@@ -46,7 +46,7 @@
 ;; highlighting in batch mode; set that variable to nil to avoid such
 ;; changes.
 ;;
-;; Function `org-reveal-publish-setq-defaults' uses `setq' to change
+;; Function `oer-reveal-publish-setq-defaults' uses `setq' to change
 ;; various variables of other packages related to export to HTML and
 ;; LaTeX.  Please check what it does before invoking it.
 ;;
@@ -94,7 +94,7 @@ See URL `https://ctan.org/pkg/float' for float documentation."
   :type 'string)
 
 (defcustom oer-reveal-publish-html-doctype "html5"
-  "Value to assign to `org-html-doctype' before export."
+  "Value to assign to variable `org-html-doctype' before export."
   :group 'oer-reveal
   :type 'string)
 
@@ -153,7 +153,7 @@ Set to nil for default syntax highlighting."
 
 (require 'table)
 ;;;###autoload
-(defun org-reveal-publish-setq-defaults ()
+(defun oer-reveal-publish-setq-defaults ()
   "Change various variables with `setq'."
   (setq table-html-th-rows 1
 	table-html-table-attribute "class=\"emacs-table\""
