@@ -168,21 +168,7 @@ Set to nil for default syntax highlighting."
 	;; org-latex-default-packages-alist.
 	org-latex-default-packages-alist
 	(append oer-reveal-latex-packages org-latex-default-packages-alist)
-	;; Setup Bibliography in HTML based on default bib file (which
-	;; helps to locate the bib file when the current buffer does
-	;; not specify one).
-	org-ref-default-bibliography '("references.bib")
-	;; Display article, book, inproceedings differently.  Entry
-	;; misc is new.  Remaining entries are defaults.
-	org-ref-bibliography-entry-format
-	'(("article" . "%a, %t, <i>%j %v(%n)</i>, %p (%y). <a href=\"%U\">%U</a>")
-	  ("book" . "%a, %t, %u, %y. <a href=\"%U\">%U</a>")
-	  ("inproceedings" . "%a, %t, %b, %y. <a href=\"%U\">%U</a>")
-	  ("incollection" . "%a, %t, %b, %u, %y. <a href=\"%U\">%U</a>")
-	  ("misc" . "%a, %t, %i, %y.  <a href=\"%U\">%U</a>")
-	  ("techreport" . "%a, %t, %i, %u (%y).")
-	  ("proceedings" . "%e, %t in %S, %u (%y).")
-	  )))
+))
 
 (defun oer-reveal-publish-all (&optional project-alist)
   "Configure settings and invoke `org-publish-all'.
