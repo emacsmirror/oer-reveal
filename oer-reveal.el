@@ -208,13 +208,16 @@ Software is cloned from `oer-reveal-submodules-url' into
   (oer-reveal-clone-submodules)
   (oer-reveal-update-submodules t))
 
-(defun oer-reveal-setup-submodules ()
-  "Install or update submodules of oer-reveal."
-  (interactive)
+(defun oer-reveal-setup-submodules (&optional force)
+  "Install or update submodules of oer-reveal.
+If optional FORCE is t, do not ask when `oer-reveal-submodules-dir' is
+missing but install submodules silently."
+  (interactive "P")
   (if (file-exists-p oer-reveal-submodules-dir)
-      (oer-reveal-update-submodules)
-    (when (y-or-n-p (format "Directory \"%s\" for reveal.js and plugins does not exist.  Type \"y\" to have it set up for you (needs to download about 26 MB).  Type \"n\" to install necessary submodules yourself or customize `oer-reveal-submodules-dir'.  Your choice? "
-			    oer-reveal-submodules-dir))
+      (oer-reveal-update-submodules force)
+    (when (or force
+	      (y-or-n-p (format "Directory \"%s\" for reveal.js and plugins does not exist.  Type \"y\" to have it set up for you (needs to download about 26 MB).  Type \"n\" to install necessary submodules yourself or customize `oer-reveal-submodules-dir'.  Your choice? "
+				oer-reveal-submodules-dir)))
       (oer-reveal-install-submodules))))
 
 (defun oer-reveal--generate-include-file (source-file)
@@ -228,21 +231,23 @@ Resulting file is stored under `oer-reveal-org-includes-dir'."
       (insert (format "# Generated file.  Will be overwritten without warning.
 #+INCLUDE: \"%s\"" source-file)))))
 
-(defun oer-reveal-generate-include-files ()
+(defun oer-reveal-generate-include-files (&optional force)
   "Generate files that include Org configuration files of oer-reveal.
 If `oer-reveal-org-includes-dir' does not exist and
 `oer-reveal-generate-org-includes-p' is t, ask user whether that directory
 should be created to store generated files.
+If optional FORCE is t, create directory without questions.
 This provides a stable location for \"#+INCLUDE\" statements in your
 Org files."
   (catch 'aborted
     (if (not (file-exists-p oer-reveal-org-includes-dir))
-	(if (or (not oer-reveal-generate-org-includes-p)
-		(not (y-or-n-p
+	(if (or force
+		(and oer-reveal-generate-org-includes-p
+		     (y-or-n-p
 		      (format "Directory \"%s\" does not exist.  Create and populate for you (if not, maybe customize `oer-reveal-generate-org-includes-p')? "
 			      oer-reveal-org-includes-dir))))
-	    (throw 'aborted nil)
-	  (make-directory oer-reveal-org-includes-dir t)))
+	    (make-directory oer-reveal-org-includes-dir t)
+	  (throw 'aborted nil)))
     (let* ((source-dir (concat (file-name-as-directory
 				(expand-file-name oer-reveal-dir)) "org"))
 	   (source-files (directory-files source-dir t "\\.org$")))
