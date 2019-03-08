@@ -11,9 +11,9 @@
 ;; This file contains setup code to publish reveal.js presentations
 ;; from Org source files with oer-reveal.
 ;;
-;; This file defines function `oer-reveal-publish-all' to be used in
-;; batch mode, which invokes the standard Org export function
-;; `org-publish-all' to publish all projects added to
+;; Function `oer-reveal-publish-all' is meant to be used in batch mode
+;; (more details follow below) and invokes the standard Org export
+;; function `org-publish-all' to publish all projects of
 ;; `org-publish-project-alist'.
 ;; Org source files (except explicitly excluded ones) are published
 ;; according to `oer-reveal-publish-org-publishing-functions'.  Other
@@ -34,7 +34,7 @@
 ;; Then, invoke publication based on your own publish.el:
 ;; emacs --batch --load publish.el --funcall oer-reveal-publish-all
 ;;
-;; Warning!  By default, `oer-reveal-publish-all' sets
+;; Warning!  By default, `oer-reveal-publish-all' let-binds
 ;; `org-confirm-babel-evaluate' to `oer-reveal-publish-confirm-evaluate',
 ;; which defaults to nil.
 ;; This enables automatic execution of code embedded in Org source
@@ -69,8 +69,8 @@ general Emacs sessions."
   '(org-re-reveal-publish-to-reveal org-latex-publish-to-pdf)
   "Functions to publish Org source files.
 By default, Org files are published as reveal.js presentations and as
-PDF.  For the latter, `org-latex-pdf-process' is modified via
-`oer-reveal-publish-pdf-process'."
+PDF.  For the latter, `org-latex-pdf-process' is set to
+`oer-reveal-publish-pdf-process' in `oer-reveal-publish-setq-defaults'."
   :group 'oer-reveal
   :type '(repeat function))
 
@@ -81,12 +81,14 @@ PDF.  For the latter, `org-latex-pdf-process' is modified via
 
 (defcustom oer-reveal-publish-pdf-process
   '("latexmk -outdir=%o -interaction=nonstopmode -shell-escape -bibtex -pdf %f")
-  "Value to assign to `org-latex-pdf-process' before export."
+  "Value to assign to `org-latex-pdf-process'.
+Assignment happens in `oer-reveal-publish-setq-defaults'."
   :group 'oer-reveal
   :type '(repeat string))
 
 (defcustom oer-reveal-publish-figure-float "H"
-  "Value to assign to `oer-reveal-latex-figure-float' before export.
+  "Value to assign to `oer-reveal-latex-figure-float'.
+Assignment happens in `oer-reveal-publish-setq-defaults'.
 The default uses the LaTeX float package to position figures \"here\",
 which results in a layout that is more similar to HTML slides.
 See URL `https://ctan.org/pkg/float' for float documentation."
@@ -94,7 +96,8 @@ See URL `https://ctan.org/pkg/float' for float documentation."
   :type 'string)
 
 (defcustom oer-reveal-publish-html-doctype "html5"
-  "Value to assign to variable `org-html-doctype' before export."
+  "Value to assign to variable `org-html-doctype'.
+Assignment happens in `oer-reveal-publish-setq-defaults'."
   :group 'oer-reveal
   :type 'string)
 
@@ -103,13 +106,15 @@ See URL `https://ctan.org/pkg/float' for float documentation."
 <p class=\"date\">Created: <span property=\"dc:created\">%C</span></p>
 <div class=\"legalese\"><p><a href=\"/imprint.html\">Imprint</a> | <a href=\"/privacy.html\">Privacy Policy</a></p></div>"
   "Value to assign to `org-html-postamble' before export.
+Assignment happens in `oer-reveal-publish-setq-defaults'.
 The default generates CC BY-SA 4.0 license information and links to
 imprint and privacy policy."
   :group 'oer-reveal
   :type 'string)
 
 (defun oer-reveal-publish-faces ()
-  "Call `custom-set-faces' for syntax highlighting in batch mode."
+  "Call `custom-set-faces' for syntax highlighting in batch mode.
+Invoked from function `oer-reveal-publish-all'."
   ;; The following colors are based on the tango custom theme.
   (custom-set-faces
    '(default                      ((t (:foreground "#2e3436"))))
@@ -125,7 +130,8 @@ imprint and privacy policy."
 
 (defcustom oer-reveal-publish-faces-function #'oer-reveal-publish-faces
   "Function to change faces for syntax highlighting.
-Set to nil for default syntax highlighting."
+This function is called in `oer-reveal-publish-all'.  Set to nil for default
+syntax highlighting."
   :group 'oer-reveal
   :type '(choice (const nil) function))
 
@@ -138,7 +144,8 @@ Set to nil for default syntax highlighting."
     ;; warnings for figures:
     ;; warning (ext4): destination with the same identifier
     ("" "float" nil))
-  "Packages to add to beginning of `org-latex-default-packages-alist'."
+  "Packages to add to beginning of `org-latex-default-packages-alist'.
+Assignment happens in `oer-reveal-publish-setq-defaults'."
   :group 'oer-reveal
   :type '(repeat
 	  (choice
@@ -173,8 +180,10 @@ Set to nil for default syntax highlighting."
 
 (defun oer-reveal-publish-all (&optional project-alist)
   "Configure settings and invoke `org-publish-all'.
-Apply settings for `oer-reveal', which influence export to reveal.js,
-PDF, and HTML, and set up `org-publish-project-alist'.
+Invoke function `oer-reveal-publish-faces-function' if non-nil,
+let-bind `org-confirm-babel-evaluate' to
+`oer-reveal-publish-confirm-evaluate', and set up
+`org-publish-project-alist'.
 Optional PROJECT-ALIST defines additional projects to be added to
 `org-publish-project-alist'."
   (when oer-reveal-publish-faces-function
