@@ -129,7 +129,7 @@ Set to nil for default syntax highlighting."
   :group 'oer-reveal
   :type '(choice (const nil) function))
 
-(defcustom oer-reveal-latex-packages
+(defcustom oer-reveal-publish-latex-packages
   '(
     ;; Setup url package with hyphens option.  This is done here to avoid
     ;; option clashes when implicitly loading the package from hyperref.
@@ -167,7 +167,8 @@ Set to nil for default syntax highlighting."
 	;; Add packages that need to be at the beginning of
 	;; org-latex-default-packages-alist.
 	org-latex-default-packages-alist
-	(append oer-reveal-latex-packages org-latex-default-packages-alist)
+	(append oer-reveal-publish-latex-packages
+		org-latex-default-packages-alist)
 ))
 
 (defun oer-reveal-publish-all (&optional project-alist)
