@@ -177,15 +177,14 @@ returns the version `oer-reveal-submodules-version'."
 			 (shell-quote-argument
 			  (expand-file-name oer-reveal-submodules-dir)))))))
 
-(defun oer-reveal-update-submodules (&optional force)
+(defun oer-reveal-update-submodules ()
   "Update submodules for this version of oer-reveal.
-Do not update if `oer-reveal-submodules-ok-p' returns t, unless
-optional FORCE is non-nil.
+Do not update if `oer-reveal-submodules-ok-p' returns t.
 Output of Git goes to buffer `oer-reveal-buffer'."
   (unless (file-writable-p oer-reveal-submodules-dir)
     (error "Directory of submodules not writable: %s"
 	   oer-reveal-submodules-dir))
-  (when (or force (not (oer-reveal-submodules-ok-p)))
+  (when (not (oer-reveal-submodules-ok-p))
     (save-excursion
       (pop-to-buffer (get-buffer-create oer-reveal-buffer) nil t)
       (let ((default-directory
@@ -206,7 +205,7 @@ Output of Git goes to buffer `oer-reveal-buffer'."
 Software is cloned from `oer-reveal-submodules-url' into
 `oer-reveal-submodules-dir'."
   (oer-reveal-clone-submodules)
-  (oer-reveal-update-submodules t))
+  (oer-reveal-update-submodules))
 
 (defun oer-reveal-setup-submodules (&optional force)
   "Install or update submodules of oer-reveal.
@@ -214,7 +213,7 @@ If optional FORCE is t, do not ask when `oer-reveal-submodules-dir' is
 missing but install submodules silently."
   (interactive "P")
   (if (file-exists-p oer-reveal-submodules-dir)
-      (oer-reveal-update-submodules force)
+      (oer-reveal-update-submodules)
     (when (or force
 	      (y-or-n-p (format "Directory \"%s\" for reveal.js and plugins does not exist.  Type \"y\" to have it set up for you (needs to download about 26 MB).  Type \"n\" to install necessary submodules yourself or customize `oer-reveal-submodules-dir'.  Your choice? "
 				oer-reveal-submodules-dir)))
