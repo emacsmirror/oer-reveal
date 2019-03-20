@@ -51,9 +51,8 @@
 ;; contains some variants for title slides of presentations, and
 ;; subdirectory "css" contains sample CSS.  Subdirectory "org"
 ;; contains Org files to embed in presentations.  Please be warned
-;; that included resources, in particular css/jl-simple.css, may
-;; change in incompatible ways.  You may want to work with your own
-;; copies.
+;; that included resources, in particular CSS files, may change in
+;; incompatible ways.  You may want to work with your own copies.
 ;;
 ;; Function `oer-reveal-setup-submodules' downloads and installs
 ;; reveal.js and some of its plugins into the directory
@@ -653,7 +652,7 @@ and whose cdr is the LaTeX representation."
 		      ""))
 	 (htmlauthor (if attributionname
 			 (if attributionurl
-			     (format "by <a rel=\"dc:creator\" href=\"%s\" property=\"cc:attributionName\">%s</a>"
+			     (format "by <a rel=\"cc:attributionURL dc:creator\" href=\"%s\" property=\"cc:attributionName\">%s</a>"
 				     attributionurl attributionname)
 			   (format "by <span property=\"dc:creator cc:attributionName\">%s</span>"
 				   attributionname))
