@@ -18,7 +18,7 @@
 
 # Transition styles: none/fade/slide/convex/concave/zoom/cube
 #+REVEAL_TRANS: fade
-#+REVEAL_THEME: jl-simple
+#+REVEAL_THEME: oer-reveal
 
 #+REVEAL_PLUGINS: (notes search zoom)
 
