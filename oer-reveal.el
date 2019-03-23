@@ -403,7 +403,7 @@ For elements of `oer-reveal-plugins', add initialization code to
     ;; Enable courseware plugin, but do not show it.
     (oer-reveal-add-to-init-script "coursemod: { enabled: true, shown: false }")
     (add-to-list 'org-re-reveal-external-plugins
-		 (cons 'quiz "{ src: '%splugin/coursemod/coursemod.js', async: true }"))))
+		 (cons 'coursemod "{ src: '%splugin/coursemod/coursemod.js', async: true }"))))
 
 ;;; Allow colored text.
 ;; The FAQ at http://orgmode.org/worg/org-faq.html contains a recipe
