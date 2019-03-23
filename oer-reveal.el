@@ -612,8 +612,9 @@ Templates `oer-reveal--svg-div-template' and
   "Call `org-export-string-as' on STRING, BACKEND, and t;
 remove newline characters and, in case of HTML, surrounding p tags,
 and return as result."
-  (replace-regexp-in-string "\n\\|<p>\\|</p>" " "
-			    (org-export-string-as string backend t)))
+  (string-trim
+   (replace-regexp-in-string "\n\\|<p>\\|</p>" " "
+			     (org-export-string-as string backend t))))
 
 (defun oer-reveal--file-as-string (filename &optional no-newlines)
   "Return contents of FILENAME as string.
