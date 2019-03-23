@@ -170,6 +170,8 @@ Assignment happens in `oer-reveal-publish-setq-defaults'."
 	oer-reveal-latex-figure-float oer-reveal-publish-figure-float
 	org-re-reveal-script-files oer-reveal-script-files
 	org-re-reveal--href-fragment-prefix org-re-reveal--slide-id-prefix
+	org-re-reveal-body-attrs
+	"prefix=\"dc: http://purl.org/dc/terms/ cc: http://creativecommons.org/ns#\""
 	org-latex-pdf-process oer-reveal-publish-pdf-process
 	;; Add packages that need to be at the beginning of
 	;; org-latex-default-packages-alist.
