@@ -96,8 +96,9 @@
 (require 'subr-x) ; string-trim
 
 (unless (fboundp 'alist-get)
-  ;; Following copied from subr.el, Emacs 27.0.50.
-  (defun alist-get (key alist &optional default remove testfn)
+  ;; Following based on subr.el, Emacs 27.0.50.  Argument testfn removed
+  ;; as assoc in older Emacsen only accepts two arguments.
+  (defun alist-get (key alist &optional default remove)
     "Return the value associated with KEY in ALIST.
 If KEY is not found in ALIST, return DEFAULT.
 Use TESTFN to lookup in the alist if non-nil.  Otherwise, use `assq'.
@@ -106,9 +107,7 @@ This is a generalized variable suitable for use with `setf'.
 When using it to set a value, optional argument REMOVE non-nil
 means to remove KEY from ALIST if the new value is `eql' to DEFAULT."
     (ignore remove) ;;Silence byte-compiler.
-    (let ((x (if (not testfn)
-		 (assq key alist)
-               (assoc key alist testfn))))
+    (let ((x (assq key alist)))
       (if x (cdr x) default))))
 
 ;; Customizable options
