@@ -7,7 +7,7 @@
 
 ;; Author: Jens Lechtenbörger
 ;; URL: https://gitlab.com/oer/oer-reveal
-;; Version: 0.9.2
+;; Version: 0.9.3
 ;; Package-Requires: ((emacs "24.4") (org-re-reveal "1.0.3"))
 ;;    Emacs 24.4 adds advice-add and advice-remove.  Thus, Emacs
 ;;    should not be older.
@@ -248,16 +248,25 @@ missing but install submodules silently."
 				oer-reveal-submodules-dir)))
       (oer-reveal-install-submodules))))
 
-(defun oer-reveal--generate-include-file (source-file)
+(defun oer-reveal--generate-include-file (source-file type)
   "Generate include file for SOURCE-FILE.
-Resulting file is stored under `oer-reveal-org-includes-dir'."
+The TYPE can be \"org\", to generate a file that includes the source file,
+or \"title-slide\", to generate a files that defines \"REVEAL_TITLE_SLIDE\".
+The resulting file is stored under `oer-reveal-org-includes-dir'."
   (let* ((source-base (file-name-nondirectory source-file))
+         (target-org (concat (file-name-sans-extension source-base) ".org"))
 	 (target-file (concat
 		       (file-name-as-directory oer-reveal-org-includes-dir)
-		       source-base)))
+		       target-org)))
     (with-temp-file target-file
-      (insert (format "# Generated file.  Will be overwritten without warning.
-#+INCLUDE: \"%s\"" source-file)))))
+      (insert
+       (format "# Generated file.  Will be overwritten without warning.\n"))
+      (cond ((string= type "org")
+             (insert (format "#+INCLUDE: \"%s\"\n" source-file)))
+            ((string= type "title-slide")
+             (insert (format "#+REVEAL_TITLE_SLIDE: %s\n" source-file)))
+            (t (user-error "Unexpected type `%s' for file `%s'"
+                           type source-file))))))
 
 (defun oer-reveal-generate-include-files (&optional force)
   "Generate files that include Org configuration files of oer-reveal.
@@ -276,10 +285,19 @@ Org files."
 			      oer-reveal-org-includes-dir))))
 	    (make-directory oer-reveal-org-includes-dir t)
 	  (throw 'aborted nil)))
-    (let* ((source-dir (concat (file-name-as-directory
-				(expand-file-name oer-reveal-dir)) "org"))
-	   (source-files (directory-files source-dir t "\\.org$")))
-      (mapcar #'oer-reveal--generate-include-file source-files))))
+    (dolist (spec
+             (list
+              (cons "org" "\\.org$")
+              (cons "title-slide" "\\.html$"))
+             nil)
+      (let* ((source-dir (concat (file-name-as-directory
+				  (expand-file-name oer-reveal-dir))
+                                 (car spec)))
+	     (source-files (directory-files source-dir t (cdr spec))))
+        (mapc (lambda (source-file)
+                (funcall #'oer-reveal--generate-include-file
+                         source-file (car spec)))
+              source-files)))))
 
 ;; The following options are only relevant if you use
 ;; oer-reveal-export-image-grid to generate image grids.
