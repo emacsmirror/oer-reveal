@@ -802,7 +802,7 @@ NO-COLUMNS columns, NO-ROWS rows; positioning is specified by TEMPLATE-AREAS."
 		       numbered " ")
 	    "</div><p>@@"
 	    "\n"
-	    "@@latex: Presentation contains image grid.  \\LaTeX export not supported.@@")))
+	    "@@latex: Presentation contains image grid.  \\LaTeX{} export not supported.@@")))
 
 (defun oer-reveal--generate-grid-img (grid-id no)
   "Create CSS class assigning grid-area NO to image NO in grid GRID-ID."
