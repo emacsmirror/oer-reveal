@@ -7,7 +7,7 @@
 
 ;; Author: Jens Lechtenbörger
 ;; URL: https://gitlab.com/oer/oer-reveal
-;; Version: 0.9.3
+;; Version: 0.9.4
 ;; Package-Requires: ((emacs "24.4") (org-re-reveal "1.0.3"))
 ;;    Emacs 24.4 adds advice-add and advice-remove.  Thus, Emacs
 ;;    should not be older.
@@ -189,7 +189,12 @@ Output of Git goes to buffer `oer-reveal-buffer'."
       (error "Directory to install submodules not writable: %s" parent))
     (save-excursion
       (pop-to-buffer (get-buffer-create oer-reveal-buffer) nil t)
-      (let ((default-directory parent))
+      (let ((default-directory parent)
+	    ;; In newer Emacsen, call-process starts in default-directory,
+	    ;; which is what we want.  In Emacs 24.5.1, this does not happen.
+	    ;; Instead, assign filename to buffer, from which call-process
+	    ;; obtains its directory.
+	    (buffer-file-name (concat parent oer-reveal-buffer)))
 	(insert "Performing git clone in: ")
 	(call-process "pwd" nil t t)
 	(call-process "git" nil t t "clone" oer-reveal-submodules-url)
@@ -220,8 +225,13 @@ Output of Git goes to buffer `oer-reveal-buffer'."
     (save-excursion
       (pop-to-buffer (get-buffer-create oer-reveal-buffer) nil t)
       (let ((default-directory
-	      (file-name-as-directory oer-reveal-submodules-dir)))
-	(insert "Performing git pull and checkout...\n")
+	      (file-name-as-directory oer-reveal-submodules-dir))
+	    ;; As explained above, also assign value to buffer-file-name.
+	    (buffer-file-name
+	     (concat (file-name-as-directory oer-reveal-submodules-dir)
+		     oer-reveal-buffer)))
+	(insert "Performing git pull and checkout in: ")
+	(call-process "pwd" nil t t)
 	(call-process "git" nil t t "checkout" "master")
 	(call-process "git" nil t t "pull")
 	(call-process "git" nil t t "checkout" oer-reveal-submodules-version)
