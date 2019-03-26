@@ -150,9 +150,10 @@ contained in this directory.")
 (defconst oer-reveal-buffer "*oer-reveal git output*"
   "Name of buffer holding Git output.")
 (defcustom oer-reveal-submodules-dir
-  (concat (file-name-as-directory user-emacs-directory)
+  (file-name-as-directory
+   (concat (file-name-as-directory user-emacs-directory)
 	  (file-name-sans-extension
-	   (file-name-nondirectory oer-reveal-submodules-url)))
+	   (file-name-nondirectory oer-reveal-submodules-url))))
   "Directory with submodules of oer-reveal.
 Submodules include reveal.js and its plugins.
 If this directory does not exist, installation is offered.
@@ -171,7 +172,8 @@ Used in `oer-reveal-generate-include-files'."
   :type 'boolean)
 
 (defcustom oer-reveal-org-includes-dir
-  (concat (file-name-as-directory user-emacs-directory) "oer-reveal-org")
+  (file-name-as-directory
+   (concat (file-name-as-directory user-emacs-directory) "oer-reveal-org"))
   "Target directory for `oer-reveal-generate-include-files'."
   :group 'oer-reveal
   :type 'directory)
@@ -181,14 +183,15 @@ Used in `oer-reveal-generate-include-files'."
   "Clone submodules from `oer-reveal-submodules-url'.
 Target directory is `oer-reveal-submodules-dir'.
 Output of Git goes to buffer `oer-reveal-buffer'."
-  (let ((parent (directory-file-name
-		 (file-name-directory oer-reveal-submodules-dir))))
+  (let ((parent (file-name-directory
+		 (directory-file-name oer-reveal-submodules-dir))))
     (unless (file-writable-p parent)
       (error "Directory to install submodules not writable: %s" parent))
     (save-excursion
       (pop-to-buffer (get-buffer-create oer-reveal-buffer) nil t)
       (let ((default-directory parent))
-	(insert "Performing git clone...\n")
+	(insert "Performing git clone in: ")
+	(call-process "pwd" nil t t)
 	(call-process "git" nil t t "clone" oer-reveal-submodules-url)
 	(insert "...done\n\n")))
     (unless (file-readable-p oer-reveal-submodules-dir)
@@ -290,9 +293,10 @@ Org files."
               (cons "org" "\\.org$")
               (cons "title-slide" "\\.html$"))
              nil)
-      (let* ((source-dir (concat (file-name-as-directory
-				  (expand-file-name oer-reveal-dir))
-                                 (car spec)))
+      (let* ((source-dir (file-name-as-directory
+			  (concat (file-name-as-directory
+				   (expand-file-name oer-reveal-dir))
+                                  (car spec))))
 	     (source-files (directory-files source-dir t (cdr spec))))
         (mapc (lambda (source-file)
                 (funcall #'oer-reveal--generate-include-file
