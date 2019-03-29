@@ -49,6 +49,7 @@
 #+LATEX_CLASS_OPTIONS: [a4paper]
 #+LATEX_HEADER: \usepackage[backend=biber,style=alphabetic]{biblatex}
 #+LATEX_HEADER: \addbibresource{references.bib}
+#+LATEX_HEADER: \newenvironment{notes}{\par\footnotesize}{\par}
 #+LATEX_HEADER: \newenvironment{NOTES}{\par\footnotesize}{\par}
 #+LATEX_HEADER: \newenvironment{leftcol}{\begin{minipage}{.49\textwidth}}{\end{minipage}}
 #+LATEX_HEADER: \newenvironment{rightcol}{\begin{minipage}{.49\textwidth}}{\end{minipage}}
