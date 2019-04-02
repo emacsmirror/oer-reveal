@@ -7,7 +7,7 @@
 
 ;; Author: Jens Lechtenbörger
 ;; URL: https://gitlab.com/oer/oer-reveal
-;; Version: 0.9.6
+;; Version: 0.9.7
 ;; Package-Requires: ((emacs "24.4") (org-re-reveal "1.0.3"))
 ;;    Emacs 24.4 adds advice-add and advice-remove.  Thus, Emacs
 ;;    should not be older.
@@ -688,19 +688,32 @@ and whose cdr is the LaTeX representation."
 	 (attributionname (alist-get 'cc:attributionName alist))
 	 (attributionurl (alist-get 'cc:attributionURL alist))
 	 (copyright (alist-get 'copyright alist "by"))
-	 (orgauthor (if attributionname
-			(if attributionurl
-			    (format "%s [[%s][%s]]"
-				    copyright attributionurl attributionname)
-			  (format "%s %s" copyright attributionname))
-		      ""))
+	 (orgauthor
+	  (if attributionname
+	      ;; The author may be specified with a name ...
+	      (if attributionurl
+		  ;; ... and a url ...
+		  (format "%s [[%s][%s]]"
+			  copyright attributionurl attributionname)
+		;; or just a name.
+		(format "%s %s" copyright attributionname))
+	    (if (string= copyright "by")
+		;; No special copyright information.
+		""
+	      ;; Alternatively, copyright information can replace
+	      ;; attribution information.
+	      copyright)))
 	 (htmlauthor (if attributionname
 			 (if attributionurl
 			     (format "%s <a rel=\"cc:attributionURL dc:creator\" href=\"%s\" property=\"cc:attributionName\">%s</a>"
-				     copyright attributionurl attributionname)
+				     (oer-reveal--export-no-newline copyright 'html)
+				     attributionurl attributionname)
 			   (format "%s <span property=\"dc:creator cc:attributionName\">%s</span>"
-				   copyright attributionname))
-		       ""))
+				   (oer-reveal--export-no-newline copyright 'html)
+				   attributionname))
+		       (if (string= copyright "by")
+			   ""
+			 (oer-reveal--export-no-newline copyright 'html))))
 	 (title (alist-get 'dc:title alist "Image"))
 	 (realcaption (when caption
 			(if (stringp caption)
