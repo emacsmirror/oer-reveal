@@ -7,7 +7,7 @@
 
 ;; Author: Jens Lechtenbörger
 ;; URL: https://gitlab.com/oer/oer-reveal
-;; Version: 0.9.7
+;; Version: 0.9.8
 ;; Package-Requires: ((emacs "24.4") (org-re-reveal "1.0.3"))
 ;;    Emacs 24.4 adds advice-add and advice-remove.  Thus, Emacs
 ;;    should not be older.
@@ -524,7 +524,8 @@ METADATA is a text file including licensing information.
 If optional CAPTION is not nil, it can either be a string or t.  In that
 case, display text underneath the image: If CAPTION is t, display whatever
 the meta-data knows as title, otherwise display the string CAPTION, but
-replace cite-links if present.
+replace cite-links if present.  If CAPTION is t, the title is not repeated
+as part of the license information.
 If CAPTION is nil, a LaTeX caption is generated anyways to have a numbered
 figure (and frequently to also display license information).
 Optional MAXHEIGHT restricts the height of the image and of the license
@@ -755,23 +756,43 @@ and whose cdr is the LaTeX representation."
 	 (h-license (if maxheight
 			(format " style=\"max-width:%s\"" maxheight)
 		      ""))
+	 (license (if licensetext
+		      (if licenseurl
+			  (format " under [[%s][%s]];" licenseurl licensetext)
+			(format " under %s" licensetext))
+		    ""))
 	 (orglicense (cond ((eq shortlicense 'none) "")
 			   (shortlicense (format
 					  oer-reveal--short-license-template
 					  sourceuri licenseurl licensetext))
-			   (t (format "“%s” %s under [[%s][%s]]; %s [[%s][%s]]%s"
-				      title orgauthor licenseurl licensetext
-				      imgadapted sourceuri sourcetext permit))))
+			   (t (concat
+			       (format "“%s” %s" title orgauthor)
+			       license
+			       (format " %s [[%s][%s]]%s"
+				       imgadapted sourceuri sourcetext permit)))))
 	 (htmllicense (cond ((eq shortlicense 'none) "")
 			    (shortlicense (format
 					   "<p%s>%s</p>" h-license
 					   (oer-reveal--export-no-newline
 					    orglicense 'html)))
-			    (t (format
-				"<p%s>&ldquo;%s&rdquo; %s under <a rel=\"license\" href=\"%s\">%s</a>%s%s</p>"
-				h-license htmltitle htmlauthor licenseurl
-				licensetext sourcehtml
-				(oer-reveal--export-no-newline permit 'html)))))
+			    (t (concat
+				(format "<p%s>" h-license)
+				;; If title is part of the requested
+				;; caption; omit in license.
+				(if (and caption (booleanp caption))
+				    ""
+				  (format "&ldquo;%s&rdquo; " htmltitle))
+				htmlauthor
+				(if licensetext
+				    (if licenseurl
+					(format
+					 " under <a rel=\"license\" href=\"%s\">%s</a>"
+					 licenseurl licensetext)
+				      " under %s" licensetext)
+				  "")
+				(format "%s%s</p>" sourcehtml
+					(oer-reveal--export-no-newline
+					 permit 'html))))))
 	 (texlicense (if (< 0 (length orglicense))
 			 (oer-reveal--export-no-newline orglicense 'latex)
 		       (oer-reveal--export-no-newline title 'latex)))
@@ -783,12 +804,7 @@ and whose cdr is the LaTeX representation."
 	      (oer-reveal--export-figure-latex
 	       filename texwidth texfilename texlicense latexcaption))
       (cons (oer-reveal--export-figure-html
-	     filename divclasses
-	     ;; In general, the title is part of the license text, and
-	     ;; we do not display it twice.
-	     ;; If a short license is requested, the title is not part
-	     ;; of the license but passed here.
-	     (if shortlicense htmlcaption "<p></p>")
+	     filename divclasses htmlcaption
 	     htmllicense imgalt h-image embed-svg)
 	    (oer-reveal--export-figure-latex
 	     filename texwidth texfilename texlicense
