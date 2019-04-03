@@ -558,6 +558,7 @@ the width specification as fraction of `linewidth'; 0.9 by default."
 (defvar oer-reveal--figure-external-latex-template "         #+BEGIN_EXPORT latex\n     \\textbf{Warning!} External figure \\textbf{not} included: %s \\newline (See HTML presentation instead.)\n         #+END_EXPORT\n")
 (defvar oer-reveal--figure-unsupported-latex-template "         #+BEGIN_EXPORT latex\n     \\textbf{Warning!} Figure omitted as %s format \\textbf{not} supported in \\LaTeX: “%s”\\newline (See HTML presentation instead.)\n         #+END_EXPORT\n")
 (defvar oer-reveal--unsupported-tex-figure-formats '("gif"))
+(defvar oer-reveal--default-copyright "by")
 
 ;; Image grid variables
 (defvar oer-reveal--css-grid-img-class-template "grid%s-img%d"
@@ -668,6 +669,37 @@ If optional NO-NEWLINES is non-nil, return result without newlines."
 	 "\n" " " (buffer-substring-no-properties (point-min) (point-max)))
       (buffer-substring-no-properties (point-min) (point-max)))))
 
+(defun oer-reveal--attribute-author
+    (attributionname attributionurl copyright backend)
+  "Create attribution string with author and copyright information.
+If ATTRIBUTIONNAME is non-nil it is the name of the author to which the work
+should be attributed.  In that case, ATTRIBUTIONURL can specify a URL to
+create a hyperlink to the author.
+COPYRIGHT can either be the string `oer-reveal--default-copyright', which
+indicates that no copyright is necessary, or an arbitrary Org string.
+If ATTRIBUTIONNAME (maybe with ATTRIBUTIONURL) is non-nil, preprend
+COPYRIGHT to author information.
+If ATTRIBUTIONURL is nil and COPYRIGHT equals `oer-reveal--default-copyright',
+return the empty string.
+Otherwise, return COPYRIGHT information.
+BACKEND must be `org' or `html'."
+  (let ((copyright
+	 (if (eq backend 'org)
+	     copyright
+	   (oer-reveal--export-no-newline copyright 'html))))
+    (cond ((and attributionname attributionurl)
+	   (format (if (eq backend 'org)
+		       "%s [[%s][%s]]"
+		     "%s <a rel=\"cc:attributionURL dc:creator\" href=\"%s\" property=\"cc:attributionName\">%s</a>")
+		   copyright attributionurl attributionname))
+	(attributionname
+	 (format (if (eq backend 'org)
+		     "%s %s"
+		   "%s <span property=\"dc:creator cc:attributionName\">%s</span>")
+		   copyright attributionname))
+	((string= copyright oer-reveal--default-copyright) "")
+	(t copyright))))
+
 (defun oer-reveal--attribution-strings
     (metadata &optional caption maxheight divclasses shortlicense embed-svg)
   "Helper function.
@@ -687,33 +719,11 @@ and whose cdr is the LaTeX representation."
 		   ""))
 	 (attributionname (alist-get 'cc:attributionName alist))
 	 (attributionurl (alist-get 'cc:attributionURL alist))
-	 (copyright (alist-get 'copyright alist "by"))
-	 (orgauthor
-	  (if attributionname
-	      ;; The author may be specified with a name ...
-	      (if attributionurl
-		  ;; ... and a url ...
-		  (format "%s [[%s][%s]]"
-			  copyright attributionurl attributionname)
-		;; or just a name.
-		(format "%s %s" copyright attributionname))
-	    (if (string= copyright "by")
-		;; No special copyright information.
-		""
-	      ;; Alternatively, copyright information can replace
-	      ;; attribution information.
-	      copyright)))
-	 (htmlauthor (if attributionname
-			 (if attributionurl
-			     (format "%s <a rel=\"cc:attributionURL dc:creator\" href=\"%s\" property=\"cc:attributionName\">%s</a>"
-				     (oer-reveal--export-no-newline copyright 'html)
-				     attributionurl attributionname)
-			   (format "%s <span property=\"dc:creator cc:attributionName\">%s</span>"
-				   (oer-reveal--export-no-newline copyright 'html)
-				   attributionname))
-		       (if (string= copyright "by")
-			   ""
-			 (oer-reveal--export-no-newline copyright 'html))))
+	 (copyright (alist-get 'copyright alist oer-reveal--default-copyright))
+	 (orgauthor (oer-reveal--attribute-author
+		     attributionname attributionurl copyright 'org))
+	 (htmlauthor (oer-reveal--attribute-author
+		      attributionname attributionurl copyright 'html))
 	 (title (alist-get 'dc:title alist "Image"))
 	 (realcaption (when caption
 			(if (stringp caption)
