@@ -78,10 +78,10 @@
 #+LATEX_HEADER: \newverbcommand{\bverb}{\color{darkblue}}{}
 
 # Macros to display code in different colors.
-#+MACRO: blackcode (eval (message "@@html:<code><span style=\"color:black; font-size:smaller;\">%s</span></code>@@ @@latex:\verb|%s|@@" (org-html-encode-plain-text $1) $1))
-#+MACRO: redcode (eval (message "@@html:<code><span style=\"color:darkred; font-size:smaller;\">%s</span></code>@@ @@latex:\rverb|%s|@@" (org-html-encode-plain-text $1) $1))
-#+MACRO: greencode (eval (message "@@html:<code><span style=\"color:darkgreen; font-size:smaller;\">%s</span></code>@@ @@latex:\gverb|%s|@@" (org-html-encode-plain-text $1) $1))
-#+MACRO: bluecode (eval (message "@@html:<code><span style=\"color:darkblue; font-size:smaller;\">%s</span></code>@@ @@latex:\bverb|%s|@@" (org-html-encode-plain-text $1) $1))
+#+MACRO: blackcode (eval (format "@@html:<code><span style=\"color:black; font-size:smaller;\">%s</span></code>@@ @@latex:\\verb|%s|@@" (org-html-encode-plain-text $1) $1))
+#+MACRO: redcode (eval (format "@@html:<code><span style=\"color:darkred; font-size:smaller;\">%s</span></code>@@ @@latex:\\rverb|%s|@@" (org-html-encode-plain-text $1) $1))
+#+MACRO: greencode (eval (format "@@html:<code><span style=\"color:darkgreen; font-size:smaller;\">%s</span></code>@@ @@latex:\\gverb|%s|@@" (org-html-encode-plain-text $1) $1))
+#+MACRO: bluecode (eval (format "@@html:<code><span style=\"color:darkblue; font-size:smaller;\">%s</span></code>@@ @@latex:\\bverb|%s|@@" (org-html-encode-plain-text $1) $1))
 
 # To display images with license information, some macros are
 # available.
