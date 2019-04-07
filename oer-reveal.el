@@ -7,7 +7,7 @@
 
 ;; Author: Jens Lechtenbörger
 ;; URL: https://gitlab.com/oer/oer-reveal
-;; Version: 0.9.9
+;; Version: 0.9.9.1
 ;; Package-Requires: ((emacs "24.4") (org-re-reveal "1.0.3"))
 ;;    Emacs 24.4 adds advice-add and advice-remove.  Thus, Emacs
 ;;    should not be older.
@@ -129,6 +129,25 @@ initialization code yourself.  (E.g., see the code concerning
 \"reveal.js-plugins\" in the file defining `oer-reveal-plugins'.)"
   :group 'oer-reveal
   :type '(repeat string))
+
+(defcustom oer-reveal-audio-slideshow-dependency
+  " { src: '%splugin/audio-slideshow/audio-slideshow.js', condition: function( ) { return !!document.body.classList && !Reveal.isSpeakerNotes(); } }"
+  "Dependency to initialize audio-slideshow plugin."
+  :group 'oer-reveal
+  :type 'string)
+
+(defcustom oer-reveal-audio-slideshow-config
+  "audio: {
+    advance: -1, autoplay: true, defaultDuration: 0, defaultAudios: false, playerOpacity: 0.3, playerStyle: 'position: fixed; bottom: 9.5vh; left: 0%; width: 30%; height:30px; z-index: 33;' }"
+  "Configuration for audio-slideshow plugin:
+- Do not advance after end of audio.
+- Start playing audio automatically.
+- Do not display controls if no local audio file is given.
+- Do not try to download audio files with default names.
+- Increase opacity when unfocused (students found default too easy to miss).
+- Display audio controls at bottom left (to avoid overlap)."
+  :group 'oer-reveal
+  :type 'string)
 
 (defcustom oer-reveal-latex-figure-float "htp"
   "Define position for floating figures in LaTeX export.
@@ -354,21 +373,11 @@ after comma; otherwise, just `setq' to INITSTRING."
 For elements of `oer-reveal-plugins', add initialization code to
 `org-re-reveal-external-plugins'."
   (when (member "reveal.js-plugins" oer-reveal-plugins)
-    ;; Activate audio-slideshow plugin, but not multiple times when speaker
-    ;; notes are shown.
+    ;; Activate and configure audio-slideshow plugin.
     (add-to-list 'org-re-reveal-external-plugins
 		 (cons 'audio-slideshow
-		       " { src: '%splugin/audio-slideshow/audio-slideshow.js', condition: function( ) { return !!document.body.classList && !Reveal.isSpeakerNotes(); } }"))
-
-    ;; Adjust audio-slideshow settings:
-    ;; - Do not advance after end of audio
-    ;; - Start playing audio automatically
-    ;; - Do not display controls if no local audio file is given
-    ;; - Increase opacity when unfocused (students found default too easy to miss)
-    ;; - Display audio controls at bottom left (to avoid overlap)
-    (oer-reveal-add-to-init-script "audio: {
-    advance: -1, autoplay: true, defaultDuration: 0, playerOpacity: 0.3,
-    playerStyle: 'position: fixed; bottom: 9.5vh; left: 0%; width: 30%; height:30px; z-index: 33;' }")
+		       oer-reveal-audio-slideshow-dependency))
+    (oer-reveal-add-to-init-script oer-reveal-audio-slideshow-config)
 
     ;; Activate anything plugin.
     (add-to-list 'org-re-reveal-external-plugins
