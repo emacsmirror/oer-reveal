@@ -7,7 +7,7 @@
 
 ;; Author: Jens Lechtenbörger
 ;; URL: https://gitlab.com/oer/oer-reveal
-;; Version: 0.9.8.3
+;; Version: 0.9.9
 ;; Package-Requires: ((emacs "24.4") (org-re-reveal "1.0.3"))
 ;;    Emacs 24.4 adds advice-add and advice-remove.  Thus, Emacs
 ;;    should not be older.
@@ -413,7 +413,7 @@ For elements of `oer-reveal-plugins', add initialization code to
 		    choices: [ {name: \"dummyname\", path: \"dummypath\"} ]},
 	 initialize: (function(container, options){
 	     var choice = Math.trunc( Math.random()*(options.choices.length) );
-	     var img = \"<img src='\" + options.choices[choice].path + \"' alt='\" + options.choices[choice].imgalt + \"' />\";
+	     var img = \"<img data-src='\" + options.choices[choice].path + \"' alt='\" + options.choices[choice].imgalt + \"' />\";
 	     var caption = options.imgcaption.replace(new RegExp('\\{name\\}', 'gm'), options.choices[choice].name);
 	     container.innerHTML = img + caption;
 	 }) },
@@ -552,7 +552,7 @@ the width specification as fraction of `linewidth'; 0.9 by default."
 	    (cdr org))))
 
 (defvar oer-reveal--short-license-template "[[%s][Figure]] under [[%s][%s]]")
-(defvar oer-reveal--figure-div-template  "<div about=\"%s\" class=\"%s\"><p><img src=\"%s\" alt=\"%s\" %s/></p>%s%s</div>")
+(defvar oer-reveal--figure-div-template  "<div about=\"%s\" class=\"%s\"><p><img data-src=\"%s\" alt=\"%s\" %s/></p>%s%s</div>")
 (defvar oer-reveal--svg-div-template  "<div about=\"%s\" class=\"%s\"><p>%s</p>%s%s</div>")
 (defvar oer-reveal--figure-latex-caption-template "#+BEGIN_EXPORT latex\n\\begin{figure}[%s] \\centering\n  \\includegraphics[width=%s\\linewidth]{%s} \\caption{%s (%s)}\n  \\end{figure}\n#+END_EXPORT\n")
 (defvar oer-reveal--figure-latex-template "         #+BEGIN_EXPORT latex\n     \\begin{figure}[%s] \\centering\n       \\includegraphics[width=%s\\linewidth]{%s} \\caption{%s}\n     \\end{figure}\n         #+END_EXPORT\n")
