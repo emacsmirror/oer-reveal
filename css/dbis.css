@@ -3,9 +3,13 @@
  *
  * SPDX-License-Identifier: LicenseRef-MIT-JL
  *
- * Theme for DBIS Group's slides
+ * Theme for DBIS Group's slides.
+ *
+ * Note that this CSS file is meant to be used with oer-reveal.css, which
+ * was imported here previously.  Imports lead to additional round-trips
+ * upon loading, though.  Thus, oer-reveal.css is now added via
+ * REVEAL_EXTRA_CSS in org/config.org.
  */
-@import url(oer-reveal.css);
 
 /*********************************************
  * JiTT Questions
