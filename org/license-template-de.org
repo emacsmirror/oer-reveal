@@ -9,7 +9,7 @@
   :reveal_data_state: no-toc-progress
   :HTML_HEADLINE_CLASS: no-toc-progress
   :CUSTOM_ID: license
-  :UNNUMBERED: t
+  :UNNUMBERED: notoc
   :END:
 
 {{{licensepreamble}}}
