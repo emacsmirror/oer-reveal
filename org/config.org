@@ -94,11 +94,19 @@
 # file with meta-data about an image and up to four optional
 # arguments: a caption, the maximum height of image in HTML, e.g.,
 # 50vh, a list of CSS classes (space separated, containing "figure"),
-# and an attribute specifying whether a long (default/nil), short (t),
-# or no license (none) should be used (arguments are documented for
-# function oer-reveal--export-attribution-helper).
+# and an attribute specifying whether
+# - a long (default/nil),
+# - a short (t; in this case `oer-reveal--short-license-template' is
+#   used, which by default just produces "Figure under <license>",
+#   where "Figure" is hyperlinked to its source and "<license>" should
+#   typically be a  permissive license that does not require further
+#   attribution such as CC0 or Public Domain), or
+# - no license (none)
+# should be used (arguments are documented for function
+# oer-reveal--export-attribution-helper).
 # This is meant to be used with horizontally centered images, caption
 # underneath, license text rotated to the right.
+#
 # Second, reveallicense() expects up to five arguments, the filename
 # for meta-data and optionally the maximum height, CSS classes, an
 # indicator for short license, and an indicator whether the image is
