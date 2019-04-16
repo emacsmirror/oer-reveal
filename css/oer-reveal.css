@@ -566,7 +566,7 @@ div.ribbon-legalese a {
   -moz-transition: color .15s ease;
   transition: color .15s ease; }
 
-.reveal a[href^="http"], .reveal a[href^="news:"], .reveal a[href^="mailto:"] {
+.reveal a[href^="http"], .reveal a[href^="news:"], .reveal a[href^="mailto:"], .reveal a[href^="ftp:"] {
   color: #7ab516; }
 
 .reveal a[href^="https://oer.gitlab.io"] {
