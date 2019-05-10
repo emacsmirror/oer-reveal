@@ -7,7 +7,7 @@
 
 ;; Author: Jens Lechtenbörger
 ;; URL: https://gitlab.com/oer/oer-reveal
-;; Version: 0.9.9.5
+;; Version: 0.9.9.6
 ;; Package-Requires: ((emacs "24.4") (org-re-reveal "1.0.3"))
 ;;    Emacs 24.4 adds advice-add and advice-remove.  Thus, Emacs
 ;;    should not be older.
@@ -448,7 +448,7 @@ For elements of `oer-reveal-plugins', add initialization code to
   (when (member "reveal.js-quiz" oer-reveal-plugins)
     ;; Activate quiz plugin.
     (add-to-list 'org-re-reveal-external-plugins
-		 (cons 'quiz "{ src: '%splugin/quiz/js/quiz.js', async: true, callback: function() { prepareQuizzes({preventUnanswered: true}); } }")))
+		 (cons 'quiz "{ src: '%splugin/quiz/js/quiz.js', async: true, callback: function() { prepareQuizzes({preventUnanswered: true, skipStartButton: true}); } }")))
 
   (when (member "reveal.js-coursemod" oer-reveal-plugins)
     ;; Enable courseware plugin, but do not show it.
