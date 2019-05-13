@@ -79,6 +79,13 @@ erzeugt und nutzen das HTML-Framework
       - Relativ innerhalb selber Präsentation (blau), entweder zurück
         (◂) oder vorwärts (▸)
 
+Das Dokument
+[[https://gitlab.com/oer/oer.gitlab.io/blob/master/CONTRIBUTING.org][CONTRIBUTING.org]]
+liefert Hinweise (auf Englisch), wie Sie
+Verbesserungsvorschläge für die OER der
+[[https://gitlab.com/oer][Gruppe ~oer~ auf GitLab]]
+einreichen können.
+
 # Local Variables:
 # indent-tabs-mode: nil
 # End:

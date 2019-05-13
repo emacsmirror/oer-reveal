@@ -36,7 +36,8 @@ and make use of the HTML presentation framework
   - Presentations can be downloaded from build pipelines of
     source projects as self-contained zip archives
     - Extract contents and open local HTML file(s) in browser
-    - E.g., go to [[https://gitlab.com/oer/OS/pipelines][pipelines of course on Operating Systems]],
+    - E.g., for a course on Operating Systems, go to
+      [[https://gitlab.com/oer/OS/pipelines][its pipelines page]],
       click on download icon of most recent pipeline
   - Alternatively, clone source repository and build presentations locally
 - Audio
@@ -78,6 +79,11 @@ and make use of the HTML presentation framework
       - Relative into different presentation (blue with icon)
       - Relative within presentation (blue), either with backward (◂) or
         forward (▸) indicator
+
+The document
+[[https://gitlab.com/oer/oer.gitlab.io/blob/master/CONTRIBUTING.org][CONTRIBUTING.org]]
+contains hints on how to provide feedback or contribute improvements
+for OER within the [[https://gitlab.com/oer][group ~oer~ at GitLab]].
 
 # Local Variables:
 # indent-tabs-mode: nil
