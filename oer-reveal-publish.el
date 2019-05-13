@@ -203,7 +203,7 @@ Optional PROJECT-ALIST defines additional projects to be added to
 		 :base-directory "."
 		 :base-extension "org"
 		 :makeindex oer-reveal-publish-makeindex
-		 :exclude "index\\|backmatter\\|config\\|course-list\\|license-template\\|imprint\\|privacy"
+		 :exclude "index\\|backmatter\\|config\\|course-list\\|license-template\\|imprint\\|privacy\\|README\\|CONTRIBUTING"
 		 :publishing-function oer-reveal-publish-org-publishing-functions
 		 :publishing-directory "./public")
 	   (list "title-slide"
