@@ -383,6 +383,8 @@ For elements of `oer-reveal-plugins', add initialization code to
     (add-to-list 'org-re-reveal-external-plugins
 		 (cons 'anything " { src: '%splugin/anything/anything.js' }"))
     (oer-reveal-add-to-init-script "anything: [
+        // Following initialization code for class animate from anything-demo.html.
+        // Copyright (c) 2016 Asvin Goel, under The MIT License (MIT).
 	{className: \"animate\",  initialize: (function(container, options){
 		Reveal.addEventListener( 'fragmentshown', function( event ) {
 			if (typeof event.fragment.beginElement === \"function\" ) {
