@@ -7,7 +7,7 @@
 
 ;; Author: Jens Lechtenbörger
 ;; URL: https://gitlab.com/oer/oer-reveal
-;; Version: 0.9.9.7
+;; Version: 0.9.9.8
 ;; Package-Requires: ((emacs "24.4") (org-re-reveal "1.0.3"))
 ;;    Emacs 24.4 adds advice-add and advice-remove.  Thus, Emacs
 ;;    should not be older.
@@ -424,7 +424,7 @@ For elements of `oer-reveal-plugins', add initialization code to
 		    choices: [ {name: \"dummyname\", path: \"dummypath\"} ]},
 	 initialize: (function(container, options){
 	     var choice = Math.trunc( Math.random()*(options.choices.length) );
-	     var img = \"<img data-src='\" + options.choices[choice].path + \"' alt='\" + options.choices[choice].imgalt + \"' />\";
+	     var img = \"<img src='\" + options.choices[choice].path + \"' alt='\" + options.choices[choice].imgalt + \"' />\";
 	     var caption = options.imgcaption.replace(new RegExp('\\{name\\}', 'gm'), options.choices[choice].name);
 	     container.innerHTML = img + caption;
 	 }) },
