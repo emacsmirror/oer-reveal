@@ -7,7 +7,7 @@
 
 ;; Author: Jens Lechtenbörger
 ;; URL: https://gitlab.com/oer/oer-reveal
-;; Version: 0.9.9.9.2
+;; Version: 0.9.9.9.1
 ;; Package-Requires: ((emacs "24.4") (org-re-reveal "1.0.3"))
 ;;    Emacs 24.4 adds advice-add and advice-remove.  Thus, Emacs
 ;;    should not be older.
@@ -137,7 +137,7 @@ initialization code yourself.  (E.g., see the code concerning
   :type 'string)
 
 (defcustom oer-reveal-audio-slideshow-config
-  "// audioStartAtFragment: true,
+  "audioStartAtFragment: true,
 audio: {
     advance: -1, autoplay: true, defaultDuration: 0, defaultAudios: false, playerOpacity: 0.3, playerStyle: 'position: fixed; bottom: 9.5vh; left: 0%; width: 30%; height:30px; z-index: 33;' }"
   "Configuration for audio-slideshow plugin:
