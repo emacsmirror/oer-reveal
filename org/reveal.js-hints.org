@@ -42,7 +42,7 @@ and make use of the HTML presentation framework
   - Alternatively, clone source repository and build presentations locally
 - Audio
   - If audio is embedded, [[https://en.wikipedia.org/wiki/Ogg][the free Ogg format]] is used
-    - Playback should start automatically
+    - Based on student feedback, playback does /not/ start automatically
       - See [[https://github.com/rajgoel/reveal.js-plugins/tree/master/audio-slideshow#user-content-compatibility-and-known-issues][compatibility and known issues of the underlying audio plugin]]
       - [[https://www.mozilla.org/en-US/firefox/][Firefox]],
         seems to work everywhere
