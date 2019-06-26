@@ -19,7 +19,8 @@ and make use of the HTML presentation framework
   - Up/down (swiping, arrows) move within sections,
     left/right jump between sections (type “o” to see what is where)
   - Type slide’s number followed by Enter to jump to that slide
-  - Browser history (buttons, Alt-CursorLeft, Alt-CursorRight)
+  - Browser history (buttons, Alt-CursorLeft, Alt-CursorRight; may
+    need /two/ attempts to work)
   - Zoom with Ctrl-Mouse or Alt-Mouse
   - Search with Ctrl-Shift-F
 - PDF export

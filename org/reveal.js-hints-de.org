@@ -20,7 +20,8 @@ erzeugt und nutzen das HTML-Framework
     links/rechts zwischen Abschnitten („o“ zeigt, was wo liegt)
   - Eingabe von Foliennummer gefolgt von Return/Enter/Eingabetaste
     führt zur entsprechenden Folie
-  - Browser-Historie (Vor und Zurück im Browser, Alt-CursorLinks, Alt-CursorRechts)
+  - Browser-Historie (Vor und Zurück im Browser, Alt-CursorLinks,
+    Alt-CursorRechts; möglicherweise sind /zwei/ Versuche nötig)
   - Zoom mit Strg-Maus oder Alt-Maus
   - Suche mit Strg-Umschalt-F
 - PDF-Export
