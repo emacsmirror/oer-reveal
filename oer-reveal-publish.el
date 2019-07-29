@@ -14,7 +14,9 @@
 ;; Function `oer-reveal-publish-all' is meant to be used in batch mode
 ;; (more details follow below) and invokes the standard Org export
 ;; function `org-publish-all' to publish all projects of
-;; `org-publish-project-alist'.
+;; `org-publish-project-alist'.  That latter list of projects is
+;; mostly set up by code in `oer-reveal-publish-all', but your
+;; pre-existing projects are exported as well.
 ;; Org source files (except explicitly excluded ones) are published
 ;; according to `oer-reveal-publish-org-publishing-functions'.  Other
 ;; resources (e.g., reveal.js and plugins, CSS, figures) are copied with
@@ -50,7 +52,7 @@
 ;; various variables of other packages related to export to HTML and
 ;; LaTeX.  Please check what it does before invoking it.
 ;;
-;; Inspired by publish.el by Rasmus:
+;; Originally inspired by publish.el by Rasmus:
 ;; https://gitlab.com/pages/org-mode/blob/master/publish.el
 
 ;;; Code:
@@ -158,6 +160,15 @@ Assignment happens in `oer-reveal-publish-setq-defaults'."
 		  (repeat :tag "Allowed compiler" string)))
 	   (string :tag "A line of LaTeX"))))
 
+(defcustom oer-reveal-publish-babel-languages '((emacs-lisp . t))
+  "Babel languages to activate in `oer-reveal-publish-setq-defaults'."
+  :group 'oer-reveal
+  :type '(repeat
+          (cons (symbol :tag "language")
+                (choice
+                 (const :tag "Enabled" t)
+                 (const :tag "Disabled" nil)))))
+
 (require 'table)
 ;;;###autoload
 (defun oer-reveal-publish-setq-defaults ()
@@ -178,16 +189,23 @@ Assignment happens in `oer-reveal-publish-setq-defaults'."
 	org-latex-default-packages-alist
 	(append oer-reveal-publish-latex-packages
 		org-latex-default-packages-alist)
-))
+        )
+  (org-babel-do-load-languages
+   'org-babel-load-languages oer-reveal-publish-babel-languages)
+  )
 
 (defun oer-reveal-publish-all (&optional project-alist)
   "Configure settings and invoke `org-publish-all'.
 Invoke function `oer-reveal-publish-faces-function' if non-nil,
 let-bind `org-confirm-babel-evaluate' to
-`oer-reveal-publish-confirm-evaluate', and set up
-`org-publish-project-alist'.
-Optional PROJECT-ALIST defines additional projects to be added to
-`org-publish-project-alist'."
+`oer-reveal-publish-confirm-evaluate', set up
+`org-publish-project-alist', and invoke `org-publish-all'.
+Before publication, `org-publish-project-alist' contains the following:
+* Org files for publication as reveal.js presentations.
+* Resources of directory title-slide, to be published as attachments.
+* Reveal.js and plugins, to be published as attachments.
+* Original contents of `org-publish-project-alist'.
+* Optional PROJECT-ALIST."
   (when oer-reveal-publish-faces-function
     (funcall oer-reveal-publish-faces-function))
   (let ((org-confirm-babel-evaluate oer-reveal-publish-confirm-evaluate)
@@ -273,6 +291,7 @@ Optional PROJECT-ALIST defines additional projects to be added to
 		 :publishing-function 'org-publish-attachment
 		 :recursive t)
 	   )
+          org-publish-project-alist
 	  project-alist)))
     (when (file-exists-p "index.org")
       (add-to-list 'org-publish-project-alist

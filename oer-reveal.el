@@ -7,7 +7,7 @@
 
 ;; Author: Jens Lechtenbörger
 ;; URL: https://gitlab.com/oer/oer-reveal
-;; Version: 0.9.9.9.3
+;; Version: 0.9.9.9.4
 ;; Package-Requires: ((emacs "24.4") (org-re-reveal "1.0.3"))
 ;;    Emacs 24.4 adds advice-add and advice-remove.  Thus, Emacs
 ;;    should not be older.
@@ -90,6 +90,9 @@
 ;; I set this to "./" before exporting with `C-c C-e v b'.
 ;; The names of generated CSS files for image grids are determined by
 ;; `oer-reveal-css-filename-template'.
+;;
+;; Please also see "oer-reveal-publish.el" for further customizable
+;; variables.
 
 ;;; Code:
 (require 'cl-lib) ; cl-mapcar
