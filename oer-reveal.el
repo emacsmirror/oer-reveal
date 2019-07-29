@@ -145,7 +145,7 @@ audio: {
     advance: -1, autoplay: false, defaultDuration: 0, defaultAudios: false, playerOpacity: 0.8, playerStyle: 'position: fixed; bottom: 9.5vh; left: 0%; width: 30%; height:30px; z-index: 33;' }"
   "Configuration for audio-slideshow plugin:
 - Do not advance after end of audio.
-- Start playing audio automatically.
+- Do not start playing audio automatically.
 - Do not display controls if no local audio file is given.
 - Do not try to download audio files with default names.
 - Increase opacity when unfocused (students found default too easy to miss).
