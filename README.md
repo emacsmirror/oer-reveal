@@ -4,3 +4,10 @@ This repository provides *oer-reveal*, a package to extend
 [org-re-reveal](https://gitlab.com/oer/org-re-reveal)
 with resources and functionality that aim to simplify the creation of
 [Open Educational Resources (OER)](https://en.wikipedia.org/wiki/Open_educational_resources).
+
+More specifically, *oer-reveal* provides:
+- Org macros to embed OER figures with proper license attribution (in
+  machine-readable RDFa format for HTML export).
+- Installation and configuration of reveal.js with several plugins,
+  e.g., for audio explanations, for quizzes, to see notes, to display
+  a hyperlinked table of contents as footer.
