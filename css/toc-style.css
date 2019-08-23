@@ -12,8 +12,8 @@
  */
 #toc-progress-footer {
     position: absolute !important;
-    width: 90%; }
+    width: 90% !important; }
 
 /* Move footer columns to avoid overlap with audio controls. */
-#toc-progress-footer-main { width: 60%; }
-#toc-progress-footer-secondary { width: 40%; }
+#toc-progress-footer-main { width: 60% !important; }
+#toc-progress-footer-secondary { width: 40% !important; }
