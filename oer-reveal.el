@@ -7,7 +7,7 @@
 
 ;; Author: Jens Lechtenbörger
 ;; URL: https://gitlab.com/oer/oer-reveal
-;; Version: 1.0.0
+;; Version: 1.1.0
 ;; Package-Requires: ((emacs "24.4") (org-re-reveal "2.0.0"))
 ;;    Emacs 24.4 adds advice-add and advice-remove.  Thus, Emacs
 ;;    should not be older.
@@ -155,6 +155,16 @@ audio: {
 - Display audio controls at bottom left (to avoid overlap)."
   :group 'oer-reveal
   :type 'string)
+
+(defcustom oer-reveal-toc-progress-dependency
+  " { src: '%splugin/toc-progress/toc-progress.js', async: true, callback: function() { toc_progress.initialize('reduce', 'rgba(120,138,130,0.2)'); toc_progress.create(); } }"
+  "Dependency to initialize TOC-Progress plugin.
+If there are lots of subsections, 'scroll'ing can be enabled or the font
+size can be 'reduce'd.  Go for the latter with first argument.
+Second arguement sets background color."
+  :group 'oer-reveal
+  :type 'string
+  :package-version '(oer-reveal . "1.1.0"))
 
 (defcustom oer-reveal-latex-figure-float "htp"
   "Define position for floating figures in LaTeX export.
@@ -443,11 +453,8 @@ For elements of `oer-reveal-plugins', add initialization code to
 
   (when (member "Reveal.js-TOC-Progress" oer-reveal-plugins)
     ;; Activate TOC progress plugin.
-    ;; If there are lots of subsections, 'scroll'ing can be enabled or
-    ;; the font size can be 'reduce'd.  Go for the latter.
     (add-to-list 'org-re-reveal-external-plugins
-		 (cons 'toc-progress
-		       " { src: '%splugin/toc-progress/toc-progress.js', async: true, callback: function() { toc_progress.initialize('reduce', 'rgba(120,138,130,0.2)'); toc_progress.create(); } }")))
+		 (cons 'toc-progress oer-reveal-toc-progress-dependency)))
 
   (when (member "reveal.js-jump-plugin" oer-reveal-plugins)
     ;; Activate jump plugin.
