@@ -1,12 +1,10 @@
 /**
- * Copyright (C) 2018 Jens Lechtenbörger
+ * Copyright (C) 2018-2019 Jens Lechtenbörger
  *
  * Theme for ERCIS presentation with quote on title page
  *
  * Released under the MIT License: https://opensource.org/licenses/MIT
  */
-
-@import url(ercis.css);
 
 .reveal h1 { font-size: 1.8em; }
 .ercis-logo { z-index: -1; }
