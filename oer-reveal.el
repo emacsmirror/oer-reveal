@@ -7,7 +7,7 @@
 
 ;; Author: Jens Lechtenbörger
 ;; URL: https://gitlab.com/oer/oer-reveal
-;; Version: 1.1.1
+;; Version: 1.2.0
 ;; Package-Requires: ((emacs "24.4") (org-re-reveal "2.0.0"))
 ;;    Emacs 24.4 adds advice-add and advice-remove.  Thus, Emacs
 ;;    should not be older.
@@ -165,6 +165,22 @@ Second arguement sets background color."
   :group 'oer-reveal
   :type 'string
   :package-version '(oer-reveal . "1.1.0"))
+
+(defcustom oer-reveal-quiz-dependency
+  "{ src: '%splugin/quiz/js/quiz.js', async: true, callback: function() { prepareQuizzes({preventUnanswered: true, skipStartButton: true}); } }"
+  "Dependency to initialize quiz plugin.
+See URL `https://gitlab.com/schaepermeier/reveal.js-quiz/blob/master/README.md'
+for available options."
+  :group 'oer-reveal
+  :type 'string
+  :package-version '(oer-reveal . "1.2.0"))
+
+(defcustom oer-reveal-coursemod-config
+  "coursemod: { enabled: true, shown: false }"
+  "Configuration for coursemod plugin: Enable, but do not show it."
+  :group 'oer-reveal
+  :type 'string
+  :package-version '(oer-reveal . "1.2.0"))
 
 (defcustom oer-reveal-latex-figure-float "htp"
   "Define position for floating figures in LaTeX export.
@@ -464,11 +480,11 @@ For elements of `oer-reveal-plugins', add initialization code to
   (when (member "reveal.js-quiz" oer-reveal-plugins)
     ;; Activate quiz plugin.
     (add-to-list 'org-re-reveal-external-plugins
-		 (cons 'quiz "{ src: '%splugin/quiz/js/quiz.js', async: true, callback: function() { prepareQuizzes({preventUnanswered: true, skipStartButton: true}); } }")))
+		 (cons 'quiz oer-reveal-quiz-dependency)))
 
   (when (member "reveal.js-coursemod" oer-reveal-plugins)
-    ;; Enable courseware plugin, but do not show it.
-    (oer-reveal-add-to-init-script "coursemod: { enabled: true, shown: false }")
+    ;; Enable and configure courseware plugin.
+    (oer-reveal-add-to-init-script oer-reveal-coursemod-config)
     (add-to-list 'org-re-reveal-external-plugins
 		 (cons 'coursemod "{ src: '%splugin/coursemod/coursemod.js', async: true }"))))
 
