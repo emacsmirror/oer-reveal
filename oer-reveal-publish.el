@@ -221,7 +221,7 @@ Before publication, `org-publish-project-alist' contains the following:
 		 :base-directory "."
 		 :base-extension "org"
 		 :makeindex oer-reveal-publish-makeindex
-		 :exclude "index\\|backmatter\\|config\\|course-list\\|license-template\\|imprint\\|privacy\\|README\\|CONTRIBUTING"
+		 :exclude "index\\|backmatter\\|config\\|course-list\\|license-template\\|imprint\\|privacy\\|README\\|CONTRIBUTING\\|CHANGELOG"
 		 :publishing-function oer-reveal-publish-org-publishing-functions
 		 :publishing-directory "./public")
 	   (list "title-slide"

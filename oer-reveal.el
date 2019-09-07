@@ -7,8 +7,8 @@
 
 ;; Author: Jens Lechtenbörger
 ;; URL: https://gitlab.com/oer/oer-reveal
-;; Version: 1.2.0
-;; Package-Requires: ((emacs "24.4") (org-re-reveal "2.0.0"))
+;; Version: 1.3.0
+;; Package-Requires: ((emacs "24.4") (org-re-reveal "2.4.0"))
 ;;    Emacs 24.4 adds advice-add and advice-remove.  Thus, Emacs
 ;;    should not be older.
 ;; Keywords: hypermedia, tools, slideshow, presentation, OER
@@ -31,11 +31,17 @@
 ;; Boston, MA 02110-1301, USA.
 
 ;;; Commentary:
-;; Package `oer-reveal' bundles resources for the creation of
-;; reveal.js presentations as Open Educational Resources (OER) from
-;; Org source files.  This package builds upon `org-re-reveal' for
-;; export from Org mode to HTML with reveal.js.  It provides help in
-;; installing and configuring reveal.js and several of its plugins.
+;; Package `oer-reveal' bundles resources for the creation of reveal.js
+;; presentations as Open Educational Resources (OER) from Org source
+;; files.  This package defines an Org mode export backend derived from
+;; `org-re-reveal' for export to HTML with reveal.js.  It provides help
+;; in installing and configuring reveal.js and several of its plugins.
+;;
+;; As usual for Org export, use `C-c C-e' to start an export, followed
+;; by backend specific key bindings.  With `oer-reveal' `C-c C-e w w'
+;; and `C-c C-e w b' are default bindings, which can be customized with
+;; `oer-reveal-keys'.  (Actually, "ö" seems preferable to "w", if it
+;; exists on your keyboard.)
 ;;
 ;; Notably, `oer-reveal' simplifies one traditionally cumbersome task
 ;; for OER creators, namely the re-use of figures under free licenses
@@ -70,7 +76,9 @@
 ;;
 ;; Note that the file "emacs-reveal.el", hosted at
 ;; https://gitlab.com/oer/emacs-reveal
-;; provides sample initialization code for oer-reveal.
+;; provides sample initialization code for oer-reveal, and the howto at
+;; https://gitlab.com/oer/emacs-reveal-howto
+;; offers a sample presentation using this code.
 ;;
 ;; * Customizable options
 ;; Variable `oer-reveal-script-files' lists JavaScript files to load
@@ -80,14 +88,14 @@
 ;; also happens in `oer-reveal-publish-setq-defaults'.
 ;;
 ;; Variable `oer-reveal-plugins' lists reveal.js plugins to be
-;; activated.  Remove those that you do not need.  Function
-;; `oer-reveal-setup-plugins' adds plugin initialization code to
-;; `org-re-reveal-external-plugins'.
+;; activated.  To configure those plugins, customize
+;; `oer-reveal-plugin-config', which in turn points to customizable
+;; variables for individual plugins.
 ;;
 ;; When generating image grids, `oer-reveal-export-dir' specifies
 ;; the directory into which to generate CSS code.  This should
 ;; probably be the directory into which you publish your HTML code.
-;; I set this to "./" before exporting with `C-c C-e v b'.
+;; I set this to "./" before exporting with `C-c C-e w b'.
 ;; The names of generated CSS files for image grids are determined by
 ;; `oer-reveal-css-filename-template'.
 ;;
@@ -100,6 +108,10 @@
 ;;; Code:
 (require 'cl-lib) ; cl-mapcar
 (require 'subr-x) ; string-trim
+(require 'org)
+(require 'org-re-reveal)
+
+(defvar oer-reveal-keys) ; Silence byte compiler
 
 (unless (fboundp 'alist-get)
   ;; Following based on subr.el, Emacs 27.0.50.  Argument testfn removed
@@ -116,12 +128,85 @@ means to remove KEY from ALIST if the new value is `eql' to DEFAULT."
     (let ((x (assq key alist)))
       (if x (cdr x) default))))
 
+(defun oer-reveal-define-backend ()
+  "Define the back-end for export as reveal.js presentation.
+Derive from 're-reveal to add further options and keywords."
+  (org-export-define-derived-backend 'oer-reveal 're-reveal
+
+    :menu-entry
+    `(,(nth 0 oer-reveal-keys) "Export to reveal.js HTML Presentation"
+      ((,(nth 1 oer-reveal-keys)
+        "To file" oer-reveal-export-to-html)
+       (,(nth 2 oer-reveal-keys)
+        "To file and browse" oer-reveal-export-to-html-and-browse)
+       (,(nth 3 oer-reveal-keys)
+        "Current subtree to file" oer-reveal-export-current-subtree)))
+
+    :options-alist ; See org-export-options-alist for meaning of parts.
+    '((:oer-reveal-plugins "OER_REVEAL_PLUGINS" nil oer-reveal-plugins t)
+      (:oer-reveal-anything-dependency "OER_REVEAL_ANYTHING_DEPENDENCY" nil
+                                       oer-reveal-anything-dependency t)
+      (:oer-reveal-anything-config "OER_REVEAL_ANYTHING_CONFIG" nil
+                                   oer-reveal-anything-config t)
+      (:oer-reveal-audio-slideshow-dependency "OER_REVEAL_AUDIO_SLIDESHOW_DEPENDENCY" nil
+                                              oer-reveal-audio-slideshow-dependency t)
+      (:oer-reveal-audio-slideshow-config "OER_REVEAL_AUDIO_SLIDESHOW_CONFIG" nil
+                                          oer-reveal-audio-slideshow-config t)
+      (:oer-reveal-coursemod-dependency "OER_REVEAL_COURSEMOD_DEPENDENCY" nil
+                                        oer-reveal-coursemod-dependency t)
+      (:oer-reveal-coursemod-config "OER_REVEAL_COURSEMOD_CONFIG" nil
+                                    oer-reveal-coursemod-config t)
+      (:oer-reveal-jump-dependency "OER_REVEAL_JUMP_DEPENDENCY" nil
+                                   oer-reveal-jump-dependency t)
+      (:oer-reveal-quiz-dependency "OER_REVEAL_QUIZ_DEPENDENCY" nil
+                                   oer-reveal-quiz-dependency t)
+      (:oer-reveal-toc-progress-dependency "OER_REVEAL_TOC_PROGRESS_DEPENDENCY" nil
+                                           oer-reveal-toc-progress-dependency t)
+      )
+
+    :translate-alist
+    '((template . oer-reveal-template))))
+
+(defun oer-reveal-define-menu (symbol value)
+  "Define back-end with (new) key bindings.
+SYMBOL must be `oer-reveal-keys' and VALUE its new value."
+  (let ((standard (eval (car (get symbol 'standard-value)))))
+    (cl-assert
+     (eq symbol 'oer-reveal-keys) nil
+     (format "Symbol in oer-reveal-define-menu unexpected: %s" symbol))
+    (cl-assert
+     (= (length standard) (length value))
+     (format "Value for oer-reveal-keys must have length %s (same as standard), not %s"
+             (length standard) (length value)))
+    (set-default symbol value)
+    (oer-reveal-define-backend)))
+
 ;; Customizable options
+(defgroup org-export-oer-reveal nil
+  "Options for exporting Org files to reveal.js HTML pressentations."
+  :tag "Org Export oer-reveal"
+  :group 'org-export-re-reveal)
+
+(defcustom oer-reveal-keys '(?w ?w ?b ?s)
+  "Define keys for export with oer-reveal.
+This list must contain four characters: The first one triggers export
+with oer-reveal (after \\<org-mode-map> \\[org-export-dispatch]).
+The remaining three charaters each invoke a different export variant.
+One of those characters must be typed after the first one; the
+variants are, in sequence: Export to file, export to file followed by
+browsing that file, subtree export to file."
+  :group 'org-export-oer-reveal
+  :type '(list (character :tag "Key to trigger export with oer-reveal")
+               (character :tag "Key for export to file")
+               (character :tag "Key to browse file after export")
+               (character :tag "Key for subtree export to file"))
+  :set #'oer-reveal-define-menu)
+
 (defcustom oer-reveal-script-files '("js/reveal.js")
   "Value to apply to `org-re-reveal-script-files'.
 By default, `org-re-reveal' also loads head.min.js, which has been removed
 from the dev branch of reveal.js on 2018-10-04."
-  :group 'oer-reveal
+  :group 'org-export-oer-reveal
   :type '(repeat string))
 
 (defcustom oer-reveal-plugins
@@ -131,20 +216,19 @@ from the dev branch of reveal.js on 2018-10-04."
 Each element here is supposed to be the directory name of the plugin.
 If you remove a plugin from this list, it will no longer be initialized.
 If you add plugins to this list, you need to provide suitable
-initialization code yourself.  (E.g., see the code concerning
-\"reveal.js-plugins\" in the file defining `oer-reveal-plugins'.)"
-  :group 'oer-reveal
+initialization code in `oer-reveal-plugin-config'."
+  :group 'org-export-oer-reveal
   :type '(repeat string))
 
 (defcustom oer-reveal-audio-slideshow-dependency
-  " { src: '%splugin/audio-slideshow/audio-slideshow.js', condition: function( ) { return !!document.body.classList && !Reveal.isSpeakerNotes(); } }"
+  "{ src: '%splugin/audio-slideshow/audio-slideshow.js', condition: function( ) { return !!document.body.classList && !Reveal.isSpeakerNotes(); } }"
   "Dependency to initialize audio-slideshow plugin."
-  :group 'oer-reveal
+  :group 'org-export-oer-reveal
   :type 'string)
 
 (defcustom oer-reveal-audio-slideshow-config
   "audioStartAtFragment: true,
-audio: {
+  audio: {
     advance: -1, autoplay: false, defaultDuration: 0, defaultAudios: false, playerOpacity: 0.8, playerStyle: 'position: fixed; bottom: 9.5vh; left: 0%; width: 30%; height:30px; z-index: 33;' }"
   "Configuration for audio-slideshow plugin:
 - Do not advance after end of audio.
@@ -153,40 +237,152 @@ audio: {
 - Do not try to download audio files with default names.
 - Increase opacity when unfocused (students found default too easy to miss).
 - Display audio controls at bottom left (to avoid overlap)."
-  :group 'oer-reveal
+  :group 'org-export-oer-reveal
   :type 'string)
 
-(defcustom oer-reveal-toc-progress-dependency
-  " { src: '%splugin/toc-progress/toc-progress.js', async: true, callback: function() { toc_progress.initialize('reduce', 'rgba(120,138,130,0.2)'); toc_progress.create(); } }"
-  "Dependency to initialize TOC-Progress plugin.
-If there are lots of subsections, 'scroll'ing can be enabled or the font
-size can be 'reduce'd.  Go for the latter with first argument.
-Second arguement sets background color."
-  :group 'oer-reveal
+(defcustom oer-reveal-anything-dependency
+  "{ src: '%splugin/anything/anything.js' }"
+  "Dependency to initialize anything plugin."
+  :group 'org-export-oer-reveal
   :type 'string
-  :package-version '(oer-reveal . "1.1.0"))
+  :package-version '(oer-reveal . "1.3.0"))
+
+(defcustom oer-reveal-anything-config
+  "anything: [
+        // Following initialization code for class animate from anything-demo.html.
+        // Copyright (c) 2016 Asvin Goel, under The MIT License (MIT).
+	{className: \"animate\",  initialize: (function(container, options){
+		Reveal.addEventListener( 'fragmentshown', function( event ) {
+			if (typeof event.fragment.beginElement === \"function\" ) {
+				event.fragment.beginElement();
+			}
+		});
+		Reveal.addEventListener( 'fragmenthidden', function( event ) {
+			if (event.fragment.hasAttribute('data-reverse') ) {
+				var reverse = event.fragment.parentElement.querySelector('[id=\\\"' + event.fragment.getAttribute('data-reverse') + '\\\"]');
+				if ( reverse && typeof reverse.beginElement === \"function\" ) {
+					reverse.beginElement();
+				}
+			}
+		});
+		if ( container.getAttribute(\"data-svg-src\") ) {
+			var xhr = new XMLHttpRequest();
+			xhr.onload = function() {
+				if (xhr.readyState === 4) {
+					var svg = container.querySelector('svg');
+					container.removeChild( svg );
+					container.innerHTML = xhr.responseText + container.innerHTML;
+					if ( svg ) {
+						container.querySelector('svg').innerHTML = container.querySelector('svg').innerHTML + svg.innerHTML;
+					}
+				}
+				else {
+					console.warn( \"Failed to get file. ReadyState: \" + xhr.readyState + \", Status: \" + xhr.status);
+				}
+			};
+			xhr.open( 'GET', container.getAttribute(\"data-svg-src\"), true );
+			xhr.send();
+		}
+	}) },
+	{className: \"randomPic\",
+	 defaults: {imgalt: \"Dummy alt text\",
+		    imgcaption: \"Image by {name}\",
+		    choices: [ {name: \"dummyname\", path: \"dummypath\"} ]},
+	 initialize: (function(container, options){
+	     var choice = Math.trunc( Math.random()*(options.choices.length) );
+	     var img = \"<img src='\" + options.choices[choice].path + \"' alt='\" + options.choices[choice].imgalt + \"' />\";
+	     var caption = options.imgcaption.replace(new RegExp('\\{name\\}', 'gm'), options.choices[choice].name);
+	     container.innerHTML = img + caption;
+	 }) },
+	{className: \"notes\",
+	 initialize: (function(container, options){
+	     container.addEventListener('click', function(e) { RevealNotes.open(); });
+	 }) }
+]"
+  "Configuration for anything plugin.
+Currently, this sets up animation of SVG graphics,
+random selection of an image among multiple ones,
+and opening of speaker notes on click."
+  :group 'org-export-oer-reveal
+  :type 'string
+  :package-version '(oer-reveal . "1.3.0"))
+
+(defcustom oer-reveal-coursemod-dependency
+  "{ src: '%splugin/coursemod/coursemod.js', async: true }"
+  "Dependency to initialize coursemod plugin."
+  :group 'org-export-oer-reveal
+  :type 'string
+  :package-version '(oer-reveal . "1.3.0"))
+
+(defcustom oer-reveal-coursemod-config
+  "coursemod: { enabled: true, shown: false }"
+  "Configuration for coursemod plugin: Enable, but do not show it."
+  :group 'org-export-oer-reveal
+  :type 'string
+  :package-version '(oer-reveal . "1.2.0"))
+
+(defcustom oer-reveal-jump-dependency
+  "{ src: '%splugin/jump/jump.js', async: true }"
+  "Dependency to initialize jump plugin."
+  :group 'org-export-oer-reveal
+  :type 'string
+  :package-version '(oer-reveal . "1.3.0"))
 
 (defcustom oer-reveal-quiz-dependency
   "{ src: '%splugin/quiz/js/quiz.js', async: true, callback: function() { prepareQuizzes({preventUnanswered: true, skipStartButton: true}); } }"
   "Dependency to initialize quiz plugin.
 See URL `https://gitlab.com/schaepermeier/reveal.js-quiz/blob/master/README.md'
 for available options."
-  :group 'oer-reveal
+  :group 'org-export-oer-reveal
   :type 'string
   :package-version '(oer-reveal . "1.2.0"))
 
-(defcustom oer-reveal-coursemod-config
-  "coursemod: { enabled: true, shown: false }"
-  "Configuration for coursemod plugin: Enable, but do not show it."
-  :group 'oer-reveal
+(defcustom oer-reveal-toc-progress-dependency
+  "{ src: '%splugin/toc-progress/toc-progress.js', async: true, callback: function() { toc_progress.initialize('reduce', 'rgba(120,138,130,0.2)'); toc_progress.create(); } }"
+  "Dependency to initialize TOC-Progress plugin.
+If there are lots of subsections, 'scroll'ing can be enabled or the font
+size can be 'reduce'd.  Go for the latter with first argument.
+Second arguement sets background color."
+  :group 'org-export-oer-reveal
   :type 'string
-  :package-version '(oer-reveal . "1.2.0"))
+  :package-version '(oer-reveal . "1.1.0"))
+
+(defcustom oer-reveal-plugin-config
+  '(("reveal.js-plugins"
+     (:oer-reveal-audio-slideshow-dependency :oer-reveal-anything-dependency)
+     (:oer-reveal-audio-slideshow-config :oer-reveal-anything-config))
+    ("Reveal.js-TOC-Progress" (:oer-reveal-toc-progress-dependency) ())
+    ("reveal.js-jump-plugin" (:oer-reveal-jump-dependency) ())
+    ("reveal.js-quiz" (:oer-reveal-quiz-dependency) ())
+    ("reveal.js-coursemod"
+     (:oer-reveal-coursemod-dependency) (:oer-reveal-coursemod-config)))
+  "Initialization for reveal.js plugins in `oer-reveal-plugins'.
+This is a list of triples.  Each triple consists of
+- the plugin name, which must be its directory name,
+- a list of symbols or strings with JavaScript dependencies,
+- a possibly empty list of symbols or strings with configuration settings.
+The symbols should occur among the options-alist of the backend `oer-reveal'
+so that its value can be obtained with `plist-get' during export."
+  :group 'org-export-oer-reveal
+  :type '(repeat
+          (list
+           (string :tag "Plugin name (directory)")
+           (repeat (choice
+                    (symbol :tag "JavaScript dependency among options-alist")
+                    (string :tag "JavaScript dependency as string")))
+           (repeat (choice
+                    (symbol :tag "JavaScript config among options-alist")
+                    (string :tag "JavaScript config as string")))))
+  :package-version '(oer-reveal . "1.3.0"))
 
 (defcustom oer-reveal-latex-figure-float "htp"
   "Define position for floating figures in LaTeX export.
 You may want to use \"H\" with the float package."
-  :group 'oer-reveal
+  :group 'org-export-oer-reveal
   :type 'string)
+
+(defconst oer-reveal-plugin-config-fmt "%s,\n"
+  "Format string to embed a line with plugin configuration.")
 
 ;; Variables about installation location and reveal.js plugins follow.
 (defconst oer-reveal-dir
@@ -213,21 +409,21 @@ If this directory exists, it must have been cloned via git from
 `oer-reveal-submodules-url'.  If that condition is violated, strange
 things may happen.
 This directory must not be a relative path (but can start with \"~\")."
-  :group 'oer-reveal
+  :group 'org-export-oer-reveal
   :type 'directory)
 
 ;; Variables to control generation of files to include Org files.
 (defcustom oer-reveal-generate-org-includes-p nil
   "Set to t for question whether to generate include files upon loading.
 Used in `oer-reveal-generate-include-files'."
-  :group 'oer-reveal
+  :group 'org-export-oer-reveal
   :type 'boolean)
 
 (defcustom oer-reveal-org-includes-dir
   (file-name-as-directory
    (concat (file-name-as-directory user-emacs-directory) "oer-reveal-org"))
   "Target directory for `oer-reveal-generate-include-files'."
-  :group 'oer-reveal
+  :group 'org-export-oer-reveal
   :type 'directory)
 
 ;; Functions to install and update submodules.
@@ -374,7 +570,7 @@ The default supposes that `org-publish-all' publishes into a
 subdirectory of `public/'.
 This is only used to publish CSS of image grids with
 `oer-reveal-export-image-grid'."
-  :group 'oer-reveal
+  :group 'org-export-oer-reveal
   :type 'directory)
 
 (defcustom oer-reveal-css-filename-template
@@ -383,17 +579,16 @@ This is only used to publish CSS of image grids with
 This must contain `%s' as placeholder for the grid's identifier.
 Note that this filename is exported into a subdirectory of
 `oer-reveal-export-dir' under the current directory."
-  :group 'oer-reveal
+  :group 'org-export-oer-reveal
   :type 'string)
 
 ;;; Configuration of various components.
-(require 'org)
-(require 'org-re-reveal)
-
 (defun oer-reveal-add-to-init-script (initstring)
   "Add INITSTRING to `org-re-reveal-init-script'.
 If `org-re-reveal-init-script' is a non-empty string, concatenate INITSTRING
 after comma; otherwise, just `setq' to INITSTRING."
+  (declare (obsolete "customize `oer-reveal-plugin-config' instead"
+                     "oer-reveal 1.3.0"))
   (setq org-re-reveal-init-script
 	(if (and (stringp org-re-reveal-init-script)
 		 (< 0 (length org-re-reveal-init-script)))
@@ -405,6 +600,8 @@ after comma; otherwise, just `setq' to INITSTRING."
   "Setup `org-re-reveal-external-plugins'.
 For elements of `oer-reveal-plugins', add initialization code to
 `org-re-reveal-external-plugins'."
+  (declare (obsolete "customize `oer-reveal-plugin-config' instead"
+                     "oer-reveal 1.3.0"))
   (when (member "reveal.js-plugins" oer-reveal-plugins)
     ;; Activate and configure audio-slideshow plugin.
     (add-to-list 'org-re-reveal-external-plugins
@@ -414,58 +611,8 @@ For elements of `oer-reveal-plugins', add initialization code to
 
     ;; Activate anything plugin.
     (add-to-list 'org-re-reveal-external-plugins
-		 (cons 'anything " { src: '%splugin/anything/anything.js' }"))
-    (oer-reveal-add-to-init-script "anything: [
-        // Following initialization code for class animate from anything-demo.html.
-        // Copyright (c) 2016 Asvin Goel, under The MIT License (MIT).
-	{className: \"animate\",  initialize: (function(container, options){
-		Reveal.addEventListener( 'fragmentshown', function( event ) {
-			if (typeof event.fragment.beginElement === \"function\" ) {
-				event.fragment.beginElement();
-			}
-		});
-		Reveal.addEventListener( 'fragmenthidden', function( event ) {
-			if (event.fragment.hasAttribute('data-reverse') ) {
-				var reverse = event.fragment.parentElement.querySelector('[id=\\\"' + event.fragment.getAttribute('data-reverse') + '\\\"]');
-				if ( reverse && typeof reverse.beginElement === \"function\" ) {
-					reverse.beginElement();
-				}
-			}
-		});
-		if ( container.getAttribute(\"data-svg-src\") ) {
-			var xhr = new XMLHttpRequest();
-			xhr.onload = function() {
-				if (xhr.readyState === 4) {
-					var svg = container.querySelector('svg');
-					container.removeChild( svg );
-					container.innerHTML = xhr.responseText + container.innerHTML;
-					if ( svg ) {
-						container.querySelector('svg').innerHTML = container.querySelector('svg').innerHTML + svg.innerHTML;
-					}
-				}
-				else {
-					console.warn( \"Failed to get file. ReadyState: \" + xhr.readyState + \", Status: \" + xhr.status);
-				}
-			};
-			xhr.open( 'GET', container.getAttribute(\"data-svg-src\"), true );
-			xhr.send();
-		}
-	}) },
-	{className: \"randomPic\",
-	 defaults: {imgalt: \"Dummy alt text\",
-		    imgcaption: \"Image by {name}\",
-		    choices: [ {name: \"dummyname\", path: \"dummypath\"} ]},
-	 initialize: (function(container, options){
-	     var choice = Math.trunc( Math.random()*(options.choices.length) );
-	     var img = \"<img src='\" + options.choices[choice].path + \"' alt='\" + options.choices[choice].imgalt + \"' />\";
-	     var caption = options.imgcaption.replace(new RegExp('\\{name\\}', 'gm'), options.choices[choice].name);
-	     container.innerHTML = img + caption;
-	 }) },
-	{className: \"notes\",
-	 initialize: (function(container, options){
-	     container.addEventListener('click', function(e) { RevealNotes.open(); });
-	 }) }
-]"))
+		 (cons 'anything oer-reveal-anything-dependency))
+    (oer-reveal-add-to-init-script oer-reveal-anything-config))
 
   (when (member "Reveal.js-TOC-Progress" oer-reveal-plugins)
     ;; Activate TOC progress plugin.
@@ -475,7 +622,7 @@ For elements of `oer-reveal-plugins', add initialization code to
   (when (member "reveal.js-jump-plugin" oer-reveal-plugins)
     ;; Activate jump plugin.
     (add-to-list 'org-re-reveal-external-plugins
-		 (cons 'jump "{ src: '%splugin/jump/jump.js', async: true }")))
+		 (cons 'jump oer-reveal-jump-dependency)))
 
   (when (member "reveal.js-quiz" oer-reveal-plugins)
     ;; Activate quiz plugin.
@@ -486,7 +633,7 @@ For elements of `oer-reveal-plugins', add initialization code to
     ;; Enable and configure courseware plugin.
     (oer-reveal-add-to-init-script oer-reveal-coursemod-config)
     (add-to-list 'org-re-reveal-external-plugins
-		 (cons 'coursemod "{ src: '%splugin/coursemod/coursemod.js', async: true }"))))
+		 (cons 'coursemod oer-reveal-coursemod-dependency))))
 
 ;;; Allow colored text.
 ;; The FAQ at http://orgmode.org/worg/org-faq.html contains a recipe
@@ -988,6 +1135,116 @@ ARGUMENTS are unused (but present to allow invocation as completion
 function during Org export, which passes an argument)."
   (ignore arguments) ; Silence byte compiler
   (advice-remove #'org-html-link #'oer-reveal--rewrite-link))
+
+;;; Export and publication functionality.
+(defun oer-reveal-export-to-html
+    (&optional async subtreep visible-only body-only ext-plist)
+  "Export current buffer to a reveal.js HTML file.
+Optional ASYNC, SUBTREEP, VISIBLE-ONLY, BODY-ONLY, EXT-PLIST are passed
+to `org-re-reveal-export-to-html'."
+  (interactive)
+  (org-re-reveal-export-to-html
+   async subtreep visible-only body-only ext-plist 'oer-reveal))
+
+(defun oer-reveal-export-to-html-and-browse
+    (&optional async subtreep visible-only body-only ext-plist)
+  "Export current buffer to a reveal.js and browse HTML file.
+Optional ASYNC, SUBTREEP, VISIBLE-ONLY, BODY-ONLY, EXT-PLIST are passed
+to `oer-reveal-export-to-html'."
+  (interactive)
+  (browse-url-of-file
+   (expand-file-name
+    (oer-reveal-export-to-html
+     async subtreep visible-only body-only ext-plist))))
+
+(defun oer-reveal-export-current-subtree
+    (&optional async subtreep visible-only body-only ext-plist)
+  "Export current subtree to a reveal.js HTML file.
+Optional ASYNC, SUBTREEP, VISIBLE-ONLY, BODY-ONLY, EXT-PLIST are passed
+to `oer-reveal-export-to-html'."
+  (interactive)
+  (org-narrow-to-subtree)
+  (let ((ret (oer-reveal-export-to-html
+              async subtreep visible-only body-only
+              (plist-put ext-plist :reveal-subtree t))))
+    (widen)
+    ret))
+
+;;;###autoload
+(defun oer-reveal-publish-to-reveal
+    (plist filename pub-dir)
+  "Publish an Org file to HTML.
+FILENAME is the filename of the Org file to be published.  PLIST
+is the property list for the given project.  PUB-DIR is the
+publishing directory.
+Return output file name."
+  (org-publish-org-to 'oer-reveal filename ".html" plist pub-dir))
+
+;;;###autoload
+(defun oer-reveal-publish-to-reveal-client
+    (plist filename pub-dir)
+  "Publish an Org file to HTML as multiplex client.
+FILENAME is the filename of the Org file to be published.  PLIST
+is the property list for the given project.  PUB-DIR is the
+publishing directory.
+Return output file name."
+  (let ((org-re-reveal-client-multiplex t))
+    (org-publish-org-to 'oer-reveal filename "_client.html" plist pub-dir)))
+
+;;; Functionality to set up export.
+(defun oer-reveal--string-or-value (thing info)
+  "Return THING if it is a string.
+Otherwise, return value of property THING in plist INFO."
+  (if (stringp thing)
+      thing
+    (plist-get info thing)))
+
+(defun oer-reveal--plugin-config (info)
+  "Build initialization string for reveal.js plugins based on INFO."
+  (let* ((init-script (plist-get info :reveal-init-script))
+         (plugins (org-re-reveal--read-list
+                   (plist-get info :oer-reveal-plugins)))
+         (config (apply #'append
+                        (cl-mapcar
+                         (lambda (plugin)
+                           (nth 2 (assoc plugin oer-reveal-plugin-config)))
+                         plugins)))
+         (config-parts (if init-script
+                           (cons init-script config)
+                         config)))
+    (when config-parts
+      (mapconcat (lambda (part)
+                   (format oer-reveal-plugin-config-fmt
+                           (oer-reveal--string-or-value part info)))
+                 config-parts ""))))
+
+(defun oer-reveal--plugin-dependencies (info)
+  "Build dependency list for reveal.js plugins based on INFO."
+  (let* ((plugins
+          (org-re-reveal--read-list (plist-get info :oer-reveal-plugins)))
+         (external-plugins
+          (org-re-reveal--external-plugins-maybe-from-file info))
+         (dependencies
+          (apply
+           #'append
+           (cl-mapcar
+            (lambda (plugin)
+              (mapcar (lambda (dep)
+                        (cons 'dummy (oer-reveal--string-or-value dep info)))
+                      (nth 1 (assoc plugin oer-reveal-plugin-config))))
+           plugins))))
+    (append external-plugins dependencies)))
+
+(defun oer-reveal-template (contents info)
+  "Return complete document string after HTML conversion.
+CONTENTS is the transcoded contents string.
+INFO is a plist holding export options.
+Setup plugin and export configuration, then call `org-re-reveal-template'."
+  (let ((plugin-dependencies (oer-reveal--plugin-dependencies info))
+        (plugin-config (oer-reveal--plugin-config info)))
+    (plist-put info :reveal-external-plugins plugin-dependencies)
+    (plist-put info :reveal-init-script plugin-config)
+    (org-re-reveal-template contents info)))
 
 (provide 'oer-reveal)
 ;;; oer-reveal.el ends here

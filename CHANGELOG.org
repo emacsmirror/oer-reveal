@@ -1,0 +1,68 @@
+# Local IspellDict: en
+# SPDX-License-Identifier: GPL-3.0-or-later
+# Copyright (C) 2019 Jens Lechtenbörger
+
+* Changelog
+This file is based on
+[[https://keepachangelog.com/en/1.0.0/][Keep a Changelog]],
+where version numbers starting with version 1.0.0 adhere to
+[[https://semver.org/spec/v2.0.0.html][Semantic Versioning]].
+
+
+** [Unreleased]
+
+** [1.3.0] - 2019-09-07
+*** Added
+    - [[file:oer-reveal.el::(defun%20oer-reveal-define-backend%20()][Define]]
+      derived backend ~oer-reveal~ with key bindings per
+      [[file:oer-reveal.el::(defcustom%20oer-reveal-keys][oer-reveal-keys]]
+    - Backend options (variables with keywords)
+      - ~oer-reveal-plugins~ with ~OER_REVEAL_PLUGINS~
+      - ~oer-reveal-anything-dependency~ with ~OER_REVEAL_ANYTHING_DEPENDENCY~
+      - ~oer-reveal-anything-config~ with ~OER_REVEAL_ANYTHING_CONFIG~
+      - ~oer-reveal-audio-slideshow-dependency~ with ~OER_REVEAL_AUDIO_SLIDESHOW_DEPENDENCY~
+      - ~oer-reveal-audio-slideshow-config~ with ~OER_REVEAL_AUDIO_SLIDESHOW_CONFIG~
+      - ~oer-reveal-coursemod-dependency~ with ~OER_REVEAL_COURSEMOD_DEPENDENCY~
+      - ~oer-reveal-coursemod-config~ with ~OER_REVEAL_COURSEMOD_CONFIG~
+      - ~oer-reveal-jump-dependency~ with ~OER_REVEAL_JUMP_DEPENDENCY~
+      - ~oer-reveal-quiz-dependency~ with ~OER_REVEAL_QUIZ_DEPENDENCY~
+      - ~oer-reveal-toc-progress-dependency~ with ~OER_REVEAL_TOC_PROGRESS_DEPENDENCY~
+    - Export and publish functions
+      - ~oer-reveal-publish-to-reveal~ with ~oer-reveal-publish-to-reveal-client~
+      - ~oer-reveal-export-to-html~ with
+        ~oer-reveal-export-to-html-and-browse~ and ~oer-reveal-export-current-subtree~
+      - ~oer-reveal-template~
+    - Variable [[file:oer-reveal.el::(defcustom%20oer-reveal-plugin-config][oer-reveal-plugin-config]]
+*** Deprecated
+    - Functions [[file:oer-reveal.el::(defun%20oer-reveal-add-to-init-script][oer-reveal-add-to-init-script]]
+      and [[file:oer-reveal.el::(defun%20oer-reveal-setup-plugins][oer-reveal-setup-plugins]]
+
+** [1.2.0] - 2019-08-26
+*** Added
+    - Variables
+      [[file:oer-reveal.el::(defcustom%20oer-reveal-quiz-dependency][oer-reveal-quiz-dependency]]
+      and [[file:oer-reveal.el::(defcustom%20oer-reveal-coursemod-config][oer-reveal-coursemod-config]]
+
+** [1.1.1] - 2019-08-23
+*** Fixed
+    - Do not import CSS (redundantly)
+    - Add ~!important~ to TOC progress settings (necessary, when CSS
+      registration is successful)
+
+** [1.1.0] - 2019-08-23
+*** Added
+    - ERCIS title slide file:title-slide/ercis-talk-online.html with
+      CSS file:css/ercis-quote.css
+    - Variable [[file:oer-reveal.el::(defcustom%20oer-reveal-toc-progress-dependency][oer-reveal-toc-progress-dependency]]
+
+** [1.0.0] - 2019-08-21
+*** Changed
+    - Switch to ~org-re-reveal~ 2.0.0
+
+# Remember
+# - Change types: Added, Changed, Deprecated, Removed, Fixed, Security
+# - Versions: Major.Minor.Patch
+#   - Major for incompatible changes
+#   - Minor for backwards compatible changes
+#   - Patch for backwards compatible bug fixes
+# - Might use Ma.Mi.P-alpha < Ma.Mi.P-alpha.1 < Ma.Mi.P-beta
