@@ -7,7 +7,7 @@
 
 ;; Author: Jens Lechtenbörger
 ;; URL: https://gitlab.com/oer/oer-reveal
-;; Version: 1.4.0
+;; Version: 1.5.0
 ;; Package-Requires: ((emacs "24.4") (org-re-reveal "2.4.0"))
 ;;    Emacs 24.4 adds advice-add and advice-remove.  Thus, Emacs
 ;;    should not be older.
@@ -1022,10 +1022,12 @@ also after an incompatible change with Org 9.2."
     (apply #'oer-reveal--export-image-grid-helper args)))
 
 (defun oer-reveal--export-image-grid-helper
-    (grid-id grid-images height no-columns no-rows template-areas)
+    (grid-id grid-images height no-columns no-rows template-areas
+             &optional fragment)
   "Create HTML to display grid with id GRID-ID of GRID-IMAGES.
 The grid has a HEIGHT (percentage of viewport height without unit),
-NO-COLUMNS columns, NO-ROWS rows; positioning is specified by TEMPLATE-AREAS."
+NO-COLUMNS columns, NO-ROWS rows; positioning is specified by TEMPLATE-AREAS.
+If optional FRAGMENT is non-nil, add \"fragment\" to CSS classes."
   (let* ((images (read (oer-reveal--file-as-string grid-images)))
 	 (no-images (length images))
 	 (numbered (cl-mapcar #'cons (number-sequence 1 no-images) images))
@@ -1039,7 +1041,7 @@ NO-COLUMNS columns, NO-ROWS rows; positioning is specified by TEMPLATE-AREAS."
 	    (mapconcat (lambda (pair)
 			 (oer-reveal--export-grid-image
 			  grid-id row-height image-heights
-			  (car pair) (cdr pair)))
+			  (car pair) (cdr pair) fragment))
 		       numbered " ")
 	    "</div><p>@@"
 	    "\n"
@@ -1099,19 +1101,22 @@ return it's name."
 	  (puthash cell (+ 1 (gethash cell result 0)) result))))))
 
 (defun oer-reveal--export-grid-image
-    (grid-id row-height image-heights no image)
+    (grid-id row-height image-heights no image &optional fragment)
   "Create HTML for IMAGE number NO in GRID-ID.
 The height of the row is ROW-HEIGHT, heights of images are given by
-IMAGE-HEIGHTS.
+IMAGE-HEIGHTS.  Optional FRAGMENT specifies whether to add \"fragment\"
+as class attribute.
 Call `oer-reveal--attribution-strings' with proper metadata."
-  (let ((area (format "ga%d" no)))
+  (let ((area (format "ga%d" no))
+        (fragclass (if fragment " fragment" "")))
     (car (oer-reveal--attribution-strings
 	  image nil
 	  (format "%svh"
 		  (* (gethash area image-heights) row-height))
 	  (concat "figure grid-img "
 		  (format oer-reveal--css-grid-img-class-template
-			  grid-id no))))))
+			  grid-id no)
+                  fragclass)))))
 
 ;;; Functionality to make org-html-link use org-re-reveal's ID format.
 ;; This is useful when publishing with org-html-publish-to-html

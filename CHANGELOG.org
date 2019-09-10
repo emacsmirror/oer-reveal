@@ -11,6 +11,15 @@ where version numbers starting with version 1.0.0 adhere to
 
 ** [Unreleased]
 
+** [1.5.0] - 2019-09-10
+*** Added
+    - Optional 7th argument for macro ~revealgrid~ in
+      [[file:org/config.org]] and function
+      [[file:oer-reveal.el::(defun%20oer-reveal--export-image-grid-helper][oer-reveal--export-image-grid-helper]]
+*** Changed
+    - Padding-right for rotated license information in
+      [[file:css/oer-reveal.css]] increased from 2vw to 4vw
+
 ** [1.4.0] - 2019-09-07
 *** Changed
     - Variable ~oer-reveal-publish-org-publishing-functions~ now

@@ -223,7 +223,7 @@ body {
  * (if present). */
 .reveal .imgcontainer, .reveal figure, .reveal div.figure, .reveal svg {
   position: relative;
-  padding-right: 2vw;
+  padding-right: 4vw;
   text-align: center; }
 
 .reveal .imgcontainer figure, .reveal .imgcontainer div.figure {
@@ -267,7 +267,7 @@ body {
   text-align: right;
   margin: 5px;
   position: absolute;
-  right: 2vw;
+  right: 4vw;
   top: 0px;
   -webkit-transform: rotate(-90deg);
           transform: rotate(-90deg);
