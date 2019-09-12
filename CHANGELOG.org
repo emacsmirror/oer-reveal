@@ -11,6 +11,8 @@ where version numbers starting with version 1.0.0 adhere to
 
 ** [Unreleased]
 *** Added
+    - Variable
+      [[file:oer-reveal-publish.el::(defcustom%20oer-reveal-publish-descriptive-links]]
     - 7th argument for macro ~revealgrid~ can take the value ~grid~ to
       have the grid appear as whole
 *** Fixed

@@ -76,6 +76,13 @@ PDF.  For the latter, `org-latex-pdf-process' is set to
   :group 'oer-reveal
   :type '(repeat function))
 
+(defcustom oer-reveal-publish-descriptive-links nil
+  "Value to assign to `org-descriptive-links'.
+Assignment happens in `oer-reveal-publish-setq-defaults'."
+  :group 'oer-reveal
+  :type 'boolean
+  :package-version '(oer-reveal . "1.6.0"))
+
 (defcustom oer-reveal-publish-makeindex nil
   "Value to use for makeindex option when publishing Org files."
   :group 'oer-reveal
@@ -178,6 +185,7 @@ Assignment happens in `oer-reveal-publish-setq-defaults'."
 	org-html-table-default-attributes nil
 	org-html-doctype oer-reveal-publish-html-doctype
 	org-html-postamble oer-reveal-publish-html-postamble
+        org-descriptive-links oer-reveal-publish-descriptive-links
 	oer-reveal-latex-figure-float oer-reveal-publish-figure-float
 	org-re-reveal-script-files oer-reveal-script-files
 	org-re-reveal--href-fragment-prefix org-re-reveal--slide-id-prefix
