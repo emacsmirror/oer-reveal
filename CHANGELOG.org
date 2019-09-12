@@ -15,6 +15,7 @@ where version numbers starting with version 1.0.0 adhere to
       have the grid appear as whole
 *** Fixed
     - Use URL encoding for src and about attributes of figures
+    - Do not embed oer-reveal.css twice
 
 ** [1.5.0] - 2019-09-10
 *** Added

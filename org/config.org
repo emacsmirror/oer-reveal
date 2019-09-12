@@ -34,7 +34,6 @@
 
 #+REVEAL_EXTRA_CSS: ./reveal.js/plugin/toc-progress/toc-progress.css
 #+REVEAL_EXTRA_CSS: ./reveal.js/css/theme/toc-style.css
-#+REVEAL_EXTRA_CSS: ./reveal.js/css/theme/oer-reveal.css
 #+REVEAL_EXTRA_CSS: ./reveal.js/lib/font/source-sans-pro/source-sans-pro.css
 
 # The following creates an empty footer, for which the css style defines
