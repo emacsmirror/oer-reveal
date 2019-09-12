@@ -108,6 +108,7 @@
 ;;; Code:
 (require 'cl-lib) ; cl-mapcar
 (require 'subr-x) ; string-trim
+(require 'url-util) ; url-encode-url
 (require 'org)
 (require 'org-re-reveal)
 
@@ -818,18 +819,19 @@ Templates `oer-reveal--svg-div-template' and
 	 (external (string-match-p "^https?://" filename))
 	 (issvg (and (string= "svg" extension) (not external)))
 	 (issingle (plist-get (org-export-get-environment 're-reveal)
-			      :reveal-single-file)))
+			      :reveal-single-file))
+         (encoded-url (url-encode-url filename)))
     (if (and issvg issingle (not embed-svg))
 	(user-error "Cannot produce single file without embedding SVG: %s"
 		    filename)
       (if embed-svg
 	  ;; Embed SVG's XML directly.
 	  (format oer-reveal--svg-div-template
-		  filename divclasses
+		  encoded-url divclasses
 		  (oer-reveal--file-as-string filename t)
 		  htmlcaption htmllicense)
 	(format oer-reveal--figure-div-template
-		filename divclasses
+		encoded-url divclasses
 		(if (and issingle (not external))
 		    ;; Insert base64 encoded image as single line.
 		    (concat "data:image/" extension ";base64,"
@@ -837,7 +839,7 @@ Templates `oer-reveal--svg-div-template' and
 			      (insert-file-contents-literally filename)
 			      (base64-encode-region 1 (point-max) t)
 			      (buffer-string)))
-		  filename)
+		  encoded-url)
 		imgalt h-image htmlcaption htmllicense)))))
 
 (defun oer-reveal--export-no-newline (string backend)

@@ -10,6 +10,8 @@ where version numbers starting with version 1.0.0 adhere to
 
 
 ** [Unreleased]
+*** Fixed
+    - Use URL encoding for src and about attributes of figures
 
 ** [1.5.0] - 2019-09-10
 *** Added
