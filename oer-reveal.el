@@ -1029,17 +1029,20 @@ also after an incompatible change with Org 9.2."
   "Create HTML to display grid with id GRID-ID of GRID-IMAGES.
 The grid has a HEIGHT (percentage of viewport height without unit),
 NO-COLUMNS columns, NO-ROWS rows; positioning is specified by TEMPLATE-AREAS.
-If optional FRAGMENT is non-nil, add \"fragment\" to CSS classes."
+If optional FRAGMENT is the symbol `grid', add \"fragment\" as class to the
+div element containing the grid.  If it is t, add \"fragment\" as class to
+each individual image in the grid."
   (let* ((images (read (oer-reveal--file-as-string grid-images)))
 	 (no-images (length images))
 	 (numbered (cl-mapcar #'cons (number-sequence 1 no-images) images))
 	 (row-height (/ (* 0.95 height) no-rows))
-	 (image-heights (oer-reveal--compute-image-heights template-areas)))
+	 (image-heights (oer-reveal--compute-image-heights template-areas))
+         (frag-class (if (eq 'grid fragment) " fragment" "")))
     (oer-reveal--save-image-grid-css
      grid-id images height no-columns no-rows template-areas)
     (concat (format "#+REVEAL_EXTRA_CSS: %s\n"
 		    (format oer-reveal-css-filename-template grid-id))
-	    (format "@@html: </p><div class=\"grid%s\">" grid-id)
+	    (format "@@html: </p><div class=\"grid%s%s\">" grid-id frag-class)
 	    (mapconcat (lambda (pair)
 			 (oer-reveal--export-grid-image
 			  grid-id row-height image-heights
@@ -1106,11 +1109,11 @@ return it's name."
     (grid-id row-height image-heights no image &optional fragment)
   "Create HTML for IMAGE number NO in GRID-ID.
 The height of the row is ROW-HEIGHT, heights of images are given by
-IMAGE-HEIGHTS.  Optional FRAGMENT specifies whether to add \"fragment\"
+IMAGE-HEIGHTS.  If optional FRAGMENT is t, add \"fragment\"
 as class attribute.
 Call `oer-reveal--attribution-strings' with proper metadata."
   (let ((area (format "ga%d" no))
-        (fragclass (if fragment " fragment" "")))
+        (frag-class (if (and fragment (booleanp fragment)) " fragment" "")))
     (car (oer-reveal--attribution-strings
 	  image nil
 	  (format "%svh"
@@ -1118,7 +1121,7 @@ Call `oer-reveal--attribution-strings' with proper metadata."
 	  (concat "figure grid-img "
 		  (format oer-reveal--css-grid-img-class-template
 			  grid-id no)
-                  fragclass)))))
+                  frag-class)))))
 
 ;;; Functionality to make org-html-link use org-re-reveal's ID format.
 ;; This is useful when publishing with org-html-publish-to-html

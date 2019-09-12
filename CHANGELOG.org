@@ -10,6 +10,9 @@ where version numbers starting with version 1.0.0 adhere to
 
 
 ** [Unreleased]
+*** Added
+    - 7th argument for macro ~revealgrid~ can take the value ~grid~ to
+      have the grid appear as whole
 *** Fixed
     - Use URL encoding for src and about attributes of figures
 
