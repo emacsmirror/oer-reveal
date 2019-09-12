@@ -18,6 +18,7 @@ where version numbers starting with version 1.0.0 adhere to
 *** Fixed
     - Use URL encoding for src and about attributes of figures
     - Do not embed oer-reveal.css twice
+    - Do not display folder icon on title slide
 
 ** [1.5.0] - 2019-09-10
 *** Added

@@ -75,7 +75,7 @@ body {
    -webkit-transform-origin: left;
            transform-origin: left; }
 
-/* Show icon if slide has notes.
+/* Show icon if slide has notes, unless it is the title slide.
    Icon generated from SVG file /usr/share/openclipart/svg/computer/icons/lemon-theme/filesystems/folder_inbox.svg
    contained in openclipart-svg under Debian.
    SVG created by Jose Hevia, Public Domain.  */
@@ -88,6 +88,9 @@ body {
   top: 0;
   right: 0;
   display: block; }
+
+#sec-title-slide aside.notes {
+    background: none; }
 
 .reveal aside.notes:hover, .reveal aside.notes:active {
   opacity: 1.0;
