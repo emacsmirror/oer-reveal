@@ -49,6 +49,10 @@
   content: url(ERCIS-white-logo.png);
   background-image: none; }
 
+/* No folder icon on questions slide. */
+#slide-questions-ercis-slide aside.notes {
+  background: none; }
+
 /*********************************************
  * OTHER
  *********************************************/
