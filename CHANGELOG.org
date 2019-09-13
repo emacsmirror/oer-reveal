@@ -10,12 +10,19 @@ where version numbers starting with version 1.0.0 adhere to
 
 
 ** [Unreleased]
+
+** [1.6.0] - 2019-09-13
 *** Added
     - Variable
-      [[file:oer-reveal-publish.el::(defcustom%20oer-reveal-publish-descriptive-links]]
+      [[file:oer-reveal-publish.el::(defcustom%20oer-reveal-publish-descriptive-links][oer-reveal-publish-descriptive-links]]
     - 7th argument for macro ~revealgrid~ can take the value ~grid~ to
       have the grid appear as whole
+    - ERCIS style [[file:title-slide/ercis-talk-online-qr.html]]
+*** Changed
+    - Update dependency for org-re-reveal to version 2.5.0
+    - Overhaul of CSS and title slide for ERCIS master
 *** Fixed
+    - Add forgotten ox-oer-reveal.el
     - Use URL encoding for src and about attributes of figures
     - Do not embed oer-reveal.css twice
     - Do not display folder icon on title slide

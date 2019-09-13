@@ -28,18 +28,26 @@
   font-size: 2em; }
 
 /**************************************************
- * Logo for slide headers, but not on title slide
+ * Logo for slide headers, but not on title slide.
+ * Reduce size as background image to avoid overlap with headline.
+ * Move to avoid overlap with folder icon.
  **************************************************/
 
 .reveal h2:after, .reveal h3:after, .reveal h4:after {
-  content: url(ERCIS-logo.png);
+  content: "";
+  background-image: url(ERCIS-logo.png);
+  background-size: auto 70%;
+  background-repeat: no-repeat;
+  height: 12%;
+  width: 12%;
   position: fixed;
-  right: 0;
+  right: 50px;
   top: 0; }
 
 /* Different logo on questions slide. */
 #questions-ercis-slide:after {
-  content: url(ERCIS-white-logo.png); }
+  content: url(ERCIS-white-logo.png);
+  background-image: none; }
 
 /*********************************************
  * OTHER
@@ -47,7 +55,7 @@
 
 /* Make sure that content can overlay TOC footer (title slide). */
 .reveal .slides {
-    z-index: 30; }
+  z-index: 30; }
 
 /* Create space for GitLab ribbon. */
 .reveal .slides > section,
@@ -55,25 +63,23 @@
   margin: 5px 25px;
   width: 95%; }
 
+/* Sizing of title slide with components */
+#sec-title-slide { height: 90vh; }
+#title-logos     { height: 25vh; }
+#title           { height: 40vh; }
+#title-license   { height: 20vh; }
+#title-license p { line-height: 20vh; }
+
 .reveal .talk-title {
-  margin: 150px 0px 10px 0px; }
+  margin: 0; }
 
 .reveal .talk-subtitle p {
   font-size: .8em;
   font-weight: bold;
-  line-height: 1.0;
-  color: #852339;
-  margin-bottom: 20px; }
+  line-height: 1.0; }
 
-.reveal .licensepointer {
-  width: 90%; }
-
-.reveal .licensepointer p {
-  text-align: right;
-  font-size: .6em; }
-
-#license-link {
-  color: rgb(195,148,146); }
+.reveal .talk-subtitle .usage p {
+    font-size: 0.4em; }
 
 /* Sizing of ercisfooter copied from TOC-progress footer. */
 div.ercisfooter {
@@ -88,16 +94,23 @@ div.ercisfooter {
   z-index: 15; }
 
 .ercisfooter p {
+  pointer-events: auto;
   color: #fff;
-  margin: 2vh 10px;
+  margin: 10px 10px;
   font-size: .4em; }
 
 .reveal p.floatleft {
-  pointer-events: auto;
   float: left; }
 
 .reveal p.floatright {
-  float: right; }
+  float: right;
+  text-align: right; }
+
+.reveal p.width33 {
+  width: 33%; }
+
+.reveal p.width15 {
+  width: 15%; }
 
 .reveal a.ercisurl {
   font-size: .7em;
@@ -110,9 +123,6 @@ div.ercisfooter {
 /* Reduce figure size to stay away from ERCIS logo. */
 #slide-questions-ercis-slide div.figure {
   max-width: 60%; }
-
-#slide-questions-ercis-slide div.figure p:nth-child(3) {
-  color: rgb(195,148,146); }
 
 /*********************************************
  * ERCIS colors
@@ -141,11 +151,25 @@ div.ercisfooter {
   color: #852339; }
 
 .reveal strong,
-.reveal b {
+.reveal b,
+.reveal .talk-subtitle p {
   color: #852339; }
 
 .reveal a {
   color: #435c8b; }
 
+.reveal .slide-number a, .reveal .erciscolor a[id],
+.reveal .talk-subtitle .usage p,
+#slide-questions-ercis-slide div.figure p:nth-child(3) {
+  color: rgb(195,148,146); }
+
+#qr-code-left {
+  float: none;
+  display: inline-block;
+  vertical-align: middle; }
+
 #toc-progress-footer a, #toc-progress-footer ul {
   color: #fff; }
+
+div.ribbon-legalese, #forkmeongitlab a, #forkmeongitlab-right a {
+  background: rgb(195,148,146); }
