@@ -12,6 +12,7 @@ where version numbers starting with version 1.0.0 adhere to
 ** [Unreleased]
 *** Fixed
     - Do not display folder icon on question slide of ERCIS theme
+    - In view of heights, remove margin on title-license
 
 ** [1.6.0] - 2019-09-13
 *** Added
