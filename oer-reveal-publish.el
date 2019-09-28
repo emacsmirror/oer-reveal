@@ -250,57 +250,95 @@ Before publication, `org-publish-project-alist' contains the following:
 		 :publishing-directory "./public/reveal.js"
 		 :publishing-function 'org-publish-attachment
 		 :recursive t)
-	   (list "reveal.js-coursemod"
-		 :base-directory (expand-file-name
-				  "reveal.js-coursemod/coursemod"
-				  oer-reveal-submodules-dir)
-		 :base-extension 'any
-		 :publishing-directory "./public/reveal.js/plugin/coursemod"
-		 :publishing-function 'org-publish-attachment
-		 :recursive t)
-	   (list "reveal.js-jump-plugin"
-		 :base-directory (expand-file-name
-				  "reveal.js-jump-plugin/jump"
-				  oer-reveal-submodules-dir)
-		 :base-extension 'any
-		 :publishing-directory "./public/reveal.js/plugin/jump"
-		 :publishing-function 'org-publish-attachment
-		 :recursive t)
-	   (list "reveal.js-plugins-anything"
-		 :base-directory (expand-file-name
-				  "reveal.js-plugins/anything"
-				  oer-reveal-submodules-dir)
-		 :base-extension 'any
-		 :publishing-directory "./public/reveal.js/plugin/anything"
-		 :publishing-function 'org-publish-attachment
-		 :recursive t)
-	   (list "reveal.js-plugins-audio-slideshow"
-		 :base-directory (expand-file-name
-				  "reveal.js-plugins/audio-slideshow"
-				  oer-reveal-submodules-dir)
-		 :base-extension 'any
-		 :publishing-directory "./public/reveal.js/plugin/audio-slideshow"
-		 :publishing-function 'org-publish-attachment
-		 :recursive t)
-	   (list "reveal.js-quiz-plugin"
-		 :base-directory (expand-file-name
-				  "reveal.js-quiz/quiz"
-				  oer-reveal-submodules-dir)
-		 :base-extension 'any
-		 :publishing-directory "./public/reveal.js/plugin/quiz"
-		 :publishing-function 'org-publish-attachment
-		 :recursive t)
-	   (list "reveal-toc-plugin"
-		 :base-directory (expand-file-name
-				  "Reveal.js-TOC-Progress/plugin"
-				  oer-reveal-submodules-dir)
-		 :base-extension 'any
-		 :publishing-directory "./public/reveal.js/plugin"
-		 :publishing-function 'org-publish-attachment
-		 :recursive t)
 	   )
           org-publish-project-alist
 	  project-alist)))
+    (when (member "reveal.js-coursemod" oer-reveal-plugins)
+      (add-to-list 'org-publish-project-alist
+      	           (list "reveal.js-coursemod"
+		         :base-directory (expand-file-name
+				          "reveal.js-coursemod/coursemod"
+				          oer-reveal-submodules-dir)
+		         :base-extension 'any
+		         :publishing-directory "./public/reveal.js/plugin/coursemod"
+		         :publishing-function 'org-publish-attachment
+		         :recursive t)))
+    (when (member "reveal.js-jump-plugin" oer-reveal-plugins)
+      (add-to-list 'org-publish-project-alist
+	           (list "reveal.js-jump-plugin"
+		         :base-directory (expand-file-name
+				          "reveal.js-jump-plugin/jump"
+				          oer-reveal-submodules-dir)
+		         :base-extension 'any
+		         :publishing-directory "./public/reveal.js/plugin/jump"
+		         :publishing-function 'org-publish-attachment
+		         :recursive t)))
+    (when (member "reveal.js-plugins" oer-reveal-plugins)
+      (add-to-list 'org-publish-project-alist
+                   (list "reveal.js-plugins-anything"
+		         :base-directory (expand-file-name
+				          "reveal.js-plugins/anything"
+				          oer-reveal-submodules-dir)
+		         :base-extension 'any
+		         :publishing-directory "./public/reveal.js/plugin/anything"
+		         :publishing-function 'org-publish-attachment
+		         :recursive t))
+      (add-to-list 'org-publish-project-alist
+	           (list "reveal.js-plugins-audio-slideshow"
+		         :base-directory (expand-file-name
+				          "reveal.js-plugins/audio-slideshow"
+				          oer-reveal-submodules-dir)
+		         :base-extension 'any
+		         :publishing-directory "./public/reveal.js/plugin/audio-slideshow"
+		         :publishing-function 'org-publish-attachment
+		         :recursive t)))
+    (when (member "reveal.js-quiz" oer-reveal-plugins)
+      (add-to-list 'org-publish-project-alist
+	           (list "reveal.js-quiz-plugin"
+		         :base-directory (expand-file-name
+				          "reveal.js-quiz/quiz"
+				          oer-reveal-submodules-dir)
+		         :base-extension 'any
+		         :publishing-directory "./public/reveal.js/plugin/quiz"
+		         :publishing-function 'org-publish-attachment
+		         :recursive t)))
+    (when (member "Reveal.js-TOC-Progress" oer-reveal-plugins)
+      (add-to-list 'org-publish-project-alist
+	           (list "reveal-toc-plugin"
+		         :base-directory (expand-file-name
+				          "Reveal.js-TOC-Progress/plugin"
+				          oer-reveal-submodules-dir)
+		         :base-extension 'any
+		         :publishing-directory "./public/reveal.js/plugin"
+		         :publishing-function 'org-publish-attachment
+		         :recursive t)))
+    (when (member "klipse-libs" oer-reveal-plugins)
+      (add-to-list 'org-publish-project-alist
+	           (list "klipse-libs"
+		         :base-directory (expand-file-name
+				          "klipse-libs/klipse-dist"
+				          oer-reveal-submodules-dir)
+		         :base-extension 'any
+		         :publishing-directory "./public/reveal.js/plugin/klipse"
+		         :publishing-function 'org-publish-attachment))
+      (add-to-list 'org-publish-project-alist
+	           (list "codemirror"
+		         :base-directory (expand-file-name
+				          "klipse-libs/python"
+				          oer-reveal-submodules-dir)
+		         :base-extension 'any
+		         :publishing-directory "./public/reveal.js/plugin/klipse/python"
+		         :publishing-function 'org-publish-attachment
+                         :recursive t))
+      (add-to-list 'org-publish-project-alist
+	           (list "skulpt"
+		         :base-directory (expand-file-name
+				          "klipse-libs/skulpt-dist"
+				          oer-reveal-submodules-dir)
+		         :base-extension "js"
+                         :exclude "debug.*"
+		         :publishing-directory "./public/reveal.js/plugin/klipse"
+		         :publishing-function 'org-publish-attachment)))
     (when (file-exists-p "index.org")
       (add-to-list 'org-publish-project-alist
 		   (list "index"

@@ -11,6 +11,11 @@ where version numbers starting with version 1.0.0 adhere to
 
 ** [Unreleased]
 
+** [1.7.0] - 2019-09-28
+*** Changed
+    - Update emacs-reveal-submodules to version with klipse
+    - Publish plugin files only if configured in ~oer-reveal-plugins~
+
 ** [1.6.1] - 2019-09-16
 *** Fixed
     - Do not display folder icon on question slide of ERCIS theme
