@@ -182,6 +182,7 @@ Assignment happens in `oer-reveal-publish-setq-defaults'."
   "Change various variables with `setq'."
   (setq table-html-th-rows 1
 	table-html-table-attribute "class=\"emacs-table\""
+        org-entities-user '(("textbackslash" "\\textbackslash{}" nil "\\" "\\" "\\" "\\"))
 	org-html-table-default-attributes nil
 	org-html-doctype oer-reveal-publish-html-doctype
 	org-html-postamble oer-reveal-publish-html-postamble
