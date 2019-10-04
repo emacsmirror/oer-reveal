@@ -7,7 +7,7 @@
 
 ;; Author: Jens Lechtenbörger
 ;; URL: https://gitlab.com/oer/oer-reveal
-;; Version: 1.7.0
+;; Version: 1.8.0
 ;; Package-Requires: ((emacs "24.4") (org-re-reveal "2.5.0"))
 ;;    Emacs 24.4 adds advice-add and advice-remove.  Thus, Emacs
 ;;    should not be older.

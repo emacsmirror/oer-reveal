@@ -11,6 +11,11 @@ where version numbers starting with version 1.0.0 adhere to
 
 ** [Unreleased]
 
+** [1.8.0] - 2019-10-04
+*** Added
+    - Macros BO and BC in [[file:org/config.org]]
+    - Add textbackslash to org-entities-user in [[file:oer-reveal-publish.el::(defun%20oer-reveal-publish-setq-defaults][oer-reveal-publish-setq-defaults]]
+
 ** [1.7.0] - 2019-09-28
 *** Changed
     - Update emacs-reveal-submodules to version with klipse
