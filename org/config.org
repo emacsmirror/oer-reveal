@@ -46,6 +46,13 @@
 # Set a default bib file.
 #+MACRO: bibliographyfile bibliography:references.bib
 
+# Macros to display square brackets (in texts of hyperlinks).
+# Based on: https://emacs.stackexchange.com/questions/7792/can-i-make-links-in-org-mode-that-contain-brackets-or
+# Square Bracket Open [
+#+MACRO: BO @@latex:\char91{}@@@@html:&#91;@@
+# Square Bracket Close ]
+#+MACRO: BC @@latex:\char93{}@@@@html:&#93;@@
+
 # Setup for PDF generation via LaTeX export.
 #+LATEX_CLASS_OPTIONS: [a4paper]
 #+LATEX_HEADER: \usepackage[backend=biber,style=alphabetic]{biblatex}
