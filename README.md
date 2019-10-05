@@ -66,7 +66,7 @@ other packages, which may offer some suggestions what to adapt in
 your own configuration.
 
 Note that the file
-[https://gitlab.com/oer/emacs-reveal/blob/master/emacs-reveal.el](emacs-reveal.el),
+[emacs-reveal.el](https://gitlab.com/oer/emacs-reveal/blob/master/emacs-reveal.el),
 hosted at https://gitlab.com/oer/emacs-reveal, provides the following sample
 initialization code for *oer-reveal*, and the howto at
 https://gitlab.com/oer/emacs-reveal-howto offers a sample presentation
