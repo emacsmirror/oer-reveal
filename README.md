@@ -67,10 +67,17 @@ your own configuration.
 
 Note that the file
 [https://gitlab.com/oer/emacs-reveal/blob/master/emacs-reveal.el](emacs-reveal.el),
-hosted at https://gitlab.com/oer/emacs-reveal, provides sample
-initialization code for oer-reveal, and the howto at
+hosted at https://gitlab.com/oer/emacs-reveal, provides the following sample
+initialization code for *oer-reveal*, and the howto at
 https://gitlab.com/oer/emacs-reveal-howto offers a sample presentation
 using this code.
+
+```
+(require 'oer-reveal-publish)
+(oer-reveal-setup-submodules t)
+(oer-reveal-generate-include-files t)
+(oer-reveal-publish-setq-defaults)
+```
 
 # Customizable options
 
