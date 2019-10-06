@@ -1,5 +1,32 @@
 <!--- Local IspellDict: en -->
 
+# Relationships between projects
+
+| Package           | Description |
+|-------------------|-------------|
+| [org-reveal](https://github.com/yjwen/org-reveal)         | Origin of org-re-reveal |
+| [org-re-reveal](https://gitlab.com/oer/org-re-reveal)     | Fork of org-reveal, initially to add audio fragments, now with [various changes](https://gitlab.com/oer/org-re-reveal/blob/master/CHANGELOG.org) |
+| [org-re-reveal-ref](https://gitlab.com/oer/org-re-reveal) | Addon to org-re-reveal for bibliography slide based on [org-ref](https://github.com/jkitchin/org-ref) |
+| [oer-reveal](https://gitlab.com/oer/oer-reveal)           | Export backend derived from org-re-reveal; functionality for installation of reveal.js and plugins; simplification of licensing for OER |
+| [emacs-reveal](https://gitlab.com/oer/emacs-reveal/)      | Bundling of org-re-reveal, org-re-reveal-ref, and oer-reveal |
+
+Originally, *emacs-reveal* was created to enhance *org-reveal*, and it
+contained the code of what is now maintained separately as
+*org-re-reveal-ref* and *oer-reveal*.  Those packages were separated
+to make as much of *emacs-reveal* available on MELPA as possible.
+Whether anyone wants to use those package in isolation is up to them.
+I recommend to go for *emacs-reveal*, for which a
+[howto](https://oer.gitlab.io/emacs-reveal-howto/howto.html) is
+available.  Note that as of October 2019 the submodules installed by
+*emacs-reveal* have a size of 226 MB; hence, initial installation
+takes some time.
+
+(Also note that *oer-reveal* provides the functionality to install
+submodules, but does *not* install them automatically; instead, some
+functions need to be called, e.g., as in file
+[emacs-reveal.el](https://gitlab.com/oer/emacs-reveal/blob/master/emacs-reveal.el).)
+
+
 # Introduction
 
 This repository provides *oer-reveal*, a package to extend
