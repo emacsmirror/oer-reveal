@@ -62,7 +62,7 @@ that require proper attribution.  Towards that end, macros
 `revealimg`, `reveallicense`, and `revealgrid` are defined and
 documented in file [org/config.org](org/config.org).
 
-The following is copied from the Commentary section of
+The following is based on the Commentary section of
 [oer-reveal.el](oer-reveal.el).
 
 # Usage
