@@ -5,7 +5,7 @@
 # Relationships between projects
 
 | Package                                                       | Description                                                                                                                                      |
-|---------------------------------------------------------------+--------------------------------------------------------------------------------------------------------------------------------------------------|
+|---------------------------------------------------------------|--------------------------------------------------------------------------------------------------------------------------------------------------|
 | [org-reveal](https://github.com/yjwen/org-reveal)             | Origin of org-re-reveal                                                                                                                          |
 | [org-re-reveal](https://gitlab.com/oer/org-re-reveal)         | Fork of org-reveal, initially to add audio fragments, now with [various changes](https://gitlab.com/oer/org-re-reveal/blob/master/CHANGELOG.org) |
 | [org-re-reveal-ref](https://gitlab.com/oer/org-re-reveal-ref) | Addon to org-re-reveal for bibliography slide based on [org-ref](https://github.com/jkitchin/org-ref)                                            |
