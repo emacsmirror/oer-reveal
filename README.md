@@ -23,13 +23,31 @@ available.  Note that as of October 2019 the submodules installed by
 *emacs-reveal* have a size of 226 MB; hence, initial installation
 takes some time.
 
-(Also note that *oer-reveal* provides the functionality to install
-submodules, but does *not* install them automatically; instead, some
-functions need to be called, e.g., as in file
-[emacs-reveal.el](https://gitlab.com/oer/emacs-reveal/blob/master/emacs-reveal.el).)
+The package *oer-reveal* was created for use in conjunction with
+*emacs-reveal* (available at https://gitlab.com/oer/emacs-reveal, not
+on MELPA) but can also be used individually if you know what to
+expect:
 
+1. Submodules (for reveal.js and plugins) are *not* installed
+   automatically, stable paths to contained resources are *not*
+   created automatically.  See file
+   [emacs-reveal.el](https://gitlab.com/oer/emacs-reveal/blob/master/emacs-reveal.el)
+   for sample initialization code.
+   A howto for emacs-reveal is available, which serves as sample
+   emacs-reveal presentation:
+   - [Org source](https://gitlab.com/oer/emacs-reveal-howto)
+   - [Reveal.js presentation](https://oer.gitlab.io/emacs-reveal-howto/howto.html)
+2. Publishing of Org *projects* is different from export of
+   individual Org *files*.  Export can be triggered with the usual
+   key binding `C-c C-e` (see below), while publishing is performed
+   with `oer-reveal-publish-all`, which requires setup as described
+   under 1.  In particular, `oer-reveal-publish-all` publishes
+   entire projects (with all necessary resources) based on
+   `org-publish-project-alist`, while interactive export of
+   individual Org files only creates an HTML file, for which
+   necessary resources must be available locally.
 
-# Introduction
+# Functionality
 
 This repository provides *oer-reveal*, a package to extend
 [org-re-reveal](https://gitlab.com/oer/org-re-reveal)
@@ -49,7 +67,8 @@ More specifically, *oer-reveal* provides:
 - Org macros to embed OER figures with proper license attribution (in
   machine-readable RDFa format for HTML export)
 
-[Sample Org files](https://gitlab.com/oer/oer-reveal/tree/master/examples) for *oer-reveal* are available in its repository.
+[Sample Org files](https://gitlab.com/oer/oer-reveal/tree/master/examples)
+for *oer-reveal* are available in its repository.
 Besides, there is a [howto for emacs-reveal](https://oer.gitlab.io/emacs-reveal-howto/howto.html).
 
 As usual for Org export, use `C-c C-e` to start an export, followed by
@@ -63,9 +82,6 @@ for OER creators, namely the re-use of figures under free licenses
 that require proper attribution.  Towards that end, macros
 `revealimg`, `reveallicense`, and `revealgrid` are defined and
 documented in file [org/config.org](org/config.org).
-
-The following is based on the Commentary section of
-[oer-reveal.el](oer-reveal.el).
 
 # Usage
 
@@ -94,7 +110,7 @@ Function `oer-reveal-publish-setq-defaults` changes variables from
 other packages, which may offer some suggestions what to adapt in
 your own configuration.
 
-Note that the file
+Again, note that the file
 [emacs-reveal.el](https://gitlab.com/oer/emacs-reveal/blob/master/emacs-reveal.el),
 hosted at https://gitlab.com/oer/emacs-reveal, provides the following sample
 initialization code for *oer-reveal*, and the howto at
@@ -128,8 +144,8 @@ I set this to "./" before exporting with `C-c C-e w b`.
 The names of generated CSS files for image grids are determined by
 `oer-reveal-css-filename-template`.
 
-Please also see [oer-reveal-publish.el](oer-reveal-publish.el) for
-further customizable variables.  In particular,
-`oer-reveal-publish-babel-languages` can be used to activate Babel
-languages during HTML (and PDF) export, e.g., to generate figures from
-embedded sources (e.g., dot/graphviz or ditaa).
+To see all customizable variables, check out customization group
+`oer-reveal`: `M-x customize-group` followed by `oer-reveal`.
+In particular, `oer-reveal-publish-babel-languages` can be used to
+activate Babel languages during HTML (and PDF) export, e.g., to
+generate figures from embedded sources (e.g., dot/graphviz or ditaa).
