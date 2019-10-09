@@ -1,4 +1,4 @@
-;;; oer-reveal-publish.el --- Publish reveal.js presentations from Org sources
+;;; oer-reveal-publish.el --- Publish reveal.js presentations from Org sources  -*- lexical-binding: t; -*-
 ;; -*- Mode: Emacs-Lisp -*-
 ;; -*- coding: utf-8 -*-
 
@@ -355,6 +355,7 @@ Before publication, `org-publish-project-alist' contains the following:
 * Optional resources as defined by `oer-reveal-publish-optional-projects'.
 * Original contents of `org-publish-project-alist'.
 * Optional PROJECT-ALIST."
+  (interactive)
   (when oer-reveal-publish-faces-function
     (funcall oer-reveal-publish-faces-function))
   (let ((org-confirm-babel-evaluate oer-reveal-publish-confirm-evaluate)

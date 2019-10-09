@@ -10,6 +10,9 @@ where version numbers starting with version 1.0.0 adhere to
 
 
 ** [Unreleased]
+*** Changed
+    - Make function [[file:oer-reveal-publish.el::(defun%20oer-reveal-publish-all][oer-reveal-publish-all]]
+      interactive
 
 ** [1.8.0] - 2019-10-04
 *** Added
