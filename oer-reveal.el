@@ -9,9 +9,10 @@
 ;; URL: https://gitlab.com/oer/oer-reveal
 ;; Version: 1.8.0
 ;; Package-Requires: ((emacs "24.4") (org-re-reveal "2.5.0"))
-;;    Emacs 24.4 adds advice-add and advice-remove.  Thus, Emacs
-;;    should not be older.
 ;; Keywords: hypermedia, tools, slideshow, presentation, OER
+
+;; Emacs 24.4 adds advice-add and advice-remove, which are used below.
+;; Thus, Emacs should not be older.
 
 ;;; License:
 ;; This program is free software; you can redistribute it and/or
@@ -31,6 +32,7 @@
 ;; Boston, MA 02110-1301, USA.
 
 ;;; Commentary:
+
 ;; See file README.md for documentation.
 
 ;;; Code:
