@@ -16,14 +16,14 @@
 ;; Org-re-reveal and oer-reveal are also available on MELPA.
 ;;
 ;; Use this file from its parent directory with the following shell
-;; command:
+;; command, *after* you took care to install submodules (see README.md):
 ;; emacs --batch --load examples/publish.el
 
 ;;; Code:
-;; Prefer most recent version of oer-reveal and org-re-reveal from
-;; parent directories (if available) over embedded ones:
 (package-initialize)
 
+;; With `add-to-list', prefer most recent version of oer-reveal and
+;; org-re-reveal from parent directories (if available) over embedded ones:
 (add-to-list 'load-path
 	     (expand-file-name "../" (file-name-directory load-file-name)))
 (add-to-list 'load-path
