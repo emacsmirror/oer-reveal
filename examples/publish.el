@@ -25,9 +25,11 @@
 ;; With `add-to-list', prefer most recent version of oer-reveal and
 ;; org-re-reveal from parent directories (if available) over embedded ones:
 (add-to-list 'load-path
-	     (expand-file-name "../" (file-name-directory load-file-name)))
+	     (expand-file-name "../"
+                               (file-name-directory load-file-name)))
 (add-to-list 'load-path
-	     (expand-file-name "../../org-re-reveal/" (file-name-directory load-file-name)))
+	     (expand-file-name "../../org-re-reveal/"
+                               (file-name-directory load-file-name)))
 (require 'oer-reveal-publish)
 
 (let ((org-publish-project-alist
