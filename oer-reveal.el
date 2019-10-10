@@ -333,7 +333,7 @@ contained in this directory.")
 (defconst oer-reveal-submodules-url
   "https://gitlab.com/oer/emacs-reveal-submodules.git"
   "Git URL for submodules of reveal.js and plugins.")
-(defconst oer-reveal-submodules-version "0.10.2"
+(defconst oer-reveal-submodules-version "0.11.0"
   "Version of submodules to check out.")
 (defconst oer-reveal-buffer "*oer-reveal git output*"
   "Name of buffer holding Git output.")
