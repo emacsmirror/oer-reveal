@@ -10,9 +10,15 @@ where version numbers starting with version 1.0.0 adhere to
 
 
 ** [Unreleased]
+
+** [1.9.0] - 2019-10-10
 *** Changed
-    - Make function [[file:oer-reveal-publish.el::(defun%20oer-reveal-publish-all][oer-reveal-publish-all]]
-      interactive
+    - Update ~oer-reveal-submodules-version~ to 0.11.0
+*** Fixed
+    - Address issue #2
+      - Make function [[file:oer-reveal-publish.el::(defun%20oer-reveal-publish-all][oer-reveal-publish-all]]
+        interactive
+      - Improve documentation
 
 ** [1.8.0] - 2019-10-04
 *** Added
