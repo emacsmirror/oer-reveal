@@ -72,16 +72,16 @@
 
 .reveal h1 {
   margin-bottom: 1ex;
-  font-size: 2em; }
+  font-size: 1.5em; }
 
 /* Also reduce font size of headings. */
 .reveal h2 {
-  font-size: 1.8em; }
+  font-size: 1.5em; }
 
 .reveal .talk-title {
   margin: 80px 0px 10px 0px; }
 
-.reveal .talk-subtitle p {
+.reveal .talk-subtitle not(.keyboard-usage) p {
   font-size: 1em;
   font-weight: bold;
   line-height: 1.0;
