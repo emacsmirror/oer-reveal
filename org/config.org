@@ -53,6 +53,9 @@
 # Square Bracket Close ]
 #+MACRO: BC @@latex:\char93{}@@@@html:&#93;@@
 
+# MACRO for forced line break, e.g., in titles.
+#+MACRO: BR @@latex:\\@@@@html:<br />@@
+
 # Setup for PDF generation via LaTeX export.
 #+LATEX_CLASS_OPTIONS: [a4paper]
 #+LATEX_HEADER: \usepackage[backend=biber,style=alphabetic]{biblatex}
@@ -90,6 +93,57 @@
 #+MACRO: redcode (eval (format "@@html:<code><span style=\"color:darkred; font-size:smaller;\">%s</span></code>@@ @@latex:\\rverb|%s|@@" (org-html-encode-plain-text $1) $1))
 #+MACRO: greencode (eval (format "@@html:<code><span style=\"color:darkgreen; font-size:smaller;\">%s</span></code>@@ @@latex:\\gverb|%s|@@" (org-html-encode-plain-text $1) $1))
 #+MACRO: bluecode (eval (format "@@html:<code><span style=\"color:darkblue; font-size:smaller;\">%s</span></code>@@ @@latex:\\bverb|%s|@@" (org-html-encode-plain-text $1) $1))
+
+# Function to insert an agenda at position of choice.  Insert the
+# following line where your agenda should appear: #+CALL: insert-agenda()
+#+name: insert-agenda
+#+begin_src emacs-lisp :var agenda-heading="Agenda" :var agenda-heading-depth=1 :var include-depth=1 :results value raw :exports none
+  (concat (make-string agenda-heading-depth ?*)
+          " " agenda-heading "\n"
+          ":PROPERTIES:
+:UNNUMBERED: notoc
+:reveal_data_state: no-toc-progress
+:HTML_HEADLINE_CLASS: no-toc-progress
+:END:
+,#+REVEAL_TOC: headlines "
+          (format "%s\n" include-depth))
+#+end_src
+
+
+# Functions to (mis-) use the subtitle to display usage notes and to
+# embed speaker notes for the title slide.  For example, first
+# add notes like this to your presentation:
+
+# #+name: title-notes
+# #+begin_src org :exports none
+# ,#+begin_notes
+#   - Thought experiment
+#     - Proud of own research?
+#       - Disseminate widely?
+#     - What about teaching resources?
+#       - Pride, publication?
+#     - Locked away, tell story about new master students
+# ,#+end_notes
+# #+end_src
+
+# Then, use this: #+CALL: title-notes-subtitle(org-input=title-notes())
+
+#+name: default-usage-notes
+#+begin_src emacs-lisp :results value raw :exports none
+  (concat "<div class=\"keyboard-usage\"><p>"
+          (oer-reveal--export-no-newline "(Press ~?~ for help, ~n~ and ~p~ for next and previous slide)" 'html)
+          "</p></div>")
+#+end_src
+
+#+name: title-notes-subtitle
+#+begin_src emacs-lisp :var prefix=default-usage-notes() :var org-input="" :results value raw :exports none
+  (concat "#+SUBTITLE: @@html:"
+          prefix
+          (if (> (length org-input) 0)
+              (oer-reveal--export-no-newline org-input 're-reveal)
+            "")
+          "@@")
+#+end_src
 
 # To display images with license information, some macros are
 # available.
