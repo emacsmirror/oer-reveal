@@ -10,8 +10,10 @@ where version numbers starting with version 1.0.0 adhere to
 
 
 ** [Unreleased]
+
+** [1.10.0] - 2019-10-14
 *** Added
-    - CSS and HTML title slides for new ERCIS layout
+    - Configuration, CSS, and HTML title slides for new ERCIS layout
     - Functions ~insert-agenda~ and ~title-notes-subtitle~ in [[file:org/config.org]]
     - Macro BR in [[file:org/config.org]]
 
