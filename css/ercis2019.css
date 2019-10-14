@@ -51,6 +51,8 @@
 #toc-progress-footer a, #toc-progress-footer ul {
   color: #222; }
 
+.reveal ol, ul, p {
+  color: #595959; }
 
 /*********************************************
  * Logos and title on title slide
@@ -65,10 +67,19 @@
   width: 296px;
   height: 100px; }
 
+.reveal .wwu-logo-contact {
+  float: left;
+  width: 355px;
+  height: 120px; }
+
 .reveal .ercis-logo {
   margin: 0px 30px;
-  width: 250px;
-  height: 219px; }
+  width: 306px;
+  height: 180px; }
+
+.reveal .ercis-logo-contact {
+  width: 484px;
+  height: 282px; }
 
 .reveal h1 {
   margin-bottom: 1ex;
@@ -95,7 +106,7 @@
 
 .reveal h2:after, .reveal h3:after, .reveal h4:after {
   content: "";
-  background-image: url(ERCIS-logo-2019.png);
+  background-image: url(ercis1.png);
   background-size: auto 70%;
   background-repeat: no-repeat;
   height: 15%;
@@ -103,6 +114,18 @@
   position: fixed;
   right: 50px;
   top: 0; }
+
+/**************************************************
+ * Action titles
+ **************************************************/
+.reveal h2.action-title {
+  text-align: left;
+  margin-bottom: 0.5ex; }
+
+.reveal div.outline-3 h3 {
+  font-size: 1.1em;
+  font-weight: normal;
+  color: #595959; }
 
 /*********************************************
  * Question slide with contact info
@@ -154,10 +177,10 @@
   position: absolute;
   bottom: 9.5vh;
   left: 5%;
-  color: #222; }
+  color: #595959; }
 
 #preamble-footer b {
-  color: #222; }
+  color: #595959; }
 
 #preamble-footer p {
     margin: 0; }
