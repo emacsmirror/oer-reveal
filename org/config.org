@@ -152,11 +152,11 @@
 #
 # First, revealimg() for horizontally centered images, caption
 # underneath, license text rotated to the right.
-# Macro revealimg() expects up to five arguments, a filename for a
-# file with meta-data about an image and up to four optional
+# Macro revealimg() expects up to six arguments, a filename for a
+# file with meta-data about an image and up to five optional
 # arguments: a caption, the maximum height of image in HTML, e.g.,
 # 50vh, a list of CSS classes (space separated, containing "figure"),
-# and an attribute specifying whether
+# an attribute specifying whether
 # - a long (default/nil),
 # - a short (t; in this case `oer-reveal--short-license-template' is
 #   used, which by default just produces "Figure under <license>",
@@ -165,15 +165,20 @@
 #   attribution such as CC0 or Public Domain), or
 # - no license (none)
 # should be used (arguments are documented for function
-# oer-reveal--export-attribution-helper).
+# oer-reveal--export-attribution-helper), and a list of space
+# separated additional attributes to assign to the figure’s div
+# element.
 #
 # Second, reveallicense() displays an image inline in the surrouding
 # paragraph or list, aligned to the right.  Again, license information
 # is rotated to the right of the image.
-# Macro reveallicense() expects up to five arguments, the filename
-# for meta-data and optionally the maximum height, CSS classes, an
-# indicator for short license, and an indicator whether the image is
-# an SVG to be embedded as XML code into the HTML document.
+# Macro reveallicense() expects up to six arguments, the filename
+# for meta-data and optionally the maximum height, CSS classes (space
+# separated, containing "figure"), an indicator for short license (as
+# described above for revealimg()), an indicator whether the image
+# is an SVG to be embedded as XML code into the HTML document, and a
+# list of space separated additional attributes to assign to the
+# figure’s div element.
 # Embedding SVG directly is useful for single-file export with
 # :reveal-single-file and for animated SVGs.
 # Note that SVG images can also be used with revealimg().  In that case,
@@ -188,8 +193,8 @@
 # Finally, external images (those with a URL starting with "http[s]")
 # are not exported to LaTeX.
 
-#+MACRO: revealimg (eval (oer-reveal-export-attribution $1 $2 $3 $4 $5))
-#+MACRO: reveallicense (eval (oer-reveal-export-attribution $1 nil $2 $3 $4 $5))
+#+MACRO: revealimg (eval (oer-reveal-export-attribution $1 $2 $3 $4 $5 $6))
+#+MACRO: reveallicense (eval (oer-reveal-export-attribution $1 nil $2 $3 $4 $5 $6))
 
 # Finally, revealgrid creates an image grid.
 # Its six or seven arguments are as follows:

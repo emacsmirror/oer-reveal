@@ -645,7 +645,7 @@ If OBJECT is not a string, return it unchanged."
 
 (defun oer-reveal--export-attribution-helper
     (metadata
-     &optional caption maxheight divclasses shortlicense embed-svg)
+     &optional caption maxheight divclasses shortlicense embed-svg extra-attrs)
   "Display image from METADATA.
 Produce string for HTML and LaTeX exports to be embedded in Org files.
 METADATA is a text file including licensing information.
@@ -668,9 +668,11 @@ if it is t, display license based on `oer-reveal--short-license-template'
 If optional EMBED-SVG is non-nil, embed XML code of SVG image directly.  In
 this case, the maximum height on the image does not have any effect.
 For LaTeX, the METADATA file may specify a texwidth, which is embedded in
-the width specification as fraction of `linewidth'; 0.9 by default."
+the width specification as fraction of `linewidth'; 0.9 by default.
+Optional EXTRA-ATTRS are assigned to the div element."
   (let ((org (oer-reveal--attribution-strings
-	      metadata caption maxheight divclasses shortlicense embed-svg)))
+	      metadata caption maxheight divclasses shortlicense
+              embed-svg extra-attrs)))
     (concat (if caption
 		(concat "@@html: </p><div class=\"imgcontainer\">"
 			(car org)
@@ -680,8 +682,8 @@ the width specification as fraction of `linewidth'; 0.9 by default."
 	    (cdr org))))
 
 (defvar oer-reveal--short-license-template "[[%s][Figure]] under [[%s][%s]]")
-(defvar oer-reveal--figure-div-template  "<div about=\"%s\" class=\"%s\"><p><img data-src=\"%s\" alt=\"%s\" %s/></p>%s%s</div>")
-(defvar oer-reveal--svg-div-template  "<div about=\"%s\" class=\"%s\"><p>%s</p>%s%s</div>")
+(defvar oer-reveal--figure-div-template "<div about=\"%s\" class=\"%s\"%s><p><img data-src=\"%s\" alt=\"%s\" %s/></p>%s%s</div>")
+(defvar oer-reveal--svg-div-template    "<div about=\"%s\" class=\"%s\"%s><p>%s</p>%s%s</div>")
 (defvar oer-reveal--figure-latex-caption-template "#+BEGIN_EXPORT latex\n\\begin{figure}[%s] \\centering\n  \\includegraphics[width=%s\\linewidth]{%s} \\caption{%s (%s)}\n  \\end{figure}\n#+END_EXPORT\n")
 (defvar oer-reveal--figure-latex-template "         #+BEGIN_EXPORT latex\n     \\begin{figure}[%s] \\centering\n       \\includegraphics[width=%s\\linewidth]{%s} \\caption{%s}\n     \\end{figure}\n         #+END_EXPORT\n")
 (defvar oer-reveal--figure-external-latex-template "         #+BEGIN_EXPORT latex\n     \\textbf{Warning!} External figure \\textbf{not} included: %s \\newline (See HTML presentation instead.)\n         #+END_EXPORT\n")
@@ -741,7 +743,7 @@ with caption TEXLICENSE.  Optional LATEXCAPTION determines whether
 
 (defun oer-reveal--export-figure-html
     (filename divclasses htmlcaption htmllicense imgalt h-image
-	      &optional embed-svg)
+	      &optional embed-svg extra-attrs)
   "Generate HTML for figure at FILENAME.
 DIVCLASSES is passed from `oer-reveal-export-attribution',
 HTMLCAPTION and HTMLLICENSE caption and license information for
@@ -752,6 +754,8 @@ single file export is requested, which fails if a H-IMAGE is given.
 Otherwise, an img tag is used, for which optional parameter IMGALT provides
 the text for the alt attribute, while H-IMAGE specifies the height of the
 image.
+If optional extra-attrs is non-nil, it must be a string to be assigned
+as extra attributes to the figure's HTML element.
 Templates `oer-reveal--svg-div-template' and
 `oer-reveal--figure-div-template'specify the general HTML format."
   (let* ((extension (file-name-extension filename))
@@ -766,11 +770,11 @@ Templates `oer-reveal--svg-div-template' and
       (if embed-svg
 	  ;; Embed SVG's XML directly.
 	  (format oer-reveal--svg-div-template
-		  encoded-url divclasses
+		  encoded-url divclasses extra-attrs
 		  (oer-reveal--file-as-string filename t)
 		  htmlcaption htmllicense)
 	(format oer-reveal--figure-div-template
-		encoded-url divclasses
+		encoded-url divclasses extra-attrs
 		(if (and issingle (not external))
 		    ;; Insert base64 encoded image as single line.
 		    (concat "data:image/" extension ";base64,"
@@ -831,11 +835,12 @@ BACKEND must be `org' or `html'."
 	(t copyright))))
 
 (defun oer-reveal--attribution-strings
-    (metadata &optional caption maxheight divclasses shortlicense embed-svg)
+    (metadata &optional caption maxheight divclasses shortlicense
+    embed-svg extra-attrs)
   "Helper function.
 See `oer-reveal-export-attribution' and
 `oer-reveal--export-attribution-helper' for description of arguments
-CAPTION, MAXHEIGHT, DIVCLASSES, SHORTLICENSE, EMBED-SVG.
+CAPTION, MAXHEIGHT, DIVCLASSES, SHORTLICENSE, EMBED-SVG, EXTRA-ATTRS.
 Return cons cell whose car is the HTML representation for METADATA
 and whose cdr is the LaTeX representation."
   (let* ((org-export-with-sub-superscripts nil)
@@ -878,6 +883,9 @@ and whose cdr is the LaTeX representation."
 	 (divclasses (if divclasses
 			 divclasses
 		       "figure"))
+         (extra-attrs (if extra-attrs
+                          (concat " " extra-attrs)
+                        ""))
 	 (texwidth (alist-get 'texwidth alist 0.9))
 	 (h-image (if maxheight
 		      (format " style=\"max-height:%s\"" maxheight)
@@ -929,12 +937,12 @@ and whose cdr is the LaTeX representation."
     (if (stringp caption)
 	(cons (oer-reveal--export-figure-html
 	       filename divclasses htmlcaption htmllicense imgalt h-image
-	       embed-svg)
+	       embed-svg extra-attrs)
 	      (oer-reveal--export-figure-latex
 	       filename texwidth texfilename texlicense latexcaption))
       (cons (oer-reveal--export-figure-html
 	     filename divclasses htmlcaption
-	     htmllicense imgalt h-image embed-svg)
+	     htmllicense imgalt h-image embed-svg extra-attrs)
 	    (oer-reveal--export-figure-latex
 	     filename texwidth texfilename texlicense
 	     ;; Similar to above case.  However, a LaTeX caption is always
