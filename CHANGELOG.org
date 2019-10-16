@@ -11,6 +11,21 @@ where version numbers starting with version 1.0.0 adhere to
 
 ** [Unreleased]
 
+** [1.11.0] - 2019-10-16
+*** Added
+    - File [[file:org/finalslide-ercis.org]]
+    - New optional (final) argument to add attributes to div elements
+      for figures (in macros ~revealimg()~ and ~reveallicense()~ in
+      [[file:org/config.org]] and supporting functions
+      ~oer-reveal--export-figure-html~ and
+      ~oer-reveal--attribution-strings~), e.g., to assign
+      ~data-fragment-index~
+*** Changed
+    - Use include in [[file:org/backmatter-ercis.org]] for
+      [[file:org/finalslide-ercis.org]]
+*** Fixed
+    - Use new logo in [[file:title-slide/ercis2019-talk-online-qr.html]]
+
 ** [1.10.0] - 2019-10-14
 *** Added
     - Configuration, CSS, and HTML title slides for new ERCIS layout
