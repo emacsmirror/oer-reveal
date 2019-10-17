@@ -14,7 +14,7 @@ where version numbers starting with version 1.0.0 adhere to
 ** [1.12.0] - 2019-10-17
 *** Changed
     - Update submodules to version 1.0.0 with changed directory
-      structure.
+      structure for CodeMirror files.
 
 ** [1.11.0] - 2019-10-16
 *** Added
