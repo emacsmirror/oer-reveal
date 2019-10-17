@@ -203,6 +203,37 @@ Assignment happens in `oer-reveal-publish-setq-defaults'."
    'org-babel-load-languages oer-reveal-publish-babel-languages)
   )
 
+(defun oer-reveal-publish-klipse-projects ()
+  "Compute project list for local klipse libraries."
+  (let (result)
+      (push (list "klipse-libs"
+		  :base-directory (expand-file-name
+				   "klipse-libs/klipse-dist"
+				   oer-reveal-submodules-dir)
+		  :base-extension 'any
+		  :publishing-directory "./public/reveal.js/plugin/klipse"
+		  :publishing-function 'org-publish-attachment)
+            result)
+      (push (list "codemirror"
+		  :base-directory (expand-file-name
+				   "klipse-libs/python"
+				   oer-reveal-submodules-dir)
+		  :base-extension 'any
+		  :publishing-directory "./public/reveal.js/plugin/klipse/python"
+		  :publishing-function 'org-publish-attachment
+                  :recursive t)
+            result)
+      (push (list "skulpt"
+		  :base-directory (expand-file-name
+				   "klipse-libs/skulpt-dist"
+				   oer-reveal-submodules-dir)
+		  :base-extension "js"
+                  :exclude "debug.*"
+		  :publishing-directory "./public/reveal.js/plugin/klipse"
+		  :publishing-function
+                  'org-publish-attachment)
+            result)))
+
 (defun oer-reveal-publish-plugin-projects ()
   "Compute list of plugin projects for `org-publish-project-alist'.
 For each plugin in `oer-reveal-plugins', add what to publish."
@@ -267,33 +298,7 @@ For each plugin in `oer-reveal-plugins', add what to publish."
 		  :recursive t)
             result))
     (when (member "klipse-libs" oer-reveal-plugins)
-      (push (list "klipse-libs"
-		  :base-directory (expand-file-name
-				   "klipse-libs/klipse-dist"
-				   oer-reveal-submodules-dir)
-		  :base-extension 'any
-		  :publishing-directory "./public/reveal.js/plugin/klipse"
-		  :publishing-function 'org-publish-attachment)
-            result)
-      (push (list "codemirror"
-		  :base-directory (expand-file-name
-				   "klipse-libs/python"
-				   oer-reveal-submodules-dir)
-		  :base-extension 'any
-		  :publishing-directory "./public/reveal.js/plugin/klipse/python"
-		  :publishing-function 'org-publish-attachment
-                  :recursive t)
-            result)
-      (push (list "skulpt"
-		  :base-directory (expand-file-name
-				   "klipse-libs/skulpt-dist"
-				   oer-reveal-submodules-dir)
-		  :base-extension "js"
-                  :exclude "debug.*"
-		  :publishing-directory "./public/reveal.js/plugin/klipse"
-		  :publishing-function
-                  'org-publish-attachment)
-            result))
+      (nconc result (oer-reveal-publish-klipse-projects)))
     result))
 
 (defun oer-reveal-publish-optional-projects ()
