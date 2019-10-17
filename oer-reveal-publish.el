@@ -216,10 +216,10 @@ Assignment happens in `oer-reveal-publish-setq-defaults'."
             result)
       (push (list "codemirror"
 		  :base-directory (expand-file-name
-				   "klipse-libs/python"
+				   "klipse-libs/codemirror"
 				   oer-reveal-submodules-dir)
 		  :base-extension 'any
-		  :publishing-directory "./public/reveal.js/plugin/klipse/python"
+		  :publishing-directory "./public/reveal.js/plugin/klipse"
 		  :publishing-function 'org-publish-attachment
                   :recursive t)
             result)
