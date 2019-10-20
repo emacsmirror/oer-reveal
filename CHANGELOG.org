@@ -11,6 +11,12 @@ where version numbers starting with version 1.0.0 adhere to
 
 ** [Unreleased]
 
+** [1.13.0] - 2019-10-20
+*** Changed
+    - Require version 2.12.0 of org-re-reveal
+    - Respect ~org-re-reveal-client-multiplex-filter~ in
+      ~oer-reveal-publish-to-reveal-client~
+
 ** [1.12.0] - 2019-10-17
 *** Changed
     - Update submodules to version 1.0.0 with changed directory

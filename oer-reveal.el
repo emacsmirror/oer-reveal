@@ -7,8 +7,8 @@
 
 ;; Author: Jens Lechtenbörger
 ;; URL: https://gitlab.com/oer/oer-reveal
-;; Version: 1.12.0
-;; Package-Requires: ((emacs "24.4") (org-re-reveal "2.5.0"))
+;; Version: 1.13.0
+;; Package-Requires: ((emacs "24.4") (org-re-reveal "2.12.0"))
 ;; Keywords: hypermedia, tools, slideshow, presentation, OER
 
 ;; Emacs 24.4 adds advice-add and advice-remove, which are used below.
@@ -1135,7 +1135,7 @@ FILENAME is the filename of the Org file to be published.  PLIST
 is the property list for the given project.  PUB-DIR is the
 publishing directory.
 Return output file name."
-  (org-publish-org-to 'oer-reveal filename ".html" plist pub-dir))
+  (org-re-reveal-publish-to-reveal plist filename pub-dir 'oer-reveal))
 
 ;;;###autoload
 (defun oer-reveal-publish-to-reveal-client
@@ -1144,9 +1144,10 @@ Return output file name."
 FILENAME is the filename of the Org file to be published.  PLIST
 is the property list for the given project.  PUB-DIR is the
 publishing directory.
+If `org-re-reveal-client-multiplex-filter' is a regular expression (not
+nil), only publish FILENAME if it matches this regular expression.
 Return output file name."
-  (let ((org-re-reveal-client-multiplex t))
-    (org-publish-org-to 'oer-reveal filename "_client.html" plist pub-dir)))
+  (org-re-reveal-publish-to-reveal-client plist filename pub-dir 'oer-reveal))
 
 ;;; Functionality to set up export.
 (defun oer-reveal--string-or-value (thing info)
