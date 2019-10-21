@@ -20,7 +20,7 @@
 #+OER_REVEAL_TOC_PROGRESS_DEPENDENCY: { src: '%splugin/toc-progress/toc-progress.js', async: true, callback: function() { toc_progress.initialize('reduce', 'none'); toc_progress.create(); } }
 
 # Legalese and footer.
-#+REVEAL_PREAMBLE: <div style="display:none;"><div id="preamble"><div id="preamble-header"><p><a href="/imprint.html">Imprint</a> | <a href="/privacy.html">Privacy Policy</a></div><div id="preamble-footer"><hr /><p class="leftcol"><b>%a</b></p><p class="rightcol org-right">%d</p></div></div></div>
+#+REVEAL_PREAMBLE: <div style="display:none;"><div id="preamble"><div id="preamble-header"><p><a href="/imprint.html">Imprint</a> | <a href="/privacy.html">Privacy Policy</a></p></div><div id="preamble-footer"><hr /><p class="leftcol"><b>%a</b></p><p class="rightcol org-right">%d</p></div></div></div>
 
 # Macro for contact data.
 #+MACRO: contactinfo @@html:</p><div id="contactbox"><div class="top-logos"><a class="nooutlink" href="https://www.uni-muenster.de/en/"><img class="wwu-logo-contact" src="title-slide/WWUMuenster_Logo_2017_rgb.svg" alt="Logo of University of Muenster, Germany (WWU Münster)" /></a><a class="nooutlink" href="https://www.ercis.org/"><img class="ercis-logo-contact" src="title-slide/ercis2.png" alt="Logo of European Research Center for Information Systems (ERCIS)" /></a></div><div id="contactinfo"><p id="presentername">@@{{{keyword(REVEAL_ACADEMIC_TITLE)}}} {{{AUTHOR}}}@@html:</p><p class="erciscolor"><a id="presenteremail" class="nooutlink" href="mailto:@@{{{EMAIL}}}@@html:">@@{{{EMAIL}}}@@html:</a></p><p id="ercisdetails">@@{{{keyword(ERCIS_POSITION)}}}@@html:<br />@@{{{keyword(ERCIS_STREET)}}}@@html:<br />@@{{{keyword(ERCIS_CITY)}}}@@html:<br />@@{{{keyword(ERCIS_COUNTRY)}}}@@html:</p></div></div><p>@@

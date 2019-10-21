@@ -11,6 +11,10 @@ where version numbers starting with version 1.0.0 adhere to
 
 ** [Unreleased]
 
+** [1.13.2] - 2019-10-21
+*** Fixed
+    - Add missing tag in ERCIS preamble
+
 ** [1.13.1] - 2019-10-21
 *** Fixed
     - Restrict max-width of image grid to 90%
