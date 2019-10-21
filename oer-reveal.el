@@ -7,7 +7,7 @@
 
 ;; Author: Jens Lechtenbörger
 ;; URL: https://gitlab.com/oer/oer-reveal
-;; Version: 1.13.0
+;; Version: 1.13.1
 ;; Package-Requires: ((emacs "24.4") (org-re-reveal "2.12.0"))
 ;; Keywords: hypermedia, tools, slideshow, presentation, OER
 
@@ -703,6 +703,7 @@ Optional EXTRA-ATTRS are assigned to the div element."
 (defvar oer-reveal--css-grid-template ".grid%s {
   display: grid;
   height: %svh;
+  max-width: 90%%;
   grid-template-columns: %s;
   grid-template-rows: %s;
   grid-gap: 5px;
@@ -710,9 +711,7 @@ Optional EXTRA-ATTRS are assigned to the div element."
   grid-template-areas: %s; }
 "
   "Template for CSS of grid.")
-(defvar oer-reveal--css-grid-img-all ".grid-img img {
-  max-width: 90%; }
-"
+(defvar oer-reveal--css-grid-img-all ".grid-img img { }"
   "CSS for all images of grid.")
 
 (defun oer-reveal--export-figure-latex

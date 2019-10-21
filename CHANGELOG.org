@@ -11,6 +11,11 @@ where version numbers starting with version 1.0.0 adhere to
 
 ** [Unreleased]
 
+** [1.13.1] - 2019-10-21
+*** Fixed
+    - Restrict max-width of image grid to 90%
+    - Remove max-width from grid images, which is default anyways
+
 ** [1.13.0] - 2019-10-20
 *** Changed
     - Require version 2.12.0 of org-re-reveal
