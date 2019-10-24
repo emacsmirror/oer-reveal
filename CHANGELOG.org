@@ -11,6 +11,11 @@ where version numbers starting with version 1.0.0 adhere to
 
 ** [Unreleased]
 
+** [1.13.3] - 2019-10-24
+*** Fixed
+    - When installing/updating submodules, make sure that they have
+      been initialized at least once.
+
 ** [1.13.2] - 2019-10-21
 *** Fixed
     - Add missing tag in ERCIS preamble

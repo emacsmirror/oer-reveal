@@ -7,7 +7,7 @@
 
 ;; Author: Jens Lechtenbörger
 ;; URL: https://gitlab.com/oer/oer-reveal
-;; Version: 1.13.2
+;; Version: 1.13.3
 ;; Package-Requires: ((emacs "24.4") (org-re-reveal "2.12.0"))
 ;; Keywords: hypermedia, tools, slideshow, presentation, OER
 
@@ -394,13 +394,18 @@ Output of Git goes to buffer `oer-reveal-buffer'."
 (defun oer-reveal-submodules-ok-p ()
   "Return t if submodules have correct version.
 Check that \"git describe --tags\" in `oer-reveal-submodules-dir'
-returns the version `oer-reveal-submodules-version'."
-  (string=
-   oer-reveal-submodules-version
-   (string-trim (shell-command-to-string
-		 (format "cd %s; git describe --tags"
-			 (shell-quote-argument
-			  (expand-file-name oer-reveal-submodules-dir)))))))
+returns the version `oer-reveal-submodules-version'
+and make sure that submodules have been initialized by checking the
+existence of file \"reveal.js\"."
+  (and (string=
+        oer-reveal-submodules-version
+        (string-trim (shell-command-to-string
+		      (format "cd %s; git describe --tags"
+			      (shell-quote-argument
+			       (expand-file-name oer-reveal-submodules-dir))))))
+       (let* ((subdirs `(,oer-reveal-submodules-dir "reveal.js" "js"))
+              (dir (mapconcat #'file-name-as-directory subdirs "")))
+         (file-readable-p (concat dir "reveal.js")))))
 
 (defun oer-reveal-update-submodules ()
   "Update submodules for this version of oer-reveal.
