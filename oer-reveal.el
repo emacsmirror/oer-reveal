@@ -321,6 +321,20 @@ You may want to use \"H\" with the float package."
   :group 'org-export-oer-reveal
   :type 'string)
 
+(defcustom oer-reveal-alternate-types
+  '(("org" "text/org" "Org mode source code of HTML presentation")
+    ("pdf" "application/pdf" "Concise PDF version of HTML presentation"))
+  "List of triples for alternate type links in HTML presentations.
+The first entry is a file extension, the second its MIME type, and the
+third a title for the link.  If the title's length is zero, no title
+attribute is generated in `oer-reveal-add-alternate-types'."
+  :group 'org-export-oer-reveal
+  :type '(repeat (list
+                  (string :tag "Type as file extension")
+                  (string :tag "MIME type")
+                  (string :tag "Title for HTML link element")))
+  :package-version '(oer-reveal . "1.14.0"))
+
 (defconst oer-reveal-plugin-config-fmt "%s,\n"
   "Format string to embed a line with plugin configuration.")
 
@@ -598,6 +612,46 @@ For elements of `oer-reveal-plugins', add initialization code to
 	     (format "<span style=\"color:%s;\">%s</span>" path desc))
 	    ((eq backend 'latex)
 	     (format "{\\color{%s}%s}" path desc)))))
+
+;;; Add alternate type links to HTML presentations and pointers to PDF.
+(defconst oer-reveal-alternate-type-html
+  "#+HTML_HEAD: <link rel=\"alternate\" type=\"%s\" href=\"%s\"%s/>\n"
+  "Org code for HTML link element for alternate type.")
+(defconst oer-reveal-alternate-type-latex
+  "#+TITLE: @@latex:\\footnote{This PDF document is an inferior version of an \\href{%s}{OER HTML presentation}; free/libre \\href{%s}{Org mode source repository}.}@@\n"
+  "Org code for LaTeX footnote on title pointing to HTML and Org variants.")
+(defun oer-reveal-add-alternate-types
+    (types source-repo html-url &optional basename)
+  "Construct Org code to add links for types in list TYPES.
+Supported string values for TYPES are defined in
+`oer-reveal-alternate-types', currently \"org\" and \"pdf\".
+First, create HTML link elements in \"HTML_HEAD\" lines for each type
+in TYPES.  For \"org\", create a link to the Org file under SOURCE-REPO.
+For other types, including \"pdf\", create a link with relative path.
+Second, add a LaTeX footnote to the title with href links to the source
+file in SOURCE-REPO and to the HTML file under HTML-URL.
+By default, names in links include the basename of the buffer's file;
+use optional BASENAME to overwrite this default.
+Customize `oer-reveal-alternate-types' to add more types."
+  (let ((basename (or basename (file-name-base (buffer-file-name)))))
+    (concat
+     (mapconcat
+      (lambda (type)
+        (let* ((mime-type (nth 1 (assoc type oer-reveal-alternate-types)))
+               (title (nth 2 (assoc type oer-reveal-alternate-types)))
+               (title-attr (if (< 0 (length title))
+                               (format " title=\"%s\"" title)
+                             ""))
+               (filename (concat basename "." type))
+               (url (cond
+                     ((equal type "org")
+                      (concat source-repo "/blob/master/" filename))
+                     (t filename))))
+          (format oer-reveal-alternate-type-html
+                  mime-type url title-attr)))
+      types "")
+     (format oer-reveal-alternate-type-latex
+             (concat html-url basename ".html") source-repo))))
 
 ;;; Function to generate proper CC attribution for images.
 ;; Function oer-reveal-export-attribution is used in macros in org/config.org.

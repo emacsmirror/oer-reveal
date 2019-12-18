@@ -88,4 +88,28 @@
                   (format oer-reveal-plugin-config-fmt "c0")
                   (format oer-reveal-plugin-config-fmt "c1")
                   (format oer-reveal-plugin-config-fmt "c2")))))
+
+(ert-deftest test-alternate-types ()
+  "Test generation of alternate type information."
+  (let ((oer-reveal-alternate-types
+         '(("org" "text/org")
+           ("pdf" "application/pdf"))))
+    ;; Links without title attribute.
+    (should (equal (oer-reveal-add-alternate-types
+                    '("org") "git" "example.org/" "presentation")
+                   "#+HTML_HEAD: <link rel=\"alternate\" type=\"text/org\" href=\"git/blob/master/presentation.org\"/>
+#+TITLE: @@latex:\\footnote{This PDF document is an inferior version of an \\href{example.org/presentation.html}{OER HTML presentation}; free/libre \\href{git}{Org mode source repository}.}@@
+"))
+    (should (equal (oer-reveal-add-alternate-types
+                    '("pdf") "git" "example.org/" "presentation")
+                   "#+HTML_HEAD: <link rel=\"alternate\" type=\"application/pdf\" href=\"presentation.pdf\"/>
+#+TITLE: @@latex:\\footnote{This PDF document is an inferior version of an \\href{example.org/presentation.html}{OER HTML presentation}; free/libre \\href{git}{Org mode source repository}.}@@
+")))
+  ;; Default value for oer-reveal-alternate-types, with link titles.
+  (should (equal (oer-reveal-add-alternate-types
+                  '("org" "pdf") "git" "example.org/" "presentation")
+                 "#+HTML_HEAD: <link rel=\"alternate\" type=\"text/org\" href=\"git/blob/master/presentation.org\" title=\"Org mode source code of HTML presentation\"/>
+#+HTML_HEAD: <link rel=\"alternate\" type=\"application/pdf\" href=\"presentation.pdf\" title=\"Concise PDF version of HTML presentation\"/>
+#+TITLE: @@latex:\\footnote{This PDF document is an inferior version of an \\href{example.org/presentation.html}{OER HTML presentation}; free/libre \\href{git}{Org mode source repository}.}@@
+")))
 ;;; oer-reveal-ert-tests.el ends here
