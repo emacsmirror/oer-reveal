@@ -722,7 +722,9 @@ classes for the div element, including `figure'.
 If optional SHORTLICENSE is the symbol `none', do not display license
 text (useful if image license agrees with document license);
 if it is t, display license based on `oer-reveal--short-license-template'
-\(instead of default (long) license text).
+\(instead of default (long) license text).  As this does not include
+the author, it must not be used with attribution licenses.  (Instead,
+this is meant to indicate public domain licensing.)
 If optional EMBED-SVG is non-nil, embed XML code of SVG image directly.  In
 this case, the maximum height on the image does not have any effect.
 For LaTeX, the METADATA file may specify a texwidth, which is embedded in
