@@ -112,4 +112,30 @@
 #+HTML_HEAD: <link rel=\"alternate\" type=\"application/pdf\" href=\"presentation.pdf\" title=\"Concise PDF version of HTML presentation\"/>
 #+TITLE: @@latex:\\footnote{This PDF document is an inferior version of an \\href{example.org/presentation.html}{OER HTML presentation}; free/libre \\href{git}{Org mode source repository}.}@@
 ")))
+
+(defvar oer-metadata "((filename . \"./doesnotexist.png\")
+ (licenseurl . \"https://creativecommons.org/publicdomain/zero/1.0/\")
+ (licensetext . \"CC0 1.0\")
+ (dc:source . \"https://example.org/\")
+ (sourcetext . \"Sample source\")
+ (cc:attributionName . \"Jens Lechtenboerger\")
+ (cc:attributionURL . \"https://gitlab.com/lechten\"))")
+(ert-deftest test-license-info ()
+  "Tests for RDFa license information."
+  (let ((meta (make-temp-file "oer.meta")))
+    (with-temp-file meta (insert oer-metadata))
+    (let ((result
+           (oer-reveal--attribution-strings meta))
+          (result-short
+           (oer-reveal--attribution-strings meta nil nil nil t))
+          (result-full
+           (oer-reveal--attribution-strings meta "A caption" "50vh" "figure fragment appear" nil nil "data-fragment-index=\"1\""))
+          )
+      (should (equal (car result)
+                     "<div about=\"./doesnotexist.png\" class=\"figure\"><p><img data-src=\"./doesnotexist.png\" alt=\"Figure\" /></p><p></p><p>&ldquo;<span property=\"dc:title\">Figure</span>&rdquo; by <a rel=\"cc:attributionURL dc:creator\" href=\"https://gitlab.com/lechten\" property=\"cc:attributionName\">Jens Lechtenboerger</a> under <a rel=\"license\" href=\"https://creativecommons.org/publicdomain/zero/1.0/\">CC0 1.0</a>; from <a rel=\"dc:source\" href=\"https://example.org/\">Sample source</a></p></div>"))
+      (should (equal (car result-short)
+                     "<div about=\"./doesnotexist.png\" class=\"figure\"><p><img data-src=\"./doesnotexist.png\" alt=\"Figure\" /></p><p></p><p><a rel=\"dc:source\" href=\"https://example.org/\">Figure</a> under <a rel=\"license\" href=\"https://creativecommons.org/publicdomain/zero/1.0/\">CC0 1.0</a></p></div>"))
+      (should (equal (car result-full)
+                     "<div about=\"./doesnotexist.png\" class=\"figure fragment appear\" data-fragment-index=\"1\"><p><img data-src=\"./doesnotexist.png\" alt=\"Figure\"  style=\"max-height:50vh\"/></p><p>A caption</p><p style=\"max-width:50vh\">&ldquo;<span property=\"dc:title\">Figure</span>&rdquo; by <a rel=\"cc:attributionURL dc:creator\" href=\"https://gitlab.com/lechten\" property=\"cc:attributionName\">Jens Lechtenboerger</a> under <a rel=\"license\" href=\"https://creativecommons.org/publicdomain/zero/1.0/\">CC0 1.0</a>; from <a rel=\"dc:source\" href=\"https://example.org/\">Sample source</a></p></div>"))
+  )))
 ;;; oer-reveal-ert-tests.el ends here
