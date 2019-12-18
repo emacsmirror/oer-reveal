@@ -314,6 +314,12 @@ so that its value can be obtained with `plist-get' during export."
                     (string :tag "JavaScript config as string")))))
   :package-version '(oer-reveal . "1.3.0"))
 
+(defcustom oer-reveal-default-figure-title "Figure"
+  "Default title for figures whose metadata lacks a title.
+Also used in display of short licenses."
+  :group 'org-export-oer-reveal
+  :type 'string)
+
 (defcustom oer-reveal-latex-figure-float "htp"
   "Define position for floating figures in LaTeX export.
 You may want to use \"H\" with the float package."
@@ -741,7 +747,10 @@ Optional EXTRA-ATTRS are assigned to the div element."
 	    "\n"
 	    (cdr org))))
 
-(defvar oer-reveal--short-license-template "[[%s][Figure]] under [[%s][%s]]")
+(defvar oer-reveal--short-license-template
+  (concat "[[%s][" oer-reveal-default-figure-title "]] under [[%s][%s]]"))
+(defvar oer-reveal--license-rel-template "<a rel=\"license\" href=\"%s\">%s</a>")
+(defvar oer-reveal--source-rel-template "<a rel=\"dc:source\" href=\"%s\">%s</a>")
 (defvar oer-reveal--figure-div-template "<div about=\"%s\" class=\"%s\"%s><p><img data-src=\"%s\" alt=\"%s\" %s/></p>%s%s</div>")
 (defvar oer-reveal--svg-div-template    "<div about=\"%s\" class=\"%s\"%s><p>%s</p>%s%s</div>")
 (defvar oer-reveal--figure-latex-caption-template "#+BEGIN_EXPORT latex\n\\begin{figure}[%s] \\centering\n  \\includegraphics[width=%s\\linewidth]{%s} \\caption{%s (%s)}\n  \\end{figure}\n#+END_EXPORT\n")
@@ -918,7 +927,7 @@ and whose cdr is the LaTeX representation."
 		     attributionname attributionurl copyright 'org))
 	 (htmlauthor (oer-reveal--attribute-author
 		      attributionname attributionurl copyright 'html))
-	 (title (alist-get 'dc:title alist "Image"))
+	 (title (alist-get 'dc:title alist oer-reveal-default-figure-title))
 	 (realcaption (when caption
 			(if (stringp caption)
 			    caption
@@ -936,9 +945,13 @@ and whose cdr is the LaTeX representation."
 	 (imgadapted (alist-get 'imgadapted alist "from"))
 	 (sourceuri (alist-get 'dc:source alist))
 	 (sourcetext (alist-get 'sourcetext alist))
-	 (sourcehtml (format "; %s <a rel=\"dc:source\" href=\"%s\">%s</a>"
+         (sourcelink (format oer-reveal--source-rel-template
+                             sourceuri sourcetext))
+         (sourceshortlink (format oer-reveal--source-rel-template
+                                  sourceuri oer-reveal-default-figure-title))
+	 (sourcehtml (format "; %s %s"
 			     (oer-reveal--export-no-newline imgadapted 'html)
-			     sourceuri sourcetext))
+			     sourcelink))
 	 (divclasses (if divclasses
 			 divclasses
 		       "figure"))
@@ -956,21 +969,35 @@ and whose cdr is the LaTeX representation."
 		      (if licenseurl
 			  (format " under [[%s][%s]];" licenseurl licensetext)
 			(format " under %s" licensetext))
-		    ""))
+		    (user-error "Field `licensetext' missing in: %s" metadata)))
 	 (orglicense (cond ((eq shortlicense 'none) "")
-			   (shortlicense (format
-					  oer-reveal--short-license-template
-					  sourceuri licenseurl licensetext))
+			   (shortlicense
+                            (cl-assert (and sourceuri licenseurl) nil
+                                       "Short license requires URLs for source and license.  Invalid in: %s"
+                                       metadata)
+                            (format oer-reveal--short-license-template
+			            sourceuri licenseurl licensetext))
 			   (t (concat
 			       (format "“%s” %s" title orgauthor)
 			       license
-			       (format " %s [[%s][%s]]%s"
-				       imgadapted sourceuri sourcetext permit)))))
+			       (format
+                                " %s [[%s][%s]]%s"
+				imgadapted sourceuri sourcetext permit)))))
+         (htmllicensetag (if licensetext
+                             (concat
+                              " under "
+			      (if licenseurl
+                                  (format
+                                   oer-reveal--license-rel-template
+				   licenseurl licensetext)
+				licensetext))
+			   ""))
 	 (htmllicense (cond ((eq shortlicense 'none) "")
 			    (shortlicense (format
-					   "<p%s>%s</p>" h-license
-					   (oer-reveal--export-no-newline
-					    orglicense 'html)))
+			                   "<p%s>%s%s</p>"
+                                           h-license
+			                   sourceshortlink
+                                           htmllicensetag))
 			    (t (concat
 				(format "<p%s>" h-license)
 				;; If title is part of the requested
@@ -979,20 +1006,13 @@ and whose cdr is the LaTeX representation."
 				    ""
 				  (format "&ldquo;%s&rdquo; " htmltitle))
 				htmlauthor
-				(if licensetext
-				    (if licenseurl
-					(format
-					 " under <a rel=\"license\" href=\"%s\">%s</a>"
-					 licenseurl licensetext)
-				      " under %s" licensetext)
-				  "")
+				htmllicensetag
 				(format "%s%s</p>" sourcehtml
 					(oer-reveal--export-no-newline
 					 permit 'html))))))
 	 (texlicense (if (< 0 (length orglicense))
 			 (oer-reveal--export-no-newline orglicense 'latex)
-		       (oer-reveal--export-no-newline title 'latex)))
-	 )
+		       (oer-reveal--export-no-newline title 'latex))))
     (if (stringp caption)
 	(cons (oer-reveal--export-figure-html
 	       filename divclasses htmlcaption htmllicense imgalt h-image
