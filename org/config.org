@@ -98,15 +98,17 @@
 # following line where your agenda should appear: #+CALL: insert-agenda()
 #+name: insert-agenda
 #+begin_src emacs-lisp :var agenda-heading="Agenda" :var agenda-heading-depth=1 :var include-depth=1 :results value raw :exports none
-  (concat (make-string agenda-heading-depth ?*)
-          " " agenda-heading "\n"
-          ":PROPERTIES:
-:UNNUMBERED: notoc
-:reveal_data_state: no-toc-progress
-:HTML_HEADLINE_CLASS: no-toc-progress
-:END:
-,#+REVEAL_TOC: headlines "
-          (format "%s\n" include-depth))
+    (concat (make-string agenda-heading-depth ?*)
+            " " agenda-heading "\n"
+            ":PROPERTIES:
+  :UNNUMBERED: notoc
+  :reveal_data_state: no-toc-progress
+  :HTML_HEADLINE_CLASS: no-toc-progress
+  :END:
+  ,#+REVEAL_TOC: headlines "
+            (format "%s\n" include-depth)
+            "#+LATEX: \\renewcommand{\\printtoctitle}[1]{}\n"
+            "#+LATEX: \\tableofcontents\n\n")
 #+end_src
 
 
