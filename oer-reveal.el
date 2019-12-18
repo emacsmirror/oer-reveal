@@ -101,8 +101,7 @@ Derive from 're-reveal to add further options and keywords."
       (:oer-reveal-quiz-dependency "OER_REVEAL_QUIZ_DEPENDENCY" nil
                                    oer-reveal-quiz-dependency t)
       (:oer-reveal-toc-progress-dependency "OER_REVEAL_TOC_PROGRESS_DEPENDENCY" nil
-                                           oer-reveal-toc-progress-dependency t)
-      )
+                                           oer-reveal-toc-progress-dependency t))
 
     :translate-alist
     '((template . oer-reveal-template))))
