@@ -11,6 +11,22 @@ where version numbers starting with version 1.0.0 adhere to
 
 ** [Unreleased]
 
+** [1.14.0] - 2019-12-20
+*** Added
+    - Create LaTeX toc in [[file:org/config.org::insert-agenda][insert-agenda]]
+    - New file file:org/config-title-notes.org
+    - Support for HTML link elements pointing to alternate types
+      - New file file:org/config-alternate-types.org with user-facing
+        function [[file:org/config-alternate-types.org::org-add-alternate-types][org-add-alternate-types]]
+      - New variable [[file:oer-reveal.el::(defcustom oer-reveal-alternate-types][oer-reveal-alternate-types]]
+        with new function [[file:oer-reveal.el::(defun oer-reveal-add-alternate-types][oer-reveal-add-alternate-types]]
+    - New variable [[file:oer-reveal.el::(defcustom oer-reveal-default-figure-title][oer-reveal-default-figure-title]]
+*** Changed
+    - Move functions ~default-usage-notes~ and ~title-notes-subtitle~
+      from file:org/config.org to new file file:org/config-title-notes.org
+    - Refactor HTML license information.  Generate RDFa (~rel~
+      attributes for license and source) also for short licenses.
+
 ** [1.13.3] - 2019-10-24
 *** Fixed
     - When installing/updating submodules, make sure that they have
