@@ -751,7 +751,7 @@ Optional EXTRA-ATTRS are assigned to the div element."
   (concat "[[%s][" oer-reveal-default-figure-title "]] under [[%s][%s]]"))
 (defvar oer-reveal--license-rel-template "<a rel=\"license\" href=\"%s\">%s</a>")
 (defvar oer-reveal--source-rel-template "<a rel=\"dc:source\" href=\"%s\">%s</a>")
-(defvar oer-reveal--figure-div-template "<div about=\"%s\" class=\"%s\"%s><p><img data-src=\"%s\" alt=\"%s\" %s/></p>%s%s</div>")
+(defvar oer-reveal--figure-div-template "<div about=\"%s\" class=\"%s\"%s><p><img data-src=\"%s\" alt=\"%s\"%s /></p>%s%s</div>")
 (defvar oer-reveal--svg-div-template    "<div about=\"%s\" class=\"%s\"%s><p>%s</p>%s%s</div>")
 (defvar oer-reveal--figure-latex-caption-template "#+BEGIN_EXPORT latex\n\\begin{figure}[%s] \\centering\n  \\includegraphics[width=%s\\linewidth]{%s} \\caption{%s (%s)}\n  \\end{figure}\n#+END_EXPORT\n")
 (defvar oer-reveal--figure-latex-template "         #+BEGIN_EXPORT latex\n     \\begin{figure}[%s] \\centering\n       \\includegraphics[width=%s\\linewidth]{%s} \\caption{%s}\n     \\end{figure}\n         #+END_EXPORT\n")
