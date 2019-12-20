@@ -751,14 +751,15 @@ Optional EXTRA-ATTRS are assigned to the div element."
   (concat "[[%s][" oer-reveal-default-figure-title "]] under [[%s][%s]]"))
 (defvar oer-reveal--license-rel-template "<a rel=\"license\" href=\"%s\">%s</a>")
 (defvar oer-reveal--source-rel-template "<a rel=\"dc:source\" href=\"%s\">%s</a>")
-(defvar oer-reveal--figure-div-template "<div about=\"%s\" class=\"%s\"%s><p><img data-src=\"%s\" alt=\"%s\"%s /></p>%s%s</div>")
-(defvar oer-reveal--svg-div-template    "<div about=\"%s\" class=\"%s\"%s><p>%s</p>%s%s</div>")
+(defvar oer-reveal--figure-div-template "<div about=\"%s\" typeof=\"%s\" class=\"%s\"%s><p><img data-src=\"%s\" alt=\"%s\"%s /></p>%s%s</div>")
+(defvar oer-reveal--svg-div-template    "<div about=\"%s\" typeof=\"%s\" class=\"%s\"%s><p>%s</p>%s%s</div>")
 (defvar oer-reveal--figure-latex-caption-template "#+BEGIN_EXPORT latex\n\\begin{figure}[%s] \\centering\n  \\includegraphics[width=%s\\linewidth]{%s} \\caption{%s (%s)}\n  \\end{figure}\n#+END_EXPORT\n")
 (defvar oer-reveal--figure-latex-template "         #+BEGIN_EXPORT latex\n     \\begin{figure}[%s] \\centering\n       \\includegraphics[width=%s\\linewidth]{%s} \\caption{%s}\n     \\end{figure}\n         #+END_EXPORT\n")
 (defvar oer-reveal--figure-external-latex-template "         #+BEGIN_EXPORT latex\n     \\textbf{Warning!} External figure \\textbf{not} included: %s \\newline (See HTML presentation instead.)\n         #+END_EXPORT\n")
 (defvar oer-reveal--figure-unsupported-latex-template "         #+BEGIN_EXPORT latex\n     \\textbf{Warning!} Figure omitted as %s format \\textbf{not} supported in \\LaTeX: “%s”\\newline (See HTML presentation instead.)\n         #+END_EXPORT\n")
 (defvar oer-reveal--unsupported-tex-figure-formats '("gif"))
 (defvar oer-reveal--default-copyright "by")
+(defvar oer-reveal--default-figure-dcmitype "StillImage")
 
 ;; Image grid variables
 (defvar oer-reveal--css-grid-img-class-template "grid%s-img%d"
@@ -810,11 +811,11 @@ with caption TEXLICENSE.  Optional LATEXCAPTION determines whether
 		   texwidth texfilename texlicense))))
 
 (defun oer-reveal--export-figure-html
-    (filename divclasses htmlcaption htmllicense imgalt h-image
+    (filename dcmitype divclasses htmlcaption htmllicense imgalt h-image
 	      &optional embed-svg extra-attrs)
   "Generate HTML for figure at FILENAME.
-DIVCLASSES is passed from `oer-reveal-export-attribution',
-HTMLCAPTION and HTMLLICENSE caption and license information for
+Assign DCMITYPE and DIVCLASSES to \"typeof\" and \"class\" attributes.
+HTMLCAPTION and HTMLLICENSE specify caption and license information for
 the figure in HTML format.
 If optional EMBED-SVG is non-nil, the file must be an SVG image
 which is embedded directly.  SVG images are also embedded directly if
@@ -822,13 +823,14 @@ single file export is requested, which fails if a H-IMAGE is given.
 Otherwise, an img tag is used, for which optional parameter IMGALT provides
 the text for the alt attribute, while H-IMAGE specifies the height of the
 image.
-If optional extra-attrs is non-nil, it must be a string to be assigned
+If optional EXTRA-ATTRS is non-nil, it must be a string to be assigned
 as extra attributes to the figure's HTML element.
 Templates `oer-reveal--svg-div-template' and
-`oer-reveal--figure-div-template'specify the general HTML format."
+`oer-reveal--figure-div-template' specify the general HTML format."
   (let* ((extension (file-name-extension filename))
 	 (external (string-match-p "^https?://" filename))
 	 (issvg (and (string= "svg" extension) (not external)))
+         (dcmitype (or dcmitype oer-reveal--default-figure-dcmitype))
 	 (issingle (plist-get (org-export-get-environment 're-reveal)
 			      :reveal-single-file))
          (encoded-url (url-encode-url filename)))
@@ -838,11 +840,11 @@ Templates `oer-reveal--svg-div-template' and
       (if embed-svg
 	  ;; Embed SVG's XML directly.
 	  (format oer-reveal--svg-div-template
-		  encoded-url divclasses extra-attrs
+		  encoded-url dcmitype divclasses extra-attrs
 		  (oer-reveal--file-as-string filename t)
 		  htmlcaption htmllicense)
 	(format oer-reveal--figure-div-template
-		encoded-url divclasses extra-attrs
+		encoded-url dcmitype divclasses extra-attrs
 		(if (and issingle (not external))
 		    ;; Insert base64 encoded image as single line.
 		    (concat "data:image/" extension ";base64,"
@@ -923,6 +925,9 @@ and whose cdr is the LaTeX representation."
 	 (attributionname (alist-get 'cc:attributionName alist))
 	 (attributionurl (alist-get 'cc:attributionURL alist))
 	 (copyright (alist-get 'copyright alist oer-reveal--default-copyright))
+	 (dcmitype (format "dcmitype:%s"
+                           (alist-get 'dcmitype alist
+                                      oer-reveal--default-figure-dcmitype)))
 	 (orgauthor (oer-reveal--attribute-author
 		     attributionname attributionurl copyright 'org))
 	 (htmlauthor (oer-reveal--attribute-author
@@ -1015,12 +1020,12 @@ and whose cdr is the LaTeX representation."
 		       (oer-reveal--export-no-newline title 'latex))))
     (if (stringp caption)
 	(cons (oer-reveal--export-figure-html
-	       filename divclasses htmlcaption htmllicense imgalt h-image
-	       embed-svg extra-attrs)
+	       filename dcmitype divclasses htmlcaption htmllicense
+               imgalt h-image embed-svg extra-attrs)
 	      (oer-reveal--export-figure-latex
 	       filename texwidth texfilename texlicense latexcaption))
       (cons (oer-reveal--export-figure-html
-	     filename divclasses htmlcaption
+	     filename dcmitype divclasses htmlcaption
 	     htmllicense imgalt h-image embed-svg extra-attrs)
 	    (oer-reveal--export-figure-latex
 	     filename texwidth texfilename texlicense

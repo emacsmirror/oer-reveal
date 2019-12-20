@@ -191,7 +191,7 @@ Assignment happens in `oer-reveal-publish-setq-defaults'."
 	org-re-reveal-script-files oer-reveal-script-files
 	org-re-reveal--href-fragment-prefix org-re-reveal--slide-id-prefix
 	org-re-reveal-body-attrs
-	"prefix=\"dc: http://purl.org/dc/terms/ cc: http://creativecommons.org/ns#\""
+	"prefix=\"dc: http://purl.org/dc/terms/ dcmitype: http://purl.org/dc/dcmitype/ cc: http://creativecommons.org/ns#\""
 	org-latex-pdf-process oer-reveal-publish-pdf-process
 	;; Add packages that need to be at the beginning of
 	;; org-latex-default-packages-alist.

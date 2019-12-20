@@ -10,6 +10,17 @@ where version numbers starting with version 1.0.0 adhere to
 
 
 ** [Unreleased]
+*** Added
+    - Support ~typeof~ attribute for figures with
+      [[https://www.dublincore.org/specifications/dublin-core/dcmi-type-vocabulary/][DCMI Types]]
+      - New argument ~dcmitype~ in
+        [[file:oer-reveal.el::(defun oer-reveal--export-figure-html][oer-reveal--export-figure-html]];
+        value from attribute ~dcmitype~ of meta-data file
+*** Changed
+    - Assign also prefix for ~dcmitype~ as ~body~ attribute in
+      [[file:oer-reveal-publish.el::(defun oer-reveal-publish-setq-defaults ()][oer-reveal-publish-setq-defaults]]
+    - Add ~typeof~ to ~oer-reveal--figure-div-template~
+      and ~oer-reveal--svg-div-template~
 
 ** [1.14.0] - 2019-12-20
 *** Added
