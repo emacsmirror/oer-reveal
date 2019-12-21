@@ -110,16 +110,36 @@ Assignment happens in `oer-reveal-publish-setq-defaults'."
   :group 'oer-reveal
   :type 'string)
 
+(defcustom oer-reveal-publish-html-attributionURL
+  "https://gitlab.com/lechten"
+  "Attribution URL for HTML documents.
+Used in `oer-reveal-publish-html-postamble'."
+  :group 'oer-reveal
+  :type 'string
+  :package-version '(oer-reveal . "1.15.0"))
+
 (defcustom oer-reveal-publish-html-postamble
-  "<p class=\"author\">License: This text, “<span property=\"dc:title\">%t</span>,” by <span property=\"dc:creator cc:attributionName\">%a</span> is published under the Creative Commons license <a rel=\"license\" href=\"https://creativecommons.org/licenses/by-sa/4.0/\">CC BY-SA 4.0</a>.</p>
+  (concat "<p class=\"author\" about=\"\" typeof=\"http://purl.org/dc/dcmitype/InteractiveResource\">License: This web document, “"
+          (format oer-reveal--title-span-template "%t")
+          ",” by "
+          (format oer-reveal--creator-rel-template
+                  oer-reveal-publish-html-attributionURL "%a")
+          " is published under the Creative Commons license "
+          (format oer-reveal--license-rel-template
+                  "https://creativecommons.org/licenses/by-sa/4.0/"
+                  "CC BY-SA 4.0")
+          ".</p>
 <p class=\"date\">Created: <span property=\"dc:created\">%C</span></p>
-<div class=\"legalese\"><p><a href=\"/imprint.html\">Imprint</a> | <a href=\"/privacy.html\">Privacy Policy</a></p></div>"
+<div class=\"legalese\"><p><a href=\"/imprint.html\">Imprint</a> | <a href=\"/privacy.html\">Privacy Policy</a></p></div>")
   "Value to assign to `org-html-postamble' before export.
 Assignment happens in `oer-reveal-publish-setq-defaults'.
 The default generates CC BY-SA 4.0 license information and links to
-imprint and privacy policy."
+imprint and privacy policy.  Title and author information are standard Org
+values, while the attribution URL is taken from
+`oer-reveal-publish-html-attributionURL'."
   :group 'oer-reveal
-  :type 'string)
+  :type 'string
+  :package-version '(oer-reveal . "1.15.0"))
 
 (defun oer-reveal-publish-faces ()
   "Call `custom-set-faces' for syntax highlighting in batch mode.
@@ -191,7 +211,7 @@ Assignment happens in `oer-reveal-publish-setq-defaults'."
 	org-re-reveal-script-files oer-reveal-script-files
 	org-re-reveal--href-fragment-prefix org-re-reveal--slide-id-prefix
 	org-re-reveal-body-attrs
-	"prefix=\"dc: http://purl.org/dc/terms/ dcmitype: http://purl.org/dc/dcmitype/ cc: http://creativecommons.org/ns#\""
+	"prefix=\"dc: http://purl.org/dc/terms/ dcmitype: http://purl.org/dc/dcmitype/ cc: http://creativecommons.org/ns#\" typeof=\"dcmitype:InteractiveResource\""
 	org-latex-pdf-process oer-reveal-publish-pdf-process
 	;; Add packages that need to be at the beginning of
 	;; org-latex-default-packages-alist.
