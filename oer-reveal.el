@@ -747,10 +747,13 @@ Optional EXTRA-ATTRS are assigned to the div element."
 	    "\n"
 	    (cdr org))))
 
+(defvar oer-reveal--title-span-template "<span property=\"dc:title\">%s</span>")
 (defvar oer-reveal--short-license-template
   (concat "[[%s][" oer-reveal-default-figure-title "]] under [[%s][%s]]"))
 (defvar oer-reveal--license-rel-template "<a rel=\"license\" href=\"%s\">%s</a>")
 (defvar oer-reveal--source-rel-template "<a rel=\"dc:source\" href=\"%s\">%s</a>")
+(defvar oer-reveal--creator-rel-template "<a rel=\"cc:attributionURL dc:creator\" href=\"%s\" property=\"cc:attributionName\">%s</a>")
+(defvar oer-reveal--attribution-template "<span property=\"cc:attributionName\">%s</span>")
 (defvar oer-reveal--figure-div-template "<div about=\"%s\" typeof=\"%s\" class=\"%s\"%s><p><img data-src=\"%s\" alt=\"%s\"%s /></p>%s%s</div>")
 (defvar oer-reveal--svg-div-template    "<div about=\"%s\" typeof=\"%s\" class=\"%s\"%s><p>%s</p>%s%s</div>")
 (defvar oer-reveal--figure-latex-caption-template "#+BEGIN_EXPORT latex\n\\begin{figure}[%s] \\centering\n  \\includegraphics[width=%s\\linewidth]{%s} \\caption{%s (%s)}\n  \\end{figure}\n#+END_EXPORT\n")
@@ -894,12 +897,12 @@ BACKEND must be `org' or `html'."
     (cond ((and attributionname attributionurl)
 	   (format (if (eq backend 'org)
 		       "%s [[%s][%s]]"
-		     "%s <a rel=\"cc:attributionURL dc:creator\" href=\"%s\" property=\"cc:attributionName\">%s</a>")
+		     (concat "%s " oer-reveal--creator-rel-template))
 		   copyright attributionurl attributionname))
 	(attributionname
 	 (format (if (eq backend 'org)
 		     "%s %s"
-		   "%s <span property=\"dc:creator cc:attributionName\">%s</span>")
+		   (concat "%s " oer-reveal--attribution-template))
 		   copyright attributionname))
 	((string= copyright oer-reveal--default-copyright) "")
 	(t copyright))))
@@ -943,7 +946,7 @@ and whose cdr is the LaTeX representation."
 				"")))
 	 (latexcaption (when realcaption
 			 (oer-reveal--export-no-newline realcaption 'latex)))
-	 (htmltitle (format "<span property=\"dc:title\">%s</span>"
+	 (htmltitle (format oer-reveal--title-span-template
 			    (oer-reveal--export-no-newline title 'html)))
 	 (imgalt (or (alist-get 'imgalt alist)
 		     title))
