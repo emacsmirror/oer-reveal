@@ -10,6 +10,8 @@ where version numbers starting with version 1.0.0 adhere to
 
 
 ** [Unreleased]
+
+** [1.15.0] - 2019-12-21
 *** Added
     - Support ~typeof~ attribute for figures with
       [[https://www.dublincore.org/specifications/dublin-core/dcmi-type-vocabulary/][DCMI Types]]
