@@ -1,6 +1,6 @@
 ;;; oer-reveal-ert-tests.el --- Tests for oer-reveal  -*- lexical-binding: t; -*-
 ;; SPDX-License-Identifier: GPL-3.0-or-later
-;; Copyright (C) 2019 Jens Lechtenbörger
+;; SPDX-FileCopyrightText: 2019 Jens Lechtenbörger
 
 ;;; Commentary:
 ;; Run tests interactively or as follows in batch mode:

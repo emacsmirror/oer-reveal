@@ -1,7 +1,7 @@
 ;;; ox-oer-reveal.el --- Loader for oer-reveal  -*- lexical-binding: t; -*-
 
 ;; SPDX-License-Identifier: GPL-3.0-or-later
-;; Copyright (C) 2019 Jens Lechtenbörger
+;; SPDX-FileCopyrightText: 2019 Jens Lechtenbörger
 
 ;;; Commentary:
 ;; Org export back-ends have file names starting with "ox-".

@@ -1,4 +1,4 @@
-# Copyright (C) 2019 Jens Lechtenbörger
+# SPDX-FileCopyrightText: 2019 Jens Lechtenbörger
 # SPDX-License-Identifier: GPL-3.0-or-later
 
 # Functions to (mis-) use the subtitle to display usage notes and to

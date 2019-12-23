@@ -1,5 +1,5 @@
 <!--- Local IspellDict: en -->
-<!-- Copyright (C) 2019 Jens Lechtenbörger -->
+<!-- SPDX-FileCopyrightText: 2019 Jens Lechtenbörger -->
 <!-- SPDX-License-Identifier: GPL-3.0-or-later -->
 
 Your contributions in the form of issues, patches, or merge/pull
@@ -20,7 +20,7 @@ applicable is not clearly defined.  Thus, I suggest that with
 non-trivial contributions you include a line as follows:
 
 ```
-;; Copyright (C) <year> <your name> <your e-mail address if you like>
+;; SPDX-FileCopyrightText: <year> <your name> <your e-mail address if you like>
 ```
 
 Please discuss larger changes first to avoid work that might not be

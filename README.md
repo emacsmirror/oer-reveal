@@ -1,5 +1,5 @@
 <!--- Local IspellDict: en -->
-<!--- Copyright (C) 2018-2019 Jens Lechtenbörger -->
+<!--- SPDX-FileCopyrightText: 2018-2019 Jens Lechtenbörger -->
 <!--- SPDX-License-Identifier: CC0-1.0 -->
 
 # Relationships between projects

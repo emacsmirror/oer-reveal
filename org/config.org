@@ -1,6 +1,6 @@
 # -*- eval: (visual-line-mode) -*-
 
-# Copyright (C) 2017-2019 Jens Lechtenbörger
+# SPDX-FileCopyrightText: 2017-2019 Jens Lechtenbörger
 # SPDX-License-Identifier: CC-BY-SA-4.0
 
 # Neither generate table of contents nor section numbers

@@ -1,6 +1,6 @@
 # -*- eval: (visual-line-mode) -*-
 
-# Copyright (C) 2019 Jens Lechtenbörger
+# SPDX-FileCopyrightText: 2019 Jens Lechtenbörger
 # SPDX-License-Identifier: CC0-1.0
 
 #+INCLUDE: "config.org"
