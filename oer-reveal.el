@@ -101,7 +101,9 @@ Derive from 're-reveal to add further options and keywords."
       (:oer-reveal-quiz-dependency "OER_REVEAL_QUIZ_DEPENDENCY" nil
                                    oer-reveal-quiz-dependency t)
       (:oer-reveal-toc-progress-dependency "OER_REVEAL_TOC_PROGRESS_DEPENDENCY" nil
-                                           oer-reveal-toc-progress-dependency t))
+                                           oer-reveal-toc-progress-dependency t)
+      (:oer-reveal-copyright "SPDX-FILECOPYRIGHTTEXT" nil nil newline)
+      (:oer-reveal-license "SPDX-LICENSE-IDENTIFIER" nil nil newline))
 
     :translate-alist
     '((template . oer-reveal-template))))
@@ -759,33 +761,54 @@ Optional EXTRA-ATTRS are assigned to the div element."
 	    "\n"
 	    (cdr org))))
 
-(defvar oer-reveal--title-span-template "<span property=\"dc:title\">%s</span>")
-(defvar oer-reveal--short-license-template
+(defconst oer-reveal--legal-html-template
+  "<div class=\"rdfa-license\" about=\"%s\"%s%s><p>%s</p>%s</div>"
+  "Outer \"div\" element to hold copyright and license information.
+First %s is the URI or path of the document, second and third one may hold
+prefixes and DCMI type from `oer-reveal-rdf-prefixes' and
+`oer-reveal-dcmitype'; fourth holds contents, fifth an optional creation
+timestamp.")
+(defconst oer-reveal--title-html-template
+  "<span property=\"dcterms:title\">%s</span>")
+(defconst oer-reveal--short-license-template
   (concat "[[%s][" oer-reveal-default-figure-title "]] under [[%s][%s]]"))
-(defvar oer-reveal--license-rel-template "<a rel=\"license\" href=\"%s\">%s</a>")
-(defvar oer-reveal--source-rel-template "<a rel=\"dc:source\" href=\"%s\">%s</a>")
-(defvar oer-reveal--creator-rel-template "<a rel=\"cc:attributionURL dc:creator\" href=\"%s\" property=\"cc:attributionName\">%s</a>")
-(defvar oer-reveal--attribution-template "<span property=\"cc:attributionName\">%s</span>")
-(defvar oer-reveal--figure-div-template "<div about=\"%s\" typeof=\"%s\" class=\"%s\"%s><p><img data-src=\"%s\" alt=\"%s\"%s /></p>%s%s</div>")
-(defvar oer-reveal--svg-div-template    "<div about=\"%s\" typeof=\"%s\" class=\"%s\"%s><p>%s</p>%s%s</div>")
-(defvar oer-reveal--figure-latex-caption-template "#+BEGIN_EXPORT latex\n\\begin{figure}[%s] \\centering\n  \\includegraphics[width=%s\\linewidth]{%s} \\caption{%s (%s)}\n  \\end{figure}\n#+END_EXPORT\n")
-(defvar oer-reveal--figure-latex-template "         #+BEGIN_EXPORT latex\n     \\begin{figure}[%s] \\centering\n       \\includegraphics[width=%s\\linewidth]{%s} \\caption{%s}\n     \\end{figure}\n         #+END_EXPORT\n")
-(defvar oer-reveal--figure-external-latex-template "         #+BEGIN_EXPORT latex\n     \\textbf{Warning!} External figure \\textbf{not} included: %s \\newline (See HTML presentation instead.)\n         #+END_EXPORT\n")
-(defvar oer-reveal--figure-unsupported-latex-template "         #+BEGIN_EXPORT latex\n     \\textbf{Warning!} Figure omitted as %s format \\textbf{not} supported in \\LaTeX: “%s”\\newline (See HTML presentation instead.)\n         #+END_EXPORT\n")
-(defvar oer-reveal--unsupported-tex-figure-formats '("gif"))
-(defvar oer-reveal--default-copyright "by")
-(defvar oer-reveal--default-figure-dcmitype "StillImage")
+(defconst oer-reveal--license-html-template
+  "<a rel=\"license\" href=\"%s\">%s</a>")
+(defconst oer-reveal--source-html-template
+  "<a rel=\"dcterms:source\" href=\"%s\">%s</a>")
+;; Use dc for rights, not dcterms, as the latter cannot be used with literal
+;; values, see: https://github.com/tdwg/rdf/blob/master/DublinCore.md
+(defconst oer-reveal--rights-html-template
+  "<span property=\"dc:rights\">%s</span>")
+(defconst oer-reveal--copyright-string "©")
+(defconst oer-reveal--datecopy-html-template
+  (concat oer-reveal--copyright-string
+          " <span property=\"dcterms:dateCopyrighted\">%s</span>"))
+(defconst oer-reveal--creator-html-template
+  "<a rel=\"cc:attributionURL dcterms:creator\" href=\"%s\" property=\"cc:attributionName\">%s</a>")
+(defconst oer-reveal--href-pdf-template "\\href{%s}{%s}")
+(defconst oer-reveal--attribution-html-template
+  "<span property=\"cc:attributionName\">%s</span>")
+(defconst oer-reveal--figure-div-template "<div about=\"%s\" typeof=\"%s\" class=\"%s\"%s><p><img data-src=\"%s\" alt=\"%s\"%s /></p>%s%s</div>")
+(defconst oer-reveal--svg-div-template    "<div about=\"%s\" typeof=\"%s\" class=\"%s\"%s><p>%s</p>%s%s</div>")
+(defconst oer-reveal--figure-latex-caption-template "#+BEGIN_EXPORT latex\n\\begin{figure}[%s] \\centering\n  \\includegraphics[width=%s\\linewidth]{%s} \\caption{%s (%s)}\n  \\end{figure}\n#+END_EXPORT\n")
+(defconst oer-reveal--figure-latex-template "         #+BEGIN_EXPORT latex\n     \\begin{figure}[%s] \\centering\n       \\includegraphics[width=%s\\linewidth]{%s} \\caption{%s}\n     \\end{figure}\n         #+END_EXPORT\n")
+(defconst oer-reveal--figure-external-latex-template "         #+BEGIN_EXPORT latex\n     \\textbf{Warning!} External figure \\textbf{not} included: %s \\newline (See HTML presentation instead.)\n         #+END_EXPORT\n")
+(defconst oer-reveal--figure-unsupported-latex-template "         #+BEGIN_EXPORT latex\n     \\textbf{Warning!} Figure omitted as %s format \\textbf{not} supported in \\LaTeX: “%s”\\newline (See HTML presentation instead.)\n         #+END_EXPORT\n")
+(defconst oer-reveal--unsupported-tex-figure-formats '("gif"))
+(defconst oer-reveal--default-copyright "by")
+(defconst oer-reveal--default-figure-dcmitype "StillImage")
 
 ;; Image grid variables
-(defvar oer-reveal--css-grid-img-class-template "grid%s-img%d"
+(defconst oer-reveal--css-grid-img-class-template "grid%s-img%d"
   "Template for name of grid class.")
-(defvar oer-reveal--css-grid-img-template
+(defconst oer-reveal--css-grid-img-template
   (concat "." oer-reveal--css-grid-img-class-template
 	  " { grid-area: ga%d; }")
   "Template for CSS of img element.")
-(defvar oer-reveal--css-repeat-template "repeat(%s, 1fr)"
+(defconst oer-reveal--css-repeat-template "repeat(%s, 1fr)"
   "Template for size of rows and columns.")
-(defvar oer-reveal--css-grid-template ".grid%s {
+(defconst oer-reveal--css-grid-template ".grid%s {
   display: grid;
   height: %svh;
   max-width: 90%%;
@@ -796,7 +819,7 @@ Optional EXTRA-ATTRS are assigned to the div element."
   grid-template-areas: %s; }
 "
   "Template for CSS of grid.")
-(defvar oer-reveal--css-grid-img-all ".grid-img img { }"
+(defconst oer-reveal--css-grid-img-all ".grid-img img { }"
   "CSS for all images of grid.")
 
 (defun oer-reveal--export-figure-latex
@@ -909,12 +932,12 @@ BACKEND must be `org' or `html'."
     (cond ((and attributionname attributionurl)
 	   (format (if (eq backend 'org)
 		       "%s [[%s][%s]]"
-		     (concat "%s " oer-reveal--creator-rel-template))
+		     (concat "%s " oer-reveal--creator-html-template))
 		   copyright attributionurl attributionname))
 	(attributionname
 	 (format (if (eq backend 'org)
 		     "%s %s"
-		   (concat "%s " oer-reveal--attribution-template))
+		   (concat "%s " oer-reveal--attribution-html-template))
 		   copyright attributionname))
 	((string= copyright oer-reveal--default-copyright) "")
 	(t copyright))))
@@ -958,16 +981,16 @@ and whose cdr is the LaTeX representation."
 				"")))
 	 (latexcaption (when realcaption
 			 (oer-reveal--export-no-newline realcaption 'latex)))
-	 (htmltitle (format oer-reveal--title-span-template
+	 (htmltitle (format oer-reveal--title-html-template
 			    (oer-reveal--export-no-newline title 'html)))
 	 (imgalt (or (alist-get 'imgalt alist)
 		     title))
 	 (imgadapted (alist-get 'imgadapted alist "from"))
 	 (sourceuri (alist-get 'dc:source alist))
 	 (sourcetext (alist-get 'sourcetext alist))
-         (sourcelink (format oer-reveal--source-rel-template
+         (sourcelink (format oer-reveal--source-html-template
                              sourceuri sourcetext))
-         (sourceshortlink (format oer-reveal--source-rel-template
+         (sourceshortlink (format oer-reveal--source-html-template
                                   sourceuri oer-reveal-default-figure-title))
 	 (sourcehtml (format "; %s %s"
 			     (oer-reveal--export-no-newline imgadapted 'html)
@@ -1008,7 +1031,7 @@ and whose cdr is the LaTeX representation."
                               " under "
 			      (if licenseurl
                                   (format
-                                   oer-reveal--license-rel-template
+                                   oer-reveal--license-html-template
 				   licenseurl licensetext)
 				licensetext))
 			   ""))
@@ -1168,6 +1191,265 @@ Call `oer-reveal--attribution-strings' with proper metadata."
 		  (format oer-reveal--css-grid-img-class-template
 			  grid-id no)
                   frag-class)))))
+
+;;; Functionality to display language-specific license information
+;;; in HTML with RDFa and in PDF.
+(defcustom oer-reveal-dictionaries
+  '(("en" . (("CC0-1.0" . "Creative Commons license CC0 1.0")
+             ("CC-BY-SA-4.0" . "Creative Commons license CC BY-SA 4.0")
+             (text . "Except where otherwise noted, the work “%t”, %c, is published under the %l.")
+             (license . " and the ")
+             (copyright . " and ")
+             (by . "by")
+             (created . "Created")
+             (legalese . "<div class=\"legalese\"><p><a href=\"/imprint.html\">Imprint</a> | <a href=\"/privacy.html\">Privacy Policy</a></p></div>")
+             (pdffootnote . "This PDF document is an inferior version of an \\href{%s}{OER HTML presentation}; \\href{%s}{free/libre Org mode source repository}.")))
+    ("de" . (("CC0-1.0" . "Creative-Commons-Lizenz CC0 1.0")
+             ("CC-BY-SA-4.0" . "Creative-Commons-Lizenz CC BY-SA 4.0")
+             (text . "Soweit nicht anders angegeben unterliegt das Werk „%t“, %c, der %l.")
+             (copyright . " und ")
+             (license . " und der ")
+             (by . "von")
+             (created . "Erzeugt")
+             (legalese . "<div class=\"legalese\"><p><a href=\"/imprint.html\">Impressum</a> | <a href=\"/privacy-de.html\">Datenschutz</a></p></div>")
+             (pdffootnote "Dieses PDF-Dokument ist eine minderwertige Version einer \\href{%s}{OER-HTML-Präsentation}; \\href{%s}{freies Repository mit Org-Mode-Quelltexten}."))))
+  "List of pairs specifying dictionaries for licensing related words.
+The first component of each pair is a two-letter language identifier (as
+defined with \"#+LANGUAGE\"), while the second one is a list of pairs from
+identifiers to language-specific words/strings/pieces of code.
+Currently, the following identifiers are used:
+- \"CC0-1.0\" and \"CC-BY-SA-4.0\": Texts to display licenses
+- `text': The license text with %-sequences indicating title (%t),
+  copyright and author information (%c), and license information (%l)
+- `copyright' and `license': Connectors to use when multiple lines
+  with copyright or license information need to be combined;
+  note the whitespace
+- `by': Word to indicate what author created the work
+- `created': Word to indicate when the work was created
+- `legalese': HTML string pointing to legalese (imprint and privacy
+  policy); set to empty string to avoid altogether
+- `pdffootnote': Text for a footnote in LaTeX to point to source files;
+  first \"%s\" is replaced with URL to HTML presentation, second one with
+  URL to source code repository; resulting text is used in
+  `oer-reveal-alternate-type-latex'; set to empty string to avoid footnote
+If you add another language, you need to provide translations for all
+identifiers.  Please create an issue (or merge request) to share your
+language at URL `https://gitlab.com/oer/org-re-reveal/issues/'."
+  :group 'org-export-oer-reveal
+  :type '(repeat (cons
+                  (string :tag "Language")
+                  (repeat (cons
+                           (choice symbol string)
+                           (string :tag "Translation")))))
+  :package-version '(oer-reveal . "2.0.0"))
+
+(defun oer-reveal--translate (language identifier)
+  "Return text under IDENTIFIER for LANGUAGE in `oer-reveal-dictionaries'."
+  (let ((dictionary (assoc language oer-reveal-dictionaries)))
+    (unless dictionary
+      (user-error
+       "Language `%s' unknown.  Customize `oer-reveal-dictionaries'" language))
+    (let ((text (assoc identifier dictionary)))
+      (unless text
+        (user-error
+         "Identifier `%s' unknown in language `%s'.  Customize `oer-reveal-dictionaries'"
+         text language))
+      (cdr text))))
+
+(defcustom oer-reveal-licenses
+  '(("CC-BY-SA-4.0" . "https://creativecommons.org/licenses/by-sa/4.0/")
+    ("CC0-1.0" . "https://creativecommons.org/publicdomain/zero/1.0/"))
+  "License information as list of pairs:
+First, the SPDX identifier for the license; second, a URI for the license.
+If you add a license here, you also need to add its identifier to
+`oer-reveal-dictionaries'."
+  :group 'org-export-oer-reveal
+  :type '(repeat (cons
+                  (string :tag "SPDX identifier")
+                  (string :tag "License URI")))
+  :package-version '(oer-reveal . "2.0.0"))
+
+(defcustom oer-reveal-rdf-prefixes
+  '"prefix=\"dc: http://purl.org/dc/elements/1.1/ dcterms: http://purl.org/dc/terms/ dcmitype: http://purl.org/dc/dcmitype/ cc: http://creativecommons.org/ns#\""
+  "String with RDF prefixes."
+  :group 'org-export-oer-reveal
+  :type 'string
+  :package-version '(oer-reveal . "2.0.0"))
+
+(defcustom oer-reveal-dcmitype "typeof=\"dcmitype:InteractiveResource\""
+  "Specify DCMI type.
+See URL `https://www.dublincore.org/specifications/dublin-core/dcmi-terms/'."
+  :group 'org-export-oer-reveal
+  :type 'string
+  :package-version '(oer-reveal . "2.0.0"))
+
+(defcustom oer-reveal-created-template
+  "<p class=\"date\">%s: <span property=\"dcterms:created\">%s</span></p>"
+  "Template string for HTML \"p\" element with creation date.
+Template for `oer-reveal-license-to-fmt'; that funtion replaces first \"%s\"
+with language-specific word for `created' in `oer-reveal-dictionaries',
+second one with creation date."
+  :group 'org-export-oer-reveal
+  :type 'string
+  :package-version '(oer-reveal . "2.0.0"))
+
+(defconst oer-reveal--copyright-regexp
+  "^\\([-0-9, ]+\\)\\([^<]+\\)\\([<]\\([^>]+\\)[>]\\)?$"
+  "Regular expression to match SPDX copyright information.
+See URL `https://reuse.software/faq/#licensing'.")
+
+(defconst oer-reveal--license-regexp "^\\(.*\\)$"
+  "Regular expression to match SPDX license identifier.
+See URL `https://reuse.software/faq/'.")
+
+(defun oer-reveal--convert-creator (value fmt)
+  "Convert creator specified by VALUE to FMT."
+  (unless (string-match oer-reveal--copyright-regexp value)
+    (error "Copyright line not matched: %s" value))
+  (let* ((years (string-trim (match-string 1 value)))
+         (name (string-trim (match-string 2 value)))
+         ;; URI is optional, enclosed in <...>.
+         (uri (match-string 4 value))
+         ;; URI may be an e-mail address, which would be useless.
+         (isurl (and uri (string-match-p "^https?://" uri)))
+         (html-template
+          (format oer-reveal--rights-html-template
+                  (concat oer-reveal--datecopy-html-template
+                          " "
+                          (if isurl
+                              oer-reveal--creator-html-template
+                            oer-reveal--attribution-html-template))))
+         (pdf-template (concat oer-reveal--copyright-string
+                               " %s "
+                               (if isurl
+                                   oer-reveal--href-pdf-template
+                                 "%s")))
+         (template (cond ((eq fmt 'html) html-template)
+                         ((eq fmt 'pdf) pdf-template)
+                         (t (error "Format `%s' not supported" fmt)))))
+    (if isurl
+        (format template years (string-trim uri) name)
+      (message "If you used a URL in the copyright header, an attributionURL could be generated.")
+      (sit-for 2)
+      (format template years name))))
+
+(defun oer-reveal--convert-license (value fmt language)
+  "Convert license specified by VALUE to FMT in LANGUAGE."
+  (unless (string-match oer-reveal--license-regexp value)
+    (user-error "License line not matched: %s" value))
+  (let* ((spdx (string-trim (match-string 1 value)))
+         (license-pair (assoc spdx oer-reveal-licenses))
+         (phrase (oer-reveal--translate language spdx))
+         (template (if (eq fmt 'html)
+                       oer-reveal--license-html-template
+                     oer-reveal--href-pdf-template)))
+    (unless license-pair
+      (user-error
+       "License `%s' unknown.  Customize `oer-reveal-licenses'" spdx))
+    (format template (cdr license-pair) phrase)))
+
+(defun oer-reveal--convert-spdx-header (header lines fmt language)
+  "Convert LINES of SPDX HEADER to FMT with LANGUAGE.
+HEADER indicates one of the two types of SPDX headers, namely `copyright'
+or `license'.  LINES are newline-separated lines of such headers.
+FMT specifies `html' or `pdf', while LANGUAGE is a two-letter language
+identifier in `oer-reveal-dictionaries'."
+  (let ((connective (oer-reveal--translate language header)))
+    (mapconcat (lambda (line)
+                 (cond ((eq header 'copyright)
+                        (oer-reveal--convert-creator line fmt))
+                       ((eq header 'license)
+                        (oer-reveal--convert-license line fmt language))
+                       (t (error "Unknown SPDX header type: `%s'" header))))
+               (split-string lines "\n" t " ")
+               connective)))
+
+(defun oer-reveal--convert-title (title fmt)
+  "Convert TITLE to FMT."
+  (cond ((eq fmt 'html) (format oer-reveal--title-html-template title))
+        (t title)))
+
+(defun oer-reveal--convert-created (timestamp fmt language)
+  "Convert TIMESTAMP to FMT in LANGUAGE."
+  (let ((created (oer-reveal--translate language 'created)))
+    (cond ((eq fmt 'html)
+           (format oer-reveal-created-template created timestamp))
+          (t (format "\n\n%s: %s" created timestamp)))))
+
+(defun oer-reveal--language ()
+  "Return two-letter language identifier of source document."
+  (let* ((info (org-export-get-environment 'oer-reveal))
+         (lang (or (plist-get info :language) "en")))
+    ;; Keep relevant prefix of languages such as de, de-de, or de_DE.
+    (downcase (car (split-string lang "[-_]")))))
+
+(defun oer-reveal-license-to-fmt
+    (fmt &optional with-dccreated about with-prefix with-dcmitype with-legalese)
+  "Create license information in FMT for file of current buffer.
+FMT must be `html' or `pdf'.  PDF output uses LaTeX text (with \"\\href\"
+hyperlinks where appropriate).
+HTML contains \"div\" elements with RDFa markup from SPDX headers as
+defined in the REUSE standard (see URL `https://reuse.software/')
+and with pointers to legalese under identifier `legalese' in
+`oer-reveal-dictionaries'.
+When optional WITH-DCCREATED is non-nil, add time when output was created,
+in HTML with \"dcterms:created\" property.
+Optional attributes ABOUT, WITH-PREFIX, WITH-DCMITYPE, WITH-LEGALESE affect
+HTML output only.
+If optional ABOUT is nil, derive value for \"about\" attribute from
+base name of published file.
+When arguments WITH-PREFIX or WITH-DCMITYPE are non-nil, the \"div\"
+element receives \"prefix\" or \"typeof\" attributes based on
+`oer-reveal-rdf-prefixes' and `oer-reveal-dcmitype'.
+If WITH-LEGALESE is non-nil, add a \"div\" element with pointers to legalese."
+  (let* ((uri (or about (concat (cdr (oer-reveal--parse-git-url))
+                                "/"
+                                (oer-reveal--relative-git-basename (buffer-file-name))
+                                ".html")))
+         (info (org-export-get-environment 'oer-reveal))
+         (language (oer-reveal--language))
+         (template (oer-reveal--translate language 'text))
+         (legalese (oer-reveal--translate language 'legalese))
+         (title (car (plist-get info :title)))
+         (copyright (plist-get info :oer-reveal-copyright))
+         (license (plist-get info :oer-reveal-license))
+         (prefix (if with-prefix
+                     (concat " " oer-reveal-rdf-prefixes)
+                   ""))
+         (dcmitype (if with-dcmitype
+                       (concat " " oer-reveal-dcmitype)
+                     ""))
+         (now (if (stringp with-dccreated)
+                  with-dccreated
+                (format-time-string "%Y-%m-%d %a %H:%M"))))
+    (unless copyright
+      (user-error
+       "Org file does not specify copyright information!  Use SPDX-FileCopyrightText header"))
+    (unless license
+      (user-error
+       "Org file does not specify license information!  Use SPDX-License-Identifier header"))
+    (unless title
+      (user-error
+     "Org file does not specify title!  Use TITLE header"))
+    (let* ((creator (oer-reveal--convert-spdx-header 'copyright copyright fmt language))
+           (license (oer-reveal--convert-spdx-header 'license license fmt language))
+           (title (oer-reveal--convert-title title fmt))
+           (created (if with-dccreated
+                        (oer-reveal--convert-created now fmt language)
+                      ""))
+           (text (format-spec template
+                              `((?c . ,creator)
+                                (?l . ,license)
+                                (?t . ,title)))))
+      (cond ((eq fmt 'html)
+             (concat
+              (format oer-reveal--legal-html-template
+                      uri prefix dcmitype text created)
+              (if (and with-legalese (< 0 (length legalese)))
+                  (concat "\n" legalese)
+                "")))
+            ((eq fmt 'pdf)
+             (concat text created))))))
 
 ;;; Functionality to make org-html-link use org-re-reveal's ID format.
 ;; This is useful when publishing with org-html-publish-to-html
