@@ -1311,10 +1311,14 @@ See URL `https://reuse.software/faq/'.")
   "Convert creator specified by VALUE to FMT."
   (unless (string-match oer-reveal--copyright-regexp value)
     (error "Copyright line not matched: %s" value))
-  (let* ((years (string-trim (match-string 1 value)))
-         (name (string-trim (match-string 2 value)))
+  (let* ((years (match-string 1 value))
+         (name (match-string 2 value))
          ;; URI is optional, enclosed in <...>.
          (uri (match-string 4 value))
+         ;; On Emacs 24, string-trim destroys match data; thus trim after
+         ;; final match-string.
+         (years (string-trim years))
+         (name (string-trim name))
          ;; URI may be an e-mail address, which would be useless.
          (isurl (and uri (string-match-p "^https?://" uri)))
          (html-template
