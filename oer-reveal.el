@@ -43,6 +43,9 @@
 ;;
 ;; See file README.md for more information; examples are included
 ;; under subdirectory "examples".
+;;
+;; Package *oer-reveal* is really meant to be used as part of
+;; emacs-reveal (https://gitlab.com/oer/emacs-reveal).
 
 ;;; Code:
 (require 'cl-lib) ; cl-mapcar
@@ -124,7 +127,9 @@ SYMBOL must be `oer-reveal-keys' and VALUE its new value."
 
 ;; Customizable options
 (defgroup org-export-oer-reveal nil
-  "Options for exporting Org files to reveal.js HTML pressentations."
+  "Options for exporting Org files to reveal.js HTML pressentations.
+The options here are provided by package oer-reveal.  They extend those
+of org-re-reveal."
   :tag "Org Export oer-reveal"
   :group 'org-export-re-reveal)
 
