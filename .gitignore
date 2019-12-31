@@ -2,4 +2,9 @@
 # SPDX-License-Identifier: CC0-1.0
 
 *.elc
-auto/*
+auto/
+public/
+*.bbl
+*.tex
+*.tex~
+*.pdf
