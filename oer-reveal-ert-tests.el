@@ -99,6 +99,10 @@
           (cons "https://gitlab.com/oer/oer-reveal"
                 "https://oer.gitlab.io/oer-reveal")))
   (should
+   (equal (oer-reveal--parse-git-url "git@gitlab.com:oer/oer-reveal")
+          (cons "https://gitlab.com/oer/oer-reveal"
+                "https://oer.gitlab.io/oer-reveal")))
+  (should
    (equal (oer-reveal--parse-git-url "git@gitlab.com:oer/test/oer-reveal.git")
           (cons "https://gitlab.com/oer/test/oer-reveal"
                 "https://oer.gitlab.io/test/oer-reveal")))
@@ -106,6 +110,10 @@
    (equal (oer-reveal--parse-git-url "https://gitlab.com/oer/oer-reveal.git")
           (cons "https://gitlab.com/oer/oer-reveal"
                 "https://oer.gitlab.io/oer-reveal")))
+  (should
+   (equal (oer-reveal--parse-git-url "https://gitlab.com/oer/test/oer-reveal")
+          (cons "https://gitlab.com/oer/test/oer-reveal"
+                "https://oer.gitlab.io/test/oer-reveal")))
   (should
    (equal (oer-reveal--parse-git-url "https://gitlab.com/oer/test/oer-reveal.git")
           (cons "https://gitlab.com/oer/test/oer-reveal"
