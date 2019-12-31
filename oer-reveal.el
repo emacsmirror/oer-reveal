@@ -326,19 +326,21 @@ You may want to use \"H\" with the float package."
   :group 'org-export-oer-reveal
   :type 'string)
 
-(defcustom oer-reveal-alternate-types
+(defvar oer-reveal-with-alternate-types '("org")
+  "List of alternate types for which to create links.
+Each element of this list must occur as first entry of a triple in
+`oer-reveal-alternate-type-config'.
+By default, this contains \"org\" to create an alternate type link to the
+Org source file.  Function `oer-reveal-publish-to-reveal-and-pdf' changes
+this to create links for Org source and PDF variant.")
+
+(defconst oer-reveal-alternate-type-config
   '(("org" "text/org" "Org mode source code of HTML presentation")
     ("pdf" "application/pdf" "Concise PDF version of HTML presentation"))
   "List of triples for alternate type links in HTML presentations.
-The first entry is a file extension, the second its MIME type, and the
+The first entry is a file extension, the second its MIME type, the
 third a title for the link.  If the title's length is zero, no title
-attribute is generated in `oer-reveal-add-alternate-types'."
-  :group 'org-export-oer-reveal
-  :type '(repeat (list
-                  (string :tag "Type as file extension")
-                  (string :tag "MIME type")
-                  (string :tag "Title for HTML link element")))
-  :package-version '(oer-reveal . "1.14.0"))
+attribute is generated in `oer-reveal-add-alternate-types'.")
 
 (defconst oer-reveal-plugin-config-fmt "%s,\n"
   "Format string to embed a line with plugin configuration.")
@@ -572,40 +574,101 @@ Note that this filename is exported into a subdirectory of
   "#+HTML_HEAD: <link rel=\"alternate\" type=\"%s\" href=\"%s\"%s/>\n"
   "Org code for HTML link element for alternate type.")
 (defconst oer-reveal-alternate-type-latex
-  "#+TITLE: @@latex:\\footnote{This PDF document is an inferior version of an \\href{%s}{OER HTML presentation}; free/libre \\href{%s}{Org mode source repository}.}@@\n"
+  "#+TITLE: @@latex:\\footnote{%s}@@\n"
   "Org code for LaTeX footnote on title pointing to HTML and Org variants.")
+
+(defun oer-reveal--parse-git-url (&optional url)
+  "Return nil or a pair of URLs for HTTPS repo and GitLab Pages.
+Either create pair from optional URL or from output of \"git remote\".
+Return nil if URL does not look like the URL of a GitLab repository."
+  (let ((url (or url
+                 (string-trim
+                  (shell-command-to-string "git remote get-url origin")))))
+    (when (string-match
+           "^\\(git@gitlab.com:\\|https://gitlab.com/\\)\\(.*\\)[.]git$" url)
+      (let* ((path (match-string 2 url))
+             (components (split-string path "/"))
+             (project-or-group (car components))
+             (path-in-project (string-join (cdr components) "/"))
+             (source-repo (concat "https://gitlab.com/" path))
+             (pages-url (format "https://%s.gitlab.io/%s"
+                                project-or-group path-in-project)))
+        (cons source-repo pages-url)))))
+
+(defun oer-reveal--relative-git-basename (filename)
+  "Return relative basename of FILENAME in Git repository."
+  (let ((root (string-trim
+               (shell-command-to-string "git rev-parse --show-toplevel"))))
+    (if (string-prefix-p "fatal" root)
+        (file-name-base filename)
+      (file-name-sans-extension
+       (file-relative-name filename root)))))
+
 (defun oer-reveal-add-alternate-types
-    (types source-repo html-url &optional basename)
+    (types source-repo html-url basename)
   "Construct Org code to add links for types in list TYPES.
 Supported string values for TYPES are defined in
-`oer-reveal-alternate-types', currently \"org\" and \"pdf\".
+`oer-reveal-alternate-type-config', currently \"org\" and \"pdf\".
 First, create HTML link elements in \"HTML_HEAD\" lines for each type
 in TYPES.  For \"org\", create a link to the Org file under SOURCE-REPO.
 For other types, including \"pdf\", create a link with relative path.
 Second, add a LaTeX footnote to the title with href links to the source
 file in SOURCE-REPO and to the HTML file under HTML-URL.
-By default, names in links include the basename of the buffer's file;
-use optional BASENAME to overwrite this default.
-Customize `oer-reveal-alternate-types' to add more types."
-  (let ((basename (or basename (file-name-base (buffer-file-name)))))
-    (concat
-     (mapconcat
-      (lambda (type)
-        (let* ((mime-type (nth 1 (assoc type oer-reveal-alternate-types)))
-               (title (nth 2 (assoc type oer-reveal-alternate-types)))
-               (title-attr (if (< 0 (length title))
-                               (format " title=\"%s\"" title)
-                             ""))
-               (filename (concat basename "." type))
-               (url (cond
-                     ((equal type "org")
-                      (concat source-repo "/blob/master/" filename))
-                     (t filename))))
-          (format oer-reveal-alternate-type-html
-                  mime-type url title-attr)))
-      types "")
-     (format oer-reveal-alternate-type-latex
-             (concat html-url basename ".html") source-repo))))
+BASENAME is the relative source filename without file extension in
+SOURCE-REPO."
+  (concat
+   (mapconcat
+    (lambda (type)
+      (let* ((triple (assoc type oer-reveal-alternate-type-config))
+             (mime-type (nth 1 triple))
+             (title (nth 2 triple))
+             (title-attr (if (< 0 (length title))
+                             (format " title=\"%s\"" title)
+                           ""))
+             (filename (concat basename "." type))
+             (url (cond
+                   ((equal type "org")
+                    ;; Absolute link to source repository.
+                    (concat source-repo "/blob/master/" filename))
+                   ((equal type "pdf")
+                    ;; Relative link to PDF in same directory.
+                    (file-name-nondirectory filename))
+                   (t (error "Unknown alternate type: `%s'" type)))))
+        (format oer-reveal-alternate-type-html
+                mime-type url title-attr)))
+    types "")
+   (let* ((language (oer-reveal--language))
+          (footnote (oer-reveal--translate language 'pdffootnote)))
+     (if (< 0 (length footnote))
+         (format
+          (format oer-reveal-alternate-type-latex footnote)
+          (concat (if (string-suffix-p "/" html-url)
+                      html-url
+                    (concat html-url "/"))
+                  basename ".html")
+          source-repo)
+       ""))))
+
+(defun oer-reveal-insert-alternate-types (backend)
+  "Insert Org code to add links for alternate MIME types, ignoring BACKEND.
+Call `oer-reveal-add-alternate-types' with `oer-reveal-with-alternate-types',
+SOURCE-REPO and HTML-URL derived from the URL of the GitLab repository, and
+BASENAME derived from the name of the buffer's file.
+Insert resulting Org code at end of current buffer."
+  (ignore backend) ; Silence byte compiler.
+  (let* ((pair (oer-reveal--parse-git-url))
+         (source-repo (car pair))
+         (html-url (cdr pair))
+         (filename (buffer-file-name))
+         (basename (and filename
+                        (oer-reveal--relative-git-basename filename))))
+    (when (and pair basename)
+      (save-excursion
+        (goto-char (point-max))
+        (insert
+         "\n\n"
+         (oer-reveal-add-alternate-types
+          oer-reveal-with-alternate-types source-repo html-url basename))))))
 
 ;;; Function to generate proper CC attribution for images.
 ;; Function oer-reveal-export-attribution is used in macros in org/config.org.
