@@ -1519,6 +1519,18 @@ Return output file name."
   (org-re-reveal-publish-to-reveal plist filename pub-dir 'oer-reveal))
 
 ;;;###autoload
+(defun oer-reveal-publish-to-reveal-and-pdf
+    (plist filename pub-dir)
+  "Publish an Org file to HTML.
+FILENAME is the filename of the Org file to be published.  PLIST
+is the property list for the given project.  PUB-DIR is the
+publishing directory.
+Return output file name."
+  (let ((oer-reveal-with-alternate-types '("org" "pdf")))
+    (org-re-reveal-publish-to-reveal plist filename pub-dir 'oer-reveal)
+    (org-latex-publish-to-pdf plist filename pub-dir)))
+
+;;;###autoload
 (defun oer-reveal-publish-to-reveal-client
     (plist filename pub-dir)
   "Publish an Org file to HTML as multiplex client.
