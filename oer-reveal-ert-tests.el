@@ -117,7 +117,16 @@
   (should
    (equal (oer-reveal--parse-git-url "https://gitlab.com/oer/test/oer-reveal.git")
           (cons "https://gitlab.com/oer/test/oer-reveal"
-                "https://oer.gitlab.io/test/oer-reveal"))))
+                "https://oer.gitlab.io/test/oer-reveal")))
+  (should
+   (equal (oer-reveal--parse-git-url "https://gitlab-ci-token:[MASKED]@gitlab.com/oer/test/oer-reveal.git")
+          (cons "https://gitlab.com/oer/test/oer-reveal"
+                "https://oer.gitlab.io/test/oer-reveal")))
+  ;; Special treatment for GitLab Pages themselves.
+  (should
+   (equal (oer-reveal--parse-git-url "https://gitlab-ci-token:[MASKED]@gitlab.com/oer/oer.gitlab.io.git")
+          (cons "https://gitlab.com/oer/oer.gitlab.io"
+                "https://oer.gitlab.io/"))))
 
 (ert-deftest test-alternate-types ()
   "Test generation of alternate type information."
