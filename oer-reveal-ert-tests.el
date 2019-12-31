@@ -3,12 +3,14 @@
 ;; SPDX-FileCopyrightText: 2019 Jens Lechtenbörger
 
 ;;; Commentary:
-;; Run tests interactively or as follows in batch mode:
-;; emacs -batch -L [path to your org-re-reveal directory] -L . -l ert -l oer-reveal-ert-tests.el -f ert-run-tests-batch-and-exit
+;; Run tests interactively or as follows (probably with adjusted paths)
+;; in batch mode:
+;; emacs --batch -L ~/src/org-mode/testing -l org-test.el -L ../org-re-reveal -L . -l ert -l oer-reveal-ert-tests.el -f ert-run-tests-batch-and-exit
 
 ;;; Code:
 (require 'oer-reveal)
 
+;;; Test plugin functionality.
 (ert-deftest parse-external-plugins ()
   "Test parsing of external plugin configuration."
   (let* ((tmp-file (make-temp-file "ert"))
@@ -89,29 +91,98 @@
                   (format oer-reveal-plugin-config-fmt "c1")
                   (format oer-reveal-plugin-config-fmt "c2")))))
 
+;;; Test alternate type links, including parsing of GitLab URLs
+(ert-deftest test-gitlab-urls ()
+  "Test parsing of GitLab URLs."
+  (should
+   (equal (oer-reveal--parse-git-url "git@gitlab.com:oer/oer-reveal.git")
+          (cons "https://gitlab.com/oer/oer-reveal"
+                "https://oer.gitlab.io/oer-reveal")))
+  (should
+   (equal (oer-reveal--parse-git-url "git@gitlab.com:oer/test/oer-reveal.git")
+          (cons "https://gitlab.com/oer/test/oer-reveal"
+                "https://oer.gitlab.io/test/oer-reveal")))
+  (should
+   (equal (oer-reveal--parse-git-url "https://gitlab.com/oer/oer-reveal.git")
+          (cons "https://gitlab.com/oer/oer-reveal"
+                "https://oer.gitlab.io/oer-reveal")))
+  (should
+   (equal (oer-reveal--parse-git-url "https://gitlab.com/oer/test/oer-reveal.git")
+          (cons "https://gitlab.com/oer/test/oer-reveal"
+                "https://oer.gitlab.io/test/oer-reveal"))))
+
 (ert-deftest test-alternate-types ()
   "Test generation of alternate type information."
-  (let ((oer-reveal-alternate-types
-         '(("org" "text/org")
-           ("pdf" "application/pdf"))))
-    ;; Links without title attribute.
-    (should (equal (oer-reveal-add-alternate-types
-                    '("org") "git" "example.org/" "presentation")
-                   "#+HTML_HEAD: <link rel=\"alternate\" type=\"text/org\" href=\"git/blob/master/presentation.org\"/>
-#+TITLE: @@latex:\\footnote{This PDF document is an inferior version of an \\href{example.org/presentation.html}{OER HTML presentation}; free/libre \\href{git}{Org mode source repository}.}@@
-"))
-    (should (equal (oer-reveal-add-alternate-types
-                    '("pdf") "git" "example.org/" "presentation")
-                   "#+HTML_HEAD: <link rel=\"alternate\" type=\"application/pdf\" href=\"presentation.pdf\"/>
-#+TITLE: @@latex:\\footnote{This PDF document is an inferior version of an \\href{example.org/presentation.html}{OER HTML presentation}; free/libre \\href{git}{Org mode source repository}.}@@
-")))
   ;; Default value for oer-reveal-alternate-types, with link titles.
   (should (equal (oer-reveal-add-alternate-types
                   '("org" "pdf") "git" "example.org/" "presentation")
                  "#+HTML_HEAD: <link rel=\"alternate\" type=\"text/org\" href=\"git/blob/master/presentation.org\" title=\"Org mode source code of HTML presentation\"/>
 #+HTML_HEAD: <link rel=\"alternate\" type=\"application/pdf\" href=\"presentation.pdf\" title=\"Concise PDF version of HTML presentation\"/>
-#+TITLE: @@latex:\\footnote{This PDF document is an inferior version of an \\href{example.org/presentation.html}{OER HTML presentation}; free/libre \\href{git}{Org mode source repository}.}@@
-")))
+#+TITLE: @@latex:\\footnote{This PDF document is an inferior version of an \\href{example.org/presentation.html}{OER HTML presentation}; \\href{git}{free/libre Org mode source repository}.}@@
+"))
+
+  ;; Links without title attribute.
+  (let ((oer-reveal-alternate-type-config
+         '(("org" "text/org")
+           ("pdf" "application/pdf"))))
+    (should (equal (oer-reveal-add-alternate-types
+                    '("org") "git" "example.org/" "presentation")
+                   "#+HTML_HEAD: <link rel=\"alternate\" type=\"text/org\" href=\"git/blob/master/presentation.org\"/>
+#+TITLE: @@latex:\\footnote{This PDF document is an inferior version of an \\href{example.org/presentation.html}{OER HTML presentation}; \\href{git}{free/libre Org mode source repository}.}@@
+"))
+    (should (equal (oer-reveal-add-alternate-types
+                    '("pdf") "git" "example.org/" "foo/presentation")
+                   "#+HTML_HEAD: <link rel=\"alternate\" type=\"application/pdf\" href=\"presentation.pdf\"/>
+#+TITLE: @@latex:\\footnote{This PDF document is an inferior version of an \\href{example.org/foo/presentation.html}{OER HTML presentation}; \\href{git}{free/libre Org mode source repository}.}@@
+"))))
+
+;;; Test license attribution
+(ert-deftest test-attribute-author ()
+  "Tests for author attribution."
+  (should
+   (equal (oer-reveal--attribute-author
+           "The Author" "https://example.org/" "Copyright (C) 2019" 'org)
+          "Copyright (C) 2019 [[https://example.org/][The Author]]"))
+  (should
+   (equal (oer-reveal--attribute-author
+           "The Author" "https://example.org/" "Copyright (C) 2019" 'html)
+          "Copyright (C) 2019 <a rel=\"cc:attributionURL dcterms:creator\" href=\"https://example.org/\" property=\"cc:attributionName\">The Author</a>"))
+  (should
+   (equal (oer-reveal--attribute-author
+           "The Author" nil "Copyright (C) 2019" 'org)
+          "Copyright (C) 2019 The Author"))
+  (should
+   (equal (oer-reveal--attribute-author
+           "The Author" nil "Copyright (C) 2019" 'html)
+          "Copyright (C) 2019 <span property=\"cc:attributionName\">The Author</span>"))
+  (should
+   (equal (oer-reveal--attribute-author
+           "The Author" "https://example.org/"
+           oer-reveal--default-copyright 'org)
+          (concat oer-reveal--default-copyright
+                  " [[https://example.org/][The Author]]")))
+  (should
+   (equal (oer-reveal--attribute-author
+           "The Author" "https://example.org/"
+           oer-reveal--default-copyright 'html)
+          (concat oer-reveal--default-copyright
+                  " <a rel=\"cc:attributionURL dcterms:creator\" href=\"https://example.org/\" property=\"cc:attributionName\">The Author</a>")))
+  (should
+   (equal (oer-reveal--attribute-author
+           nil nil "Copyright (C) 2019 The Author" 'org)
+          "Copyright (C) 2019 The Author"))
+  (should
+   (equal (oer-reveal--attribute-author
+           nil nil "Copyright (C) 2019 The Author" 'html)
+          "Copyright (C) 2019 The Author"))
+  (should
+   (equal (oer-reveal--attribute-author
+           nil nil oer-reveal--default-copyright 'org)
+          ""))
+  (should
+   (equal (oer-reveal--attribute-author
+           nil nil oer-reveal--default-copyright 'html)
+          "")))
 
 (defvar oer-metadata "((filename . \"./doesnotexist.png\")
  (licenseurl . \"https://creativecommons.org/publicdomain/zero/1.0/\")
@@ -127,8 +198,8 @@
  (sourcetext . \"Sample source\")
  (cc:attributionName . \"Jens Lechtenboerger\")
  (dcmitype . \"Image\"))")
-(ert-deftest test-license-info ()
-  "Tests for RDFa license information."
+(ert-deftest test-meta-license-info ()
+  "Tests for RDFa license information from figure meta data."
   (let ((meta (make-temp-file "oer.meta"))
         (meta-gif (make-temp-file "oer-gif.meta")))
     (with-temp-file meta (insert oer-metadata))
@@ -140,15 +211,142 @@
           (result-short
            (oer-reveal--attribution-strings meta nil nil nil t))
           (result-full
-           (oer-reveal--attribution-strings meta "A caption" "50vh" "figure fragment appear" nil nil "data-fragment-index=\"1\""))
-          )
+           (oer-reveal--attribution-strings meta "A caption" "50vh" "figure fragment appear" nil nil "data-fragment-index=\"1\"")))
       (should (equal (car result)
-                     "<div about=\"./doesnotexist.png\" typeof=\"dcmitype:StillImage\" class=\"figure\"><p><img data-src=\"./doesnotexist.png\" alt=\"Figure\" /></p><p></p><p>&ldquo;<span property=\"dc:title\">Figure</span>&rdquo; by <a rel=\"cc:attributionURL dc:creator\" href=\"https://gitlab.com/lechten\" property=\"cc:attributionName\">Jens Lechtenboerger</a> under <a rel=\"license\" href=\"https://creativecommons.org/publicdomain/zero/1.0/\">CC0 1.0</a>; from <a rel=\"dc:source\" href=\"https://example.org/\">Sample source</a></p></div>"))
+                     "<div about=\"./doesnotexist.png\" typeof=\"dcmitype:StillImage\" class=\"figure\"><p><img data-src=\"./doesnotexist.png\" alt=\"Figure\" /></p><p></p><p>&ldquo;<span property=\"dcterms:title\">Figure</span>&rdquo; by <a rel=\"cc:attributionURL dcterms:creator\" href=\"https://gitlab.com/lechten\" property=\"cc:attributionName\">Jens Lechtenboerger</a> under <a rel=\"license\" href=\"https://creativecommons.org/publicdomain/zero/1.0/\">CC0 1.0</a>; from <a rel=\"dcterms:source\" href=\"https://example.org/\">Sample source</a></p></div>"))
       (should (equal (car result-gif)
-                     "<div about=\"./doesnotexist.gif\" typeof=\"dcmitype:Image\" class=\"figure\"><p><img data-src=\"./doesnotexist.gif\" alt=\"Figure\" /></p><p></p><p>&ldquo;<span property=\"dc:title\">Figure</span>&rdquo; by <span property=\"cc:attributionName\">Jens Lechtenboerger</span> under <a rel=\"license\" href=\"https://creativecommons.org/publicdomain/zero/1.0/\">CC0 1.0</a>; from <a rel=\"dc:source\" href=\"https://example.org/\">Sample source</a></p></div>"))
+                     "<div about=\"./doesnotexist.gif\" typeof=\"dcmitype:Image\" class=\"figure\"><p><img data-src=\"./doesnotexist.gif\" alt=\"Figure\" /></p><p></p><p>&ldquo;<span property=\"dcterms:title\">Figure</span>&rdquo; by <span property=\"cc:attributionName\">Jens Lechtenboerger</span> under <a rel=\"license\" href=\"https://creativecommons.org/publicdomain/zero/1.0/\">CC0 1.0</a>; from <a rel=\"dcterms:source\" href=\"https://example.org/\">Sample source</a></p></div>"))
       (should (equal (car result-short)
-                     "<div about=\"./doesnotexist.png\" typeof=\"dcmitype:StillImage\" class=\"figure\"><p><img data-src=\"./doesnotexist.png\" alt=\"Figure\" /></p><p></p><p><a rel=\"dc:source\" href=\"https://example.org/\">Figure</a> under <a rel=\"license\" href=\"https://creativecommons.org/publicdomain/zero/1.0/\">CC0 1.0</a></p></div>"))
+                     "<div about=\"./doesnotexist.png\" typeof=\"dcmitype:StillImage\" class=\"figure\"><p><img data-src=\"./doesnotexist.png\" alt=\"Figure\" /></p><p></p><p><a rel=\"dcterms:source\" href=\"https://example.org/\">Figure</a> under <a rel=\"license\" href=\"https://creativecommons.org/publicdomain/zero/1.0/\">CC0 1.0</a></p></div>"))
       (should (equal (car result-full)
-                     "<div about=\"./doesnotexist.png\" typeof=\"dcmitype:StillImage\" class=\"figure fragment appear\" data-fragment-index=\"1\"><p><img data-src=\"./doesnotexist.png\" alt=\"Figure\" style=\"max-height:50vh\" /></p><p>A caption</p><p style=\"max-width:50vh\">&ldquo;<span property=\"dc:title\">Figure</span>&rdquo; by <a rel=\"cc:attributionURL dc:creator\" href=\"https://gitlab.com/lechten\" property=\"cc:attributionName\">Jens Lechtenboerger</a> under <a rel=\"license\" href=\"https://creativecommons.org/publicdomain/zero/1.0/\">CC0 1.0</a>; from <a rel=\"dc:source\" href=\"https://example.org/\">Sample source</a></p></div>"))
-  )))
+                     "<div about=\"./doesnotexist.png\" typeof=\"dcmitype:StillImage\" class=\"figure fragment appear\" data-fragment-index=\"1\"><p><img data-src=\"./doesnotexist.png\" alt=\"Figure\" style=\"max-height:50vh\" /></p><p>A caption</p><p style=\"max-width:50vh\">&ldquo;<span property=\"dcterms:title\">Figure</span>&rdquo; by <a rel=\"cc:attributionURL dcterms:creator\" href=\"https://gitlab.com/lechten\" property=\"cc:attributionName\">Jens Lechtenboerger</a> under <a rel=\"license\" href=\"https://creativecommons.org/publicdomain/zero/1.0/\">CC0 1.0</a>; from <a rel=\"dcterms:source\" href=\"https://example.org/\">Sample source</a></p></div>")))
+    (delete-file meta)
+    (delete-file meta-gif)))
+
+;;; Following function copied from org-mode/testing/lisp/test-ox.el.
+;; Copyright (C) 2012-2016, 2019  Nicolas Goaziou
+(defmacro org-test-with-parsed-data (data &rest body)
+  "Execute body with parsed data available.
+DATA is a string containing the data to be parsed.  BODY is the
+body to execute.  Parse tree is available under the `tree'
+variable, and communication channel under `info'."
+  (declare (debug (form body)) (indent 1))
+  `(org-test-with-temp-text ,data
+     (org-export--delete-comment-trees)
+     (let* ((tree (org-element-parse-buffer))
+	    (info (org-combine-plists
+		   (org-export--get-export-attributes)
+		   (org-export-get-environment))))
+       (org-export--prune-tree tree info)
+       (org-export--remove-uninterpreted-data tree info)
+       (let ((info (org-combine-plists
+		    info (org-export--collect-tree-properties tree info))))
+	 ,@body))))
+
+(ert-deftest test-spdx-license-info ()
+  "Tests for RDFa license information from SPDX headers."
+  ;; Header with URL and single license.
+  (let ((header "#+TITLE: A test\n#+SPDX-FileCopyrightText: 2019 Jens Lechtenbörger <https://lechten.gitlab.io/#me>\n#+SPDX-License-Identifier: CC-BY-SA-4.0\n")
+        (now "2019-12-27 Fri 19:19"))
+    (should
+     (equal (concat "<div class=\"rdfa-license\" about=\"test.html\" prefix=\"dc: http://purl.org/dc/elements/1.1/ dcterms: http://purl.org/dc/terms/ dcmitype: http://purl.org/dc/dcmitype/ cc: http://creativecommons.org/ns#\" typeof=\"dcmitype:InteractiveResource\"><p>Except where otherwise noted, the work “<span property=\"dcterms:title\">A test</span>”, <span property=\"dc:rights\">© <span property=\"dcterms:dateCopyrighted\">2019</span> <a rel=\"cc:attributionURL dcterms:creator\" href=\"https://lechten.gitlab.io/#me\" property=\"cc:attributionName\">Jens Lechtenbörger</a></span>, is published under the <a rel=\"license\" href=\"https://creativecommons.org/licenses/by-sa/4.0/\">Creative Commons license CC BY-SA 4.0</a>.</p>"
+                    "<p class=\"date\">Created: <span property=\"dcterms:created\">"
+                    now "</span></p></div>"
+                    "\n" (oer-reveal--translate "en" 'legalese))
+	    (org-test-with-parsed-data
+                header
+	      (oer-reveal-license-to-fmt 'html now "test.html" t t t))))
+    (should
+     (equal (concat "Except where otherwise noted, the work “A test”, © 2019 \\href{https://lechten.gitlab.io/#me}{Jens Lechtenbörger}, is published under the \\href{https://creativecommons.org/licenses/by-sa/4.0/}{Creative Commons license CC BY-SA 4.0}."
+                    "\n\nCreated: " now)
+	    (org-test-with-parsed-data
+                header
+	      (oer-reveal-license-to-fmt 'pdf now "dummy")))))
+
+  ;; From now on, use empty string for German legalese (avoids display of
+  ;; legalese).
+  (setcdr (assoc 'legalese (assoc "de" oer-reveal-dictionaries)) "")
+
+  ;; Different language and license, no prefix, no date, no legalese (empty string).
+  (let ((header "#+TITLE: A test\n#+SPDX-FileCopyrightText: 2019 Jens Lechtenbörger <https://lechten.gitlab.io/#me>\n#+SPDX-License-Identifier: CC0-1.0\n#+LANGUAGE: de-de"))
+    (should
+     (equal "<div class=\"rdfa-license\" about=\"test.html\" typeof=\"dcmitype:InteractiveResource\"><p>Soweit nicht anders angegeben unterliegt das Werk „<span property=\"dcterms:title\">A test</span>“, <span property=\"dc:rights\">© <span property=\"dcterms:dateCopyrighted\">2019</span> <a rel=\"cc:attributionURL dcterms:creator\" href=\"https://lechten.gitlab.io/#me\" property=\"cc:attributionName\">Jens Lechtenbörger</a></span>, der <a rel=\"license\" href=\"https://creativecommons.org/publicdomain/zero/1.0/\">Creative-Commons-Lizenz CC0 1.0</a>.</p></div>"
+	    (org-test-with-parsed-data
+                header
+	      (oer-reveal-license-to-fmt 'html nil "test.html" nil t t))))
+    (should
+     (equal "Soweit nicht anders angegeben unterliegt das Werk „A test“, © 2019 \\href{https://lechten.gitlab.io/#me}{Jens Lechtenbörger}, der \\href{https://creativecommons.org/publicdomain/zero/1.0/}{Creative-Commons-Lizenz CC0 1.0}."
+	    (org-test-with-parsed-data
+                header
+	      (oer-reveal-license-to-fmt 'pdf nil "dummy")))))
+
+  ;; Multiple licenses, no typeof, no date, no legalese.
+  (let ((header "#+TITLE: A test\n#+SPDX-FileCopyrightText: 2019 Jens Lechtenbörger <https://lechten.gitlab.io/#me>\n#+SPDX-License-Identifier: CC-BY-SA-4.0\n#+SPDX-License-Identifier: CC0-1.0\n"))
+    (should
+     (equal "<div class=\"rdfa-license\" about=\"test.html\" prefix=\"dc: http://purl.org/dc/elements/1.1/ dcterms: http://purl.org/dc/terms/ dcmitype: http://purl.org/dc/dcmitype/ cc: http://creativecommons.org/ns#\"><p>Except where otherwise noted, the work “<span property=\"dcterms:title\">A test</span>”, <span property=\"dc:rights\">© <span property=\"dcterms:dateCopyrighted\">2019</span> <a rel=\"cc:attributionURL dcterms:creator\" href=\"https://lechten.gitlab.io/#me\" property=\"cc:attributionName\">Jens Lechtenbörger</a></span>, is published under the <a rel=\"license\" href=\"https://creativecommons.org/licenses/by-sa/4.0/\">Creative Commons license CC BY-SA 4.0</a> and the <a rel=\"license\" href=\"https://creativecommons.org/publicdomain/zero/1.0/\">Creative Commons license CC0 1.0</a>.</p></div>"
+	    (org-test-with-parsed-data
+                header
+	      (oer-reveal-license-to-fmt 'html nil "test.html" t))))
+    (should
+     (equal "Except where otherwise noted, the work “A test”, © 2019 \\href{https://lechten.gitlab.io/#me}{Jens Lechtenbörger}, is published under the \\href{https://creativecommons.org/licenses/by-sa/4.0/}{Creative Commons license CC BY-SA 4.0} and the \\href{https://creativecommons.org/publicdomain/zero/1.0/}{Creative Commons license CC0 1.0}."
+	    (org-test-with-parsed-data
+                header
+	      (oer-reveal-license-to-fmt 'pdf nil "dummy")))))
+
+  ;; Header with e-mail address instead of HTTP URI, with single license.
+  (let ((header "#+TITLE: A test\n#+SPDX-FileCopyrightText: 2019 Jens Lechtenbörger <mail@example.org>\n#+SPDX-License-Identifier: CC-BY-SA-4.0\n"))
+    (should
+     (equal "Except where otherwise noted, the work “A test”, © 2019 Jens Lechtenbörger, is published under the \\href{https://creativecommons.org/licenses/by-sa/4.0/}{Creative Commons license CC BY-SA 4.0}."
+	    (org-test-with-parsed-data
+                header
+	      (oer-reveal-license-to-fmt 'pdf nil "dummy")))))
+
+  ;; Header without URL/e-mail address, with single license, neither prefix nor typeof.
+  (let ((header "#+TITLE: A test\n#+SPDX-FileCopyrightText: 2019 Jens Lechtenbörger\n#+SPDX-License-Identifier: CC-BY-SA-4.0\n"))
+    (should
+     (equal "<div class=\"rdfa-license\" about=\"test.html\"><p>Except where otherwise noted, the work “<span property=\"dcterms:title\">A test</span>”, <span property=\"dc:rights\">© <span property=\"dcterms:dateCopyrighted\">2019</span> <span property=\"cc:attributionName\">Jens Lechtenbörger</span></span>, is published under the <a rel=\"license\" href=\"https://creativecommons.org/licenses/by-sa/4.0/\">Creative Commons license CC BY-SA 4.0</a>.</p></div>"
+	    (org-test-with-parsed-data
+                header
+	      (oer-reveal-license-to-fmt 'html nil "test.html")))))
+
+  ;; Multiple authors with URLs and single license.
+  (let ((header "#+TITLE: A test\n#+SPDX-FileCopyrightText: 2019 Alice <https://example.org/#alice>\n#+SPDX-FileCopyrightText: 2017-2019 Bob <https://example.org/#bob>\n#+SPDX-License-Identifier: CC-BY-SA-4.0\n")
+        (now "2019-12-27 Fri 19:19"))
+    (should
+     (equal "<div class=\"rdfa-license\" about=\"test.html\" prefix=\"dc: http://purl.org/dc/elements/1.1/ dcterms: http://purl.org/dc/terms/ dcmitype: http://purl.org/dc/dcmitype/ cc: http://creativecommons.org/ns#\" typeof=\"dcmitype:InteractiveResource\"><p>Except where otherwise noted, the work “<span property=\"dcterms:title\">A test</span>”, <span property=\"dc:rights\">© <span property=\"dcterms:dateCopyrighted\">2019</span> <a rel=\"cc:attributionURL dcterms:creator\" href=\"https://example.org/#alice\" property=\"cc:attributionName\">Alice</a></span> and <span property=\"dc:rights\">© <span property=\"dcterms:dateCopyrighted\">2017-2019</span> <a rel=\"cc:attributionURL dcterms:creator\" href=\"https://example.org/#bob\" property=\"cc:attributionName\">Bob</a></span>, is published under the <a rel=\"license\" href=\"https://creativecommons.org/licenses/by-sa/4.0/\">Creative Commons license CC BY-SA 4.0</a>.</p></div>"
+	    (org-test-with-parsed-data
+                header
+	      (oer-reveal-license-to-fmt 'html nil "test.html" t t))))
+    (should
+     (equal (concat "Except where otherwise noted, the work “A test”, © 2019 \\href{https://example.org/#alice}{Alice} and © 2017-2019 \\href{https://example.org/#bob}{Bob}, is published under the \\href{https://creativecommons.org/licenses/by-sa/4.0/}{Creative Commons license CC BY-SA 4.0}."
+                    "\n\nCreated: " now)
+	    (org-test-with-parsed-data
+                header
+	      (oer-reveal-license-to-fmt 'pdf now "dummy")))))
+
+  ;; Unknown license.
+  (let ((header "#+TITLE: A test\n#+SPDX-FileCopyrightText: 2019 Jens Lechtenbörger <mail@example.org>\n#+SPDX-License-Identifier: CC-BY-SA-42\n"))
+    (should-error
+     (org-test-with-parsed-data
+         header
+       (oer-reveal-license-to-fmt 'pdf nil "dummy"))))
+
+  ;; Missing license.
+  (let ((header "#+TITLE: A test\n#+SPDX-FileCopyrightText: 2019 Jens Lechtenbörger <mail@example.org>\n#+SPDX-Nonsense: CC-BY-SA-42\n"))
+    (should-error
+     (org-test-with-parsed-data
+         header
+       (oer-reveal-license-to-fmt 'html nil "dummy"))))
+
+  ;; Missing copyright years.
+  (let ((header "#+TITLE: A test\n#+SPDX-FileCopyrightText: Jens Lechtenbörger <mail@example.org>\n#+SPDX-License-Identifier: CC-BY-SA-4.0\n"))
+    (should-error
+     (org-test-with-parsed-data
+         header
+       (oer-reveal-license-to-fmt 'pdf t "dummy")))
+    (should-error
+     (org-test-with-parsed-data
+         header
+       (oer-reveal-license-to-fmt 'html t "dummy")))))
+
 ;;; oer-reveal-ert-tests.el ends here
