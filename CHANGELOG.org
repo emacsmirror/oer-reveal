@@ -11,6 +11,13 @@ where version numbers starting with version 1.0.0 adhere to
 
 ** [Unreleased]
 
+** [2.0.1] - 2019-12-31
+*** Changed
+    - Use ~oer-reveal-publish-to-reveal-and-pdf~ in
+      ~oer-reveal-publish-org-publishing-functions~
+*** Fixed
+    - Trim after matching is finished in ~oer-reveal--convert-creator~
+
 ** [2.0.0] - 2019-12-31
 *** Added
     - Functionality to generate license information for HTML and LaTeX
