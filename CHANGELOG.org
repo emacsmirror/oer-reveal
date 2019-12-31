@@ -11,6 +11,11 @@ where version numbers starting with version 1.0.0 adhere to
 
 ** [Unreleased]
 
+** [2.0.3] - 2019-12-31
+*** Fixed
+    - Allow usernames in GitLab URLs
+    - Recognize repositories for GitLab Pages
+
 ** [2.0.2] - 2019-12-31
 *** Fixed
     - Make suffix “.git” in GitLab URLs optional
