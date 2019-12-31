@@ -66,10 +66,18 @@ More specifically, *oer-reveal* provides:
   - With keys `C-c C-e w w` and `C-c C-e w b`
 - Org macros to embed OER figures with proper license attribution (in
   machine-readable RDFa format for HTML export)
+- Org templates to generate license information from SPDX headers
+  (used with [REUSE 3.0](https://reuse.software/)
 
 [Sample Org files](https://gitlab.com/oer/oer-reveal/tree/master/examples)
-for *oer-reveal* are available in its repository.
-Besides, there is a [howto for emacs-reveal](https://oer.gitlab.io/emacs-reveal-howto/howto.html).
+for *oer-reveal* are available in its repository, along with sample code
+[publish.el](https://gitlab.com/oer/oer-reveal/blob/master/examples/publish.el)
+to publish *oer-reveal* presentations.  Before you try to publish
+*oer-reveal* presentations, please check out
+[emacs-reveal](https://gitlab.com/oer/emacs-reveal) and the
+[howto for emacs-reveal](https://oer.gitlab.io/emacs-reveal-howto/howto.html),
+which showcases how to publish presentations in a GitLab CI/CD
+infrastructure.
 
 As usual for Org export, use `C-c C-e` to start an export, followed by
 backend specific key bindings.  With `oer-reveal`, the default
@@ -85,7 +93,7 @@ documented in file [org/config.org](org/config.org).
 
 # Usage
 
-Variable `oer-reveal-dir` points to the directory of oer-reveal and
+Variable `oer-reveal-dir` points to the directory of *oer-reveal* and
 its embedded resources.  You may want to use that variable in your
 own publication code, for which some pointers are provided in
 function `oer-reveal-publish-all` of file
@@ -128,7 +136,7 @@ using this code.
 
 Variable `oer-reveal-script-files` lists JavaScript files to load
 when initializing reveal.js.  If you use the version of reveal.js
-coming with oer-reveal, you may want to assign the value of
+coming with *oer-reveal*, you may want to assign the value of
 `oer-reveal-script-files` to `org-re-reveal-script-files`.  This
 also happens in `oer-reveal-publish-setq-defaults`.
 
@@ -144,8 +152,12 @@ I set this to "./" before exporting with `C-c C-e w b`.
 The names of generated CSS files for image grids are determined by
 `oer-reveal-css-filename-template`.
 
+For language-specific license information generated from SPDX headers,
+see `oer-reveal-dictionaries` and `oer-reveal-licenses`.
+
 To see all customizable variables, check out customization group
-`oer-reveal`: `M-x customize-group` followed by `oer-reveal`.
+`org-export-oer-reveal`:
+`M-x customize-group` followed by `org-export-oer-reveal`.
 In particular, `oer-reveal-publish-babel-languages` can be used to
 activate Babel languages during HTML (and PDF) export, e.g., to
 generate figures from embedded sources (e.g., dot/graphviz or ditaa).
