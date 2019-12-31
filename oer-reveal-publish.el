@@ -68,13 +68,14 @@ general Emacs sessions."
   :type 'boolean)
 
 (defcustom oer-reveal-publish-org-publishing-functions
-  '(oer-reveal-publish-to-reveal org-latex-publish-to-pdf)
+  '(oer-reveal-publish-to-reveal-and-pdf)
   "Functions to publish Org source files.
 By default, Org files are published as reveal.js presentations and as
 PDF.  For the latter, `org-latex-pdf-process' is set to
 `oer-reveal-publish-pdf-process' in `oer-reveal-publish-setq-defaults'."
   :group 'org-export-oer-reveal
-  :type '(repeat function))
+  :type '(repeat function)
+  :package-version '(oer-reveal . "2.0.1"))
 
 (defcustom oer-reveal-publish-descriptive-links nil
   "Value to assign to `org-descriptive-links'.
