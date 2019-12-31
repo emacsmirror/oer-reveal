@@ -592,7 +592,7 @@ Return nil if URL does not look like the URL of a GitLab repository."
                  (string-trim
                   (shell-command-to-string "git remote get-url origin")))))
     (when (string-match
-           "^\\(git@gitlab.com:\\|https://gitlab.com/\\)\\(.*\\)[.]git$" url)
+           "^\\(git@gitlab.com:\\|https://gitlab.com/\\)\\(.*\\)\\([.]git\\)?$" url)
       (let* ((path (match-string 2 url))
              (components (split-string path "/"))
              (project-or-group (car components))
