@@ -1334,7 +1334,7 @@ See URL `https://reuse.software/faq/'.")
                          (t (error "Format `%s' not supported" fmt)))))
     (if isurl
         (format template years (string-trim uri) name)
-      (message "If you used a URL in the copyright header, an attributionURL could be generated.")
+      (message "If you used a URL in the SPDX copyright header, an attributionURL could be generated.")
       (sit-for 2)
       (format template years name))))
 
@@ -1429,10 +1429,10 @@ If WITH-LEGALESE is non-nil, add a \"div\" element with pointers to legalese."
                 (format-time-string "%Y-%m-%d %a %H:%M"))))
     (unless copyright
       (user-error
-       "Org file does not specify copyright information!  Use SPDX-FileCopyrightText header"))
+       "Org file does not specify copyright information!  Use \"#+SPDX-FileCopyrightText:\" header"))
     (unless license
       (user-error
-       "Org file does not specify license information!  Use SPDX-License-Identifier header"))
+       "Org file does not specify license information!  Use \"#+SPDX-License-Identifier:\" header"))
     (unless title
       (user-error
      "Org file does not specify title!  Use TITLE header"))
