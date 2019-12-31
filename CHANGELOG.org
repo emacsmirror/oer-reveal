@@ -11,6 +11,10 @@ where version numbers starting with version 1.0.0 adhere to
 
 ** [Unreleased]
 
+** [2.0.2] - 2019-12-31
+*** Fixed
+    - Make suffix “.git” in GitLab URLs optional
+
 ** [2.0.1] - 2019-12-31
 *** Changed
     - Use ~oer-reveal-publish-to-reveal-and-pdf~ in
