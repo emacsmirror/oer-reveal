@@ -11,6 +11,52 @@ where version numbers starting with version 1.0.0 adhere to
 
 ** [Unreleased]
 
+** [2.0.0] - 2019-12-31
+*** Added
+    - Functionality to generate license information for HTML and LaTeX
+      (PDF) export based on SPDX headers (in English and German,
+      customizable for more languages) with test cases
+      - Org header keywords ~SPDX-FILECOPYRIGHTTEXT~ and
+        ~SPDX-LICENSE-IDENTIFIER~
+      - Variables for license information
+        - ~oer-reveal-dictionaries~
+        - ~oer-reveal-licenses~
+        - ~oer-reveal-rdf-prefixes~ ~oer-reveal-dcmitype~,
+        - ~oer-reveal-created-template~
+      - Function ~oer-reveal-license-to-fmt~ (with helper functions)
+        to generate license statement
+    - Functionality to configure alternate type links based on GitLab
+      URLs with test cases
+      - Function ~oer-reveal-publish-to-reveal-and-pdf~ to generate
+        HTML presentation and PDF variant, where the HTML presentation
+        embeds alternate type links to its source file and the PDF
+        variant
+      - Function ~oer-reveal-insert-alternate-types~ (based on
+        ~oer-reveal-add-alternate-types~, with helper functions) to
+        insert Org code for alternate type links
+      - Variable ~oer-reveal-publish-alternate-type-function~ to
+        activate ~oer-reveal-insert-alternate-types~ as
+        ~org-export-before-processing-hook~ (or not).
+*** Changed
+    - Fourth argument ~basename~ of function
+      ~oer-reveal-add-alternate-types~ is no longer optional
+    - Variable ~oer-reveal-alternate-types~ is now the ~defconst~
+      ~oer-reveal-alternate-type-config~
+    - Variable ~oer-reveal-publish-html-postamble~
+      invokes ~oer-reveal-license-to-fmt~
+    - Function ~oer-reveal-publish-setq-defaults~
+      - Use ~oer-reveal-rdf-prefixes~ and ~oer-reveal-dcmitype~ to
+        assign value to ~org-re-reveal-body-attrs~
+      - Add ~oer-reveal-publish-alternate-type-function~ to
+        ~org-export-before-processing-hook~
+    - Files ~license-template.org~ and ~license-template-de.org~ use
+      ~oer-reveal-license-to-fmt~
+*** Removed
+    - File ~org/config-alternate-types.org~
+    - Variable ~oer-reveal-publish-html-attributionURL~
+    - Functions (deprecated since 1.3.0)
+      ~oer-reveal-add-to-init-script~ and ~oer-reveal-setup-plugins~
+
 ** [1.15.0] - 2019-12-21
 *** Added
     - Support ~typeof~ attribute for figures with
