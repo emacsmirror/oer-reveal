@@ -583,6 +583,10 @@ Note that this filename is exported into a subdirectory of
 (defconst oer-reveal-alternate-type-latex
   "#+TITLE: @@latex:\\footnote{%s}@@\n"
   "Org code for LaTeX footnote on title pointing to HTML and Org variants.")
+(defconst oer-reveal-gitlab-regexp
+  "^\\(git@gitlab.com:\\|https://gitlab.com/\\)\\(.*?\\)\\([.]git\\)?$"
+  "Regular expression matching GitLab URLs.
+Group 2 matches the path.")
 
 (defun oer-reveal--parse-git-url (&optional url)
   "Return nil or a pair of URLs for HTTPS repo and GitLab Pages.
@@ -591,8 +595,7 @@ Return nil if URL does not look like the URL of a GitLab repository."
   (let ((url (or url
                  (string-trim
                   (shell-command-to-string "git remote get-url origin")))))
-    (when (string-match
-           "^\\(git@gitlab.com:\\|https://gitlab.com/\\)\\(.*\\)\\([.]git\\)?$" url)
+    (when (string-match oer-reveal-gitlab-regexp url)
       (let* ((path (match-string 2 url))
              (components (split-string path "/"))
              (project-or-group (car components))
