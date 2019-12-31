@@ -37,7 +37,7 @@
 	(list "examples"
 	      :base-directory "examples"
 	      :base-extension "org"
-	      :publishing-function 'oer-reveal-publish-to-reveal
+	      :publishing-function 'oer-reveal-publish-to-reveal-and-pdf
 	      :publishing-directory "./public"))))
   (oer-reveal-publish-setq-defaults)
   (oer-reveal-publish-all))
