@@ -64,7 +64,7 @@
   "Value to assign to `org-confirm-babel-evaluate' before export.
 The default is nil, which may be dangerous and is not recommended for
 general Emacs sessions."
-  :group 'oer-reveal
+  :group 'org-export-oer-reveal
   :type 'boolean)
 
 (defcustom oer-reveal-publish-org-publishing-functions
@@ -73,26 +73,26 @@ general Emacs sessions."
 By default, Org files are published as reveal.js presentations and as
 PDF.  For the latter, `org-latex-pdf-process' is set to
 `oer-reveal-publish-pdf-process' in `oer-reveal-publish-setq-defaults'."
-  :group 'oer-reveal
+  :group 'org-export-oer-reveal
   :type '(repeat function))
 
 (defcustom oer-reveal-publish-descriptive-links nil
   "Value to assign to `org-descriptive-links'.
 Assignment happens in `oer-reveal-publish-setq-defaults'."
-  :group 'oer-reveal
+  :group 'org-export-oer-reveal
   :type 'boolean
   :package-version '(oer-reveal . "1.6.0"))
 
 (defcustom oer-reveal-publish-makeindex nil
   "Value to use for makeindex option when publishing Org files."
-  :group 'oer-reveal
+  :group 'org-export-oer-reveal
   :type 'boolean)
 
 (defcustom oer-reveal-publish-pdf-process
   '("latexmk -outdir=%o -interaction=nonstopmode -shell-escape -bibtex -pdf %f")
   "Value to assign to `org-latex-pdf-process'.
 Assignment happens in `oer-reveal-publish-setq-defaults'."
-  :group 'oer-reveal
+  :group 'org-export-oer-reveal
   :type '(repeat string))
 
 (defcustom oer-reveal-publish-figure-float "H"
@@ -101,13 +101,13 @@ Assignment happens in `oer-reveal-publish-setq-defaults'.
 The default uses the LaTeX float package to position figures \"here\",
 which results in a layout that is more similar to HTML slides.
 See URL `https://ctan.org/pkg/float' for float documentation."
-  :group 'oer-reveal
+  :group 'org-export-oer-reveal
   :type 'string)
 
 (defcustom oer-reveal-publish-html-doctype "html5"
   "Value to assign to variable `org-html-doctype'.
 Assignment happens in `oer-reveal-publish-setq-defaults'."
-  :group 'oer-reveal
+  :group 'org-export-oer-reveal
   :type 'string)
 
 (defcustom oer-reveal-publish-html-postamble
@@ -141,7 +141,7 @@ Invoked from function `oer-reveal-publish-all'."
   "Function to change faces for syntax highlighting.
 This function is called in `oer-reveal-publish-all'.  Set to nil for default
 syntax highlighting."
-  :group 'oer-reveal
+  :group 'org-export-oer-reveal
   :type '(choice (const nil) function))
 
 (defcustom oer-reveal-publish-latex-packages
@@ -155,7 +155,7 @@ syntax highlighting."
     ("" "float" nil))
   "Packages to add to beginning of `org-latex-default-packages-alist'.
 Assignment happens in `oer-reveal-publish-setq-defaults'."
-  :group 'oer-reveal
+  :group 'org-export-oer-reveal
   :type '(repeat
 	  (choice
 	   (list :tag "options/package pair"
@@ -169,7 +169,7 @@ Assignment happens in `oer-reveal-publish-setq-defaults'."
 
 (defcustom oer-reveal-publish-babel-languages '((emacs-lisp . t))
   "Babel languages to activate in `oer-reveal-publish-setq-defaults'."
-  :group 'oer-reveal
+  :group 'org-export-oer-reveal
   :type '(repeat
           (cons (symbol :tag "language")
                 (choice
