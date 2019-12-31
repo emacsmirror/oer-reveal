@@ -176,10 +176,24 @@ Assignment happens in `oer-reveal-publish-setq-defaults'."
                  (const :tag "Enabled" t)
                  (const :tag "Disabled" nil)))))
 
+(defcustom oer-reveal-publish-alternate-type-function
+  #'oer-reveal-insert-alternate-types
+  "If non-nil, function to add to org-export-before-processing-hook.
+By default, add alternate type link elements to exported HTML (and
+reveal.js) documents and hyperlinks to PDF documents.  Alternate type
+links are created from GitLab repository URLs."
+  :group 'org-export-oer-reveal
+  :type '(choice (const nil) function)
+  :package-version '(oer-reveal . "2.0.0"))
+
 (require 'table)
 ;;;###autoload
 (defun oer-reveal-publish-setq-defaults ()
-  "Change various variables with `setq'."
+  "Change Emacs environment.
+Set various variables with `setq',
+load babel languages in `oer-reveal-publish-babel-languages',
+add `oer-reveal-publish-alternate-type-function' to
+`org-export-before-processing-hook'."
   (setq table-html-th-rows 1
 	table-html-table-attribute "class=\"emacs-table\""
         org-entities-user '(("textbackslash" "\\textbackslash{}" nil "\\" "\\" "\\" "\\"))
@@ -190,8 +204,9 @@ Assignment happens in `oer-reveal-publish-setq-defaults'."
 	oer-reveal-latex-figure-float oer-reveal-publish-figure-float
 	org-re-reveal-script-files oer-reveal-script-files
 	org-re-reveal--href-fragment-prefix org-re-reveal--slide-id-prefix
-	org-re-reveal-body-attrs
-	"prefix=\"dc: http://purl.org/dc/terms/ dcmitype: http://purl.org/dc/dcmitype/ cc: http://creativecommons.org/ns#\" typeof=\"dcmitype:InteractiveResource\""
+	org-re-reveal-body-attrs (concat
+                                  oer-reveal-rdf-prefixes
+                                  " " oer-reveal-dcmitype)
 	org-latex-pdf-process oer-reveal-publish-pdf-process
 	;; Add packages that need to be at the beginning of
 	;; org-latex-default-packages-alist.
@@ -201,7 +216,9 @@ Assignment happens in `oer-reveal-publish-setq-defaults'."
         )
   (org-babel-do-load-languages
    'org-babel-load-languages oer-reveal-publish-babel-languages)
-  )
+  (when oer-reveal-publish-alternate-type-function
+    (add-hook 'org-export-before-processing-hook
+              oer-reveal-publish-alternate-type-function)))
 
 (defun oer-reveal-publish-klipse-projects ()
   "Compute project list for local klipse libraries."
