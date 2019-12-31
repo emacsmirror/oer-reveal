@@ -547,57 +547,6 @@ Note that this filename is exported into a subdirectory of
   :type 'string)
 
 ;;; Configuration of various components.
-(defun oer-reveal-add-to-init-script (initstring)
-  "Add INITSTRING to `org-re-reveal-init-script'.
-If `org-re-reveal-init-script' is a non-empty string, concatenate INITSTRING
-after comma; otherwise, just `setq' to INITSTRING."
-  (declare (obsolete "customize `oer-reveal-plugin-config' instead"
-                     "oer-reveal 1.3.0"))
-  (setq org-re-reveal-init-script
-	(if (and (stringp org-re-reveal-init-script)
-		 (< 0 (length org-re-reveal-init-script)))
-	    (concat org-re-reveal-init-script ",\n  "
-		    initstring)
-	  initstring)))
-
-(defun oer-reveal-setup-plugins ()
-  "Setup `org-re-reveal-external-plugins'.
-For elements of `oer-reveal-plugins', add initialization code to
-`org-re-reveal-external-plugins'."
-  (declare (obsolete "customize `oer-reveal-plugin-config' instead"
-                     "oer-reveal 1.3.0"))
-  (when (member "reveal.js-plugins" oer-reveal-plugins)
-    ;; Activate and configure audio-slideshow plugin.
-    (add-to-list 'org-re-reveal-external-plugins
-		 (cons 'audio-slideshow
-		       oer-reveal-audio-slideshow-dependency))
-    (oer-reveal-add-to-init-script oer-reveal-audio-slideshow-config)
-
-    ;; Activate anything plugin.
-    (add-to-list 'org-re-reveal-external-plugins
-		 (cons 'anything oer-reveal-anything-dependency))
-    (oer-reveal-add-to-init-script oer-reveal-anything-config))
-
-  (when (member "Reveal.js-TOC-Progress" oer-reveal-plugins)
-    ;; Activate TOC progress plugin.
-    (add-to-list 'org-re-reveal-external-plugins
-		 (cons 'toc-progress oer-reveal-toc-progress-dependency)))
-
-  (when (member "reveal.js-jump-plugin" oer-reveal-plugins)
-    ;; Activate jump plugin.
-    (add-to-list 'org-re-reveal-external-plugins
-		 (cons 'jump oer-reveal-jump-dependency)))
-
-  (when (member "reveal.js-quiz" oer-reveal-plugins)
-    ;; Activate quiz plugin.
-    (add-to-list 'org-re-reveal-external-plugins
-		 (cons 'quiz oer-reveal-quiz-dependency)))
-
-  (when (member "reveal.js-coursemod" oer-reveal-plugins)
-    ;; Enable and configure courseware plugin.
-    (oer-reveal-add-to-init-script oer-reveal-coursemod-config)
-    (add-to-list 'org-re-reveal-external-plugins
-		 (cons 'coursemod oer-reveal-coursemod-dependency))))
 
 ;;; Allow colored text.
 ;; The FAQ at http://orgmode.org/worg/org-faq.html contains a recipe
