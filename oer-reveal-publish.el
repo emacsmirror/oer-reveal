@@ -350,7 +350,7 @@ as well as \"index.css\" and the directories \"audio\", \"figures\",
             result))
     (when (file-accessible-directory-p "figures")
       (push (list "figures"
-		  :base-directory "figures"
+		  :base-directory (concat "figures" oer-reveal-copy-dir-suffix)
 		  :base-extension (regexp-opt '("png" "jpg" "ico" "svg" "gif"))
 		  :publishing-directory "./public/figures"
 		  :publishing-function 'org-publish-attachment
