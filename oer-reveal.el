@@ -1160,7 +1160,7 @@ Construct name of file in `oer-reveal-export-dir' with
 `oer-reveal-css-filename-template', create directories if necessary,
 remove possibly previously existing file, write CSS to new file, and
 return it's name."
-  (let* ((no-images  (length images))
+  (let* ((no-images (length images))
 	 (filename (expand-file-name
 		    (format oer-reveal-css-filename-template grid-id)
 		    oer-reveal-export-dir))
