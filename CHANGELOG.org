@@ -1,6 +1,6 @@
 # Local IspellDict: en
 # SPDX-License-Identifier: GPL-3.0-or-later
-# SPDX-FileCopyrightText: 2019 Jens Lechtenbörger
+# SPDX-FileCopyrightText: 2019-2020 Jens Lechtenbörger
 
 * Changelog
 This file is based on
@@ -10,6 +10,10 @@ where version numbers starting with version 1.0.0 adhere to
 
 
 ** [Unreleased]
+
+** [2.0.4] - 2020-01-02
+*** Fixed
+    - Trim title string in ~oer-reveal-license-to-fmt~
 
 ** [2.0.3] - 2019-12-31
 *** Fixed
