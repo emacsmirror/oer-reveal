@@ -2,12 +2,12 @@
 ;; -*- Mode: Emacs-Lisp -*-
 ;; -*- coding: utf-8 -*-
 
-;; SPDX-FileCopyrightText: 2017-2019 Jens Lechtenbörger
+;; SPDX-FileCopyrightText: 2017-2020 Jens Lechtenbörger
 ;; SPDX-License-Identifier: GPL-3.0-or-later
 
 ;; Author: Jens Lechtenbörger
 ;; URL: https://gitlab.com/oer/oer-reveal
-;; Version: 2.0.3
+;; Version: 2.0.4
 ;; Package-Requires: ((emacs "24.4") (org-re-reveal "2.12.0"))
 ;; Keywords: hypermedia, tools, slideshow, presentation, OER
 
@@ -1448,7 +1448,7 @@ If WITH-LEGALESE is non-nil, add a \"div\" element with pointers to legalese."
      "Org file does not specify title!  Use TITLE header"))
     (let* ((creator (oer-reveal--convert-spdx-header 'copyright copyright fmt language))
            (license (oer-reveal--convert-spdx-header 'license license fmt language))
-           (title (oer-reveal--convert-title title fmt))
+           (title (oer-reveal--convert-title (string-trim title) fmt))
            (created (if with-dccreated
                         (oer-reveal--convert-created now fmt language)
                       ""))
