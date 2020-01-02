@@ -851,6 +851,10 @@ timestamp.")
 (defconst oer-reveal--css-grid-img-all ".grid-img img { }"
   "CSS for all images of grid.")
 
+(defun oer-reveal-http-url-p (string)
+  "Return t if STRING is an HTTP(S) URL."
+  (string-match-p "^https?://" string))
+
 (defun oer-reveal--export-figure-latex
     (filename texwidth texfilename texlicense &optional latexcaption)
   "Generate LaTeX for figure at FILENAME.
@@ -863,7 +867,7 @@ Otherwise, include graphics at TEXFILENAME of width TEXWIDTH
 with caption TEXLICENSE.  Optional LATEXCAPTION determines whether
 `oer-reveal--figure-latex-template' or
 `oer-reveal--figure-latex-caption-template' is used to generate LaTeX code."
-  (cond ((string-match-p "^https?://" filename)
+  (cond ((oer-reveal-http-url-p filename)
 	 (format oer-reveal--figure-external-latex-template texlicense))
 	((member (file-name-extension filename)
 		 oer-reveal--unsupported-tex-figure-formats)
@@ -895,7 +899,7 @@ as extra attributes to the figure's HTML element.
 Templates `oer-reveal--svg-div-template' and
 `oer-reveal--figure-div-template' specify the general HTML format."
   (let* ((extension (file-name-extension filename))
-	 (external (string-match-p "^https?://" filename))
+	 (external (oer-reveal-http-url-p filename))
 	 (issvg (and (string= "svg" extension) (not external)))
          (dcmitype (or dcmitype oer-reveal--default-figure-dcmitype))
 	 (issingle (plist-get (org-export-get-environment 're-reveal)
@@ -1364,7 +1368,7 @@ See URL `https://reuse.software/faq/'.")
          (years (string-trim years))
          (name (string-trim name))
          ;; URI may be an e-mail address, which would be useless.
-         (isurl (and uri (string-match-p "^https?://" uri)))
+         (isurl (and uri (oer-reveal-http-url-p uri)))
          (html-template
           (format oer-reveal--rights-html-template
                   (concat oer-reveal--datecopy-html-template
