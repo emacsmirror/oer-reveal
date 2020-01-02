@@ -370,5 +370,44 @@ variable, and communication channel under `info'."
         (oer-reveal-license-to-fmt 'html t "dummy"))))))
 
 
+;;; Test helper functions.
+(ert-deftest test-copy-dir-suffix ()
+  (let* ((dir1 "test-copy-dir-suffix1")
+         (dir2 "./test-copy-dir-suffix2")
+         (dir3 ".test-copy-dir-suffix3")
+         (dir4 "./.test-copy-dir-suffix4")
+         (dir5 "test-copy-dir-suffix5/dir")
+         (dirs `(,dir1 ,dir2 ,dir3 ,dir4 ,dir5))
+         (simple-dirs `(,dir1 ,dir2 ,dir3 ,dir4))
+         (file "file")
+         (contents "Moin"))
+    (unwind-protect
+        (progn
+          (dolist (dir dirs)
+            (make-directory dir t)
+            (let ((filename (concat (file-name-as-directory dir) file)))
+              (append-to-file contents nil filename)
+              (oer-reveal--copy-for-export filename)))
+          (dolist (dir simple-dirs)
+            (let ((target (concat (file-name-as-directory
+                                   (concat dir oer-reveal-copy-dir-suffix))
+                                  file)))
+              (should (equal contents (oer-reveal--file-as-string target)))))
+          (should (equal contents (oer-reveal--file-as-string
+                                   (concat "test-copy-dir-suffix5"
+                                           oer-reveal-copy-dir-suffix
+                                           "/dir/" file)))))
+      (dolist (dir dirs)
+        (when (file-readable-p dir)
+          (delete-directory dir t))
+        (when (file-readable-p (concat dir oer-reveal-copy-dir-suffix))
+          (delete-directory (concat dir oer-reveal-copy-dir-suffix) t)))
+      (when (file-readable-p "test-copy-dir-suffix5")
+        (delete-directory "test-copy-dir-suffix5" t))
+      (when (file-readable-p (concat "test-copy-dir-suffix5"
+                                     oer-reveal-copy-dir-suffix))
+        (delete-directory (concat "test-copy-dir-suffix5"
+                                  oer-reveal-copy-dir-suffix)
+                          t)))))
 
 ;;; oer-reveal-ert-tests.el ends here
