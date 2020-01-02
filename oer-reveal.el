@@ -983,7 +983,8 @@ and (back-) slashes in group 1.")
 
 (defun oer-reveal--copy-for-export (filename)
   "Copy FILENAME depending on `oer-reveal-copy-dir-suffix'."
-  (when (< 0 (length oer-reveal-copy-dir-suffix))
+  (when (and (< 0 (length oer-reveal-copy-dir-suffix))
+             (not (oer-reveal-http-url-p filename)))
     (unless (string-match oer-reveal--copy-regexp filename)
       (user-error "Unable to create target path for figure: %s" filename))
     (let* ((target (replace-match
