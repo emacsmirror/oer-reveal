@@ -1353,15 +1353,15 @@ See URL `https://reuse.software/faq/'.")
   (unless (string-match oer-reveal--license-regexp value)
     (user-error "License line not matched: %s" value))
   (let* ((spdx (string-trim (match-string 1 value)))
-         (license-pair (assoc spdx oer-reveal-licenses))
-         (phrase (oer-reveal--translate language spdx))
-         (template (if (eq fmt 'html)
-                       oer-reveal--license-html-template
-                     oer-reveal--href-pdf-template)))
+         (license-pair (assoc spdx oer-reveal-licenses)))
     (unless license-pair
       (user-error
        "License `%s' unknown.  Customize `oer-reveal-licenses'" spdx))
-    (format template (cdr license-pair) phrase)))
+    (let ((phrase (oer-reveal--translate language spdx))
+          (template (if (eq fmt 'html)
+                        oer-reveal--license-html-template
+                      oer-reveal--href-pdf-template)))
+      (format template (cdr license-pair) phrase))))
 
 (defun oer-reveal--convert-spdx-header (header lines fmt language)
   "Convert LINES of SPDX HEADER to FMT with LANGUAGE.
