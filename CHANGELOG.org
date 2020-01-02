@@ -10,6 +10,8 @@ where version numbers starting with version 1.0.0 adhere to
 
 
 ** [Unreleased]
+*** Fixed
+    - Do not try to copy external figures in ~oer-reveal--copy-for-export~
 
 ** [2.1.0] - 2020-01-02
 *** Added
