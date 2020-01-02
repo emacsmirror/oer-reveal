@@ -534,6 +534,24 @@ Org files."
                          source-file (car spec)))
               source-files)))))
 
+;;; Export of figures
+(defcustom oer-reveal-copy-dir-suffix ".for-export"
+  "If non-empty string, copy embedded figures into separate directory.
+An oer-reveal project might embed a subset of the OER figure repository
+at URL `https://gitlab.com/oer/figures/'.  To publish only those figures
+that are actually used, they can be copied to a separate directory for
+export.  If you embed figures, say from \"./figures\", then oer-reveal
+with the default setting \".for-export\" copies each embedded figure to
+the directory \"./figures.for-export\" and publishes only those copied
+figures.
+More precisely, `oer-reveal-copy-dir-suffix' is inserted as suffix of
+the first ordinary directory component of FILENAME.  (Dots and (back-)
+slashes at the beginning of the name are left unchanged.)
+Set to empty string to disable this functionality."
+  :group 'org-export-oer-reveal
+  :type 'string
+  :package-version '(oer-reveal . "2.1.0"))
+
 ;; The following options are only relevant if you use
 ;; oer-reveal-export-image-grid to generate image grids.
 ;; Then, the options control in what directory generated CSS is saved.
@@ -953,6 +971,24 @@ BACKEND must be `org' or `html'."
 	((string= copyright oer-reveal--default-copyright) "")
 	(t copyright))))
 
+(defconst oer-reveal--copy-regexp
+  "\\([./\\]*/\\)?\\([^/\\]+\\)\\([/\\]\\)\\(.*\\)"
+  "Regular expression to match filename components.
+Group 2 is the first orginary directory name, possibly after dots
+and (back-) slashes in group 1.")
+
+(defun oer-reveal--copy-for-export (filename)
+  "Copy FILENAME depending on `oer-reveal-copy-dir-suffix'."
+  (when (< 0 (length oer-reveal-copy-dir-suffix))
+    (unless (string-match oer-reveal--copy-regexp filename)
+      (user-error "Unable to create target path for figure: %s" filename))
+    (let* ((target (replace-match
+                    (concat "\\1\\2" oer-reveal-copy-dir-suffix "\\3\\4")
+                    t nil filename))
+           (target-dir (file-name-directory target)))
+      (make-directory target-dir t)
+      (copy-file filename target-dir t t))))
+
 (defun oer-reveal--attribution-strings
     (metadata &optional caption maxheight divclasses shortlicense
     embed-svg extra-attrs)
@@ -961,7 +997,8 @@ See `oer-reveal-export-attribution' and
 `oer-reveal--export-attribution-helper' for description of arguments
 CAPTION, MAXHEIGHT, DIVCLASSES, SHORTLICENSE, EMBED-SVG, EXTRA-ATTRS.
 Return cons cell whose car is the HTML representation for METADATA
-and whose cdr is the LaTeX representation."
+and whose cdr is the LaTeX representation.
+As side effect, copy figure as described for `oer-reveal-copy-dir-suffix'."
   (let* ((org-export-with-sub-superscripts nil)
 	 (alist (read (oer-reveal--file-as-string metadata)))
 	 (filename (alist-get 'filename alist))
@@ -1067,6 +1104,7 @@ and whose cdr is the LaTeX representation."
 	 (texlicense (if (< 0 (length orglicense))
 			 (oer-reveal--export-no-newline orglicense 'latex)
 		       (oer-reveal--export-no-newline title 'latex))))
+    (oer-reveal--copy-for-export filename)
     (if (stringp caption)
 	(cons (oer-reveal--export-figure-html
 	       filename dcmitype divclasses htmlcaption htmllicense
