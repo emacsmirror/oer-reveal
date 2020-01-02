@@ -372,6 +372,8 @@ variable, and communication channel under `info'."
 
 ;;; Test helper functions.
 (ert-deftest test-copy-dir-suffix ()
+  (should-not (oer-reveal--copy-for-export "http://example.org/fig.png"))
+  (should-not (oer-reveal--copy-for-export "https://example.org/fig.png"))
   (let* ((dir1 "test-copy-dir-suffix1")
          (dir2 "./test-copy-dir-suffix2")
          (dir3 ".test-copy-dir-suffix3")
