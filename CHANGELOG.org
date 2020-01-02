@@ -11,6 +11,21 @@ where version numbers starting with version 1.0.0 adhere to
 
 ** [Unreleased]
 
+** [2.1.0] - 2020-01-02
+*** Added
+    - Variable [[file:oer-reveal.el::(defcustom oer-reveal-copy-dir-suffix][oer-reveal-copy-dir-suffix]]
+      controls copying of embedded OER figures to separate directory
+      for publication of relevant subset of figures
+      - With helper function [[file:oer-reveal.el::(defun oer-reveal--copy-for-export][oer-reveal--copy-for-export]]
+*** Changed
+    - Use ~oer-reveal--copy-for-export~ in
+      [[file:oer-reveal.el::(defun oer-reveal--attribution-strings][oer-reveal--attribution-strings]]
+    - Respect ~oer-reveal-copy-dir-suffix~ in publication setup in
+      [[file:oer-reveal-publish.el::(defun oer-reveal-publish-optional-projects][oer-reveal-publish-optional-projects]]
+*** Fixed
+    - Raise useful error if SPDX license is unknown in
+      ~oer-reveal--convert-license~
+
 ** [2.0.4] - 2020-01-02
 *** Fixed
     - Trim title string in ~oer-reveal-license-to-fmt~
