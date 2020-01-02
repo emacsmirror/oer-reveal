@@ -1,6 +1,6 @@
 ;;; oer-reveal-ert-tests.el --- Tests for oer-reveal  -*- lexical-binding: t; -*-
 ;; SPDX-License-Identifier: GPL-3.0-or-later
-;; SPDX-FileCopyrightText: 2019 Jens Lechtenbörger
+;; SPDX-FileCopyrightText: 2019-2020 Jens Lechtenbörger
 
 ;;; Commentary:
 ;; Run tests interactively or as follows (probably with adjusted paths)
@@ -218,7 +218,8 @@
 (ert-deftest test-meta-license-info ()
   "Tests for RDFa license information from figure meta data."
   (let ((meta (make-temp-file "oer.meta"))
-        (meta-gif (make-temp-file "oer-gif.meta")))
+        (meta-gif (make-temp-file "oer-gif.meta"))
+        (oer-reveal-copy-dir-suffix ""))
     (with-temp-file meta (insert oer-metadata))
     (with-temp-file meta-gif (insert oer-metadata-gif))
     (let ((result
@@ -262,108 +263,112 @@ variable, and communication channel under `info'."
 
 (ert-deftest test-spdx-license-info ()
   "Tests for RDFa license information from SPDX headers."
+  (let ((oer-reveal-copy-dir-suffix ""))
+
   ;; Header with URL and single license.
-  (let ((header "#+TITLE: A test\n#+SPDX-FileCopyrightText: 2019 Jens Lechtenbörger <https://lechten.gitlab.io/#me>\n#+SPDX-License-Identifier: CC-BY-SA-4.0\n")
-        (now "2019-12-27 Fri 19:19"))
-    (should
-     (equal (concat "<div class=\"rdfa-license\" about=\"test.html\" prefix=\"dc: http://purl.org/dc/elements/1.1/ dcterms: http://purl.org/dc/terms/ dcmitype: http://purl.org/dc/dcmitype/ cc: http://creativecommons.org/ns#\" typeof=\"dcmitype:InteractiveResource\"><p>Except where otherwise noted, the work “<span property=\"dcterms:title\">A test</span>”, <span property=\"dc:rights\">© <span property=\"dcterms:dateCopyrighted\">2019</span> <a rel=\"cc:attributionURL dcterms:creator\" href=\"https://lechten.gitlab.io/#me\" property=\"cc:attributionName\">Jens Lechtenbörger</a></span>, is published under the <a rel=\"license\" href=\"https://creativecommons.org/licenses/by-sa/4.0/\">Creative Commons license CC BY-SA 4.0</a>.</p>"
-                    "<p class=\"date\">Created: <span property=\"dcterms:created\">"
-                    now "</span></p></div>"
-                    "\n" (oer-reveal--translate "en" 'legalese))
-	    (org-test-with-parsed-data
-                header
-	      (oer-reveal-license-to-fmt 'html now "test.html" t t t))))
-    (should
-     (equal (concat "Except where otherwise noted, the work “A test”, © 2019 \\href{https://lechten.gitlab.io/#me}{Jens Lechtenbörger}, is published under the \\href{https://creativecommons.org/licenses/by-sa/4.0/}{Creative Commons license CC BY-SA 4.0}."
-                    "\n\nCreated: " now)
-	    (org-test-with-parsed-data
-                header
-	      (oer-reveal-license-to-fmt 'pdf now "dummy")))))
+    (let ((header "#+TITLE: A test\n#+SPDX-FileCopyrightText: 2019 Jens Lechtenbörger <https://lechten.gitlab.io/#me>\n#+SPDX-License-Identifier: CC-BY-SA-4.0\n")
+          (now "2019-12-27 Fri 19:19"))
+      (should
+       (equal (concat "<div class=\"rdfa-license\" about=\"test.html\" prefix=\"dc: http://purl.org/dc/elements/1.1/ dcterms: http://purl.org/dc/terms/ dcmitype: http://purl.org/dc/dcmitype/ cc: http://creativecommons.org/ns#\" typeof=\"dcmitype:InteractiveResource\"><p>Except where otherwise noted, the work “<span property=\"dcterms:title\">A test</span>”, <span property=\"dc:rights\">© <span property=\"dcterms:dateCopyrighted\">2019</span> <a rel=\"cc:attributionURL dcterms:creator\" href=\"https://lechten.gitlab.io/#me\" property=\"cc:attributionName\">Jens Lechtenbörger</a></span>, is published under the <a rel=\"license\" href=\"https://creativecommons.org/licenses/by-sa/4.0/\">Creative Commons license CC BY-SA 4.0</a>.</p>"
+                      "<p class=\"date\">Created: <span property=\"dcterms:created\">"
+                      now "</span></p></div>"
+                      "\n" (oer-reveal--translate "en" 'legalese))
+	      (org-test-with-parsed-data
+               header
+	       (oer-reveal-license-to-fmt 'html now "test.html" t t t))))
+      (should
+       (equal (concat "Except where otherwise noted, the work “A test”, © 2019 \\href{https://lechten.gitlab.io/#me}{Jens Lechtenbörger}, is published under the \\href{https://creativecommons.org/licenses/by-sa/4.0/}{Creative Commons license CC BY-SA 4.0}."
+                      "\n\nCreated: " now)
+	      (org-test-with-parsed-data
+               header
+	       (oer-reveal-license-to-fmt 'pdf now "dummy")))))
 
-  ;; From now on, use empty string for German legalese (avoids display of
-  ;; legalese).
-  (setcdr (assoc 'legalese (assoc "de" oer-reveal-dictionaries)) "")
+    ;; From now on, use empty string for German legalese (avoids display of
+    ;; legalese).
+    (setcdr (assoc 'legalese (assoc "de" oer-reveal-dictionaries)) "")
 
-  ;; Different language and license, no prefix, no date, no legalese (empty string).
-  (let ((header "#+TITLE: A test\n#+SPDX-FileCopyrightText: 2019 Jens Lechtenbörger <https://lechten.gitlab.io/#me>\n#+SPDX-License-Identifier: CC0-1.0\n#+LANGUAGE: de-de"))
-    (should
-     (equal "<div class=\"rdfa-license\" about=\"test.html\" typeof=\"dcmitype:InteractiveResource\"><p>Soweit nicht anders angegeben unterliegt das Werk „<span property=\"dcterms:title\">A test</span>“, <span property=\"dc:rights\">© <span property=\"dcterms:dateCopyrighted\">2019</span> <a rel=\"cc:attributionURL dcterms:creator\" href=\"https://lechten.gitlab.io/#me\" property=\"cc:attributionName\">Jens Lechtenbörger</a></span>, der <a rel=\"license\" href=\"https://creativecommons.org/publicdomain/zero/1.0/\">Creative-Commons-Lizenz CC0 1.0</a>.</p></div>"
-	    (org-test-with-parsed-data
-                header
-	      (oer-reveal-license-to-fmt 'html nil "test.html" nil t t))))
-    (should
-     (equal "Soweit nicht anders angegeben unterliegt das Werk „A test“, © 2019 \\href{https://lechten.gitlab.io/#me}{Jens Lechtenbörger}, der \\href{https://creativecommons.org/publicdomain/zero/1.0/}{Creative-Commons-Lizenz CC0 1.0}."
-	    (org-test-with-parsed-data
-                header
-	      (oer-reveal-license-to-fmt 'pdf nil "dummy")))))
+    ;; Different language and license, no prefix, no date, no legalese (empty string).
+    (let ((header "#+TITLE: A test\n#+SPDX-FileCopyrightText: 2019 Jens Lechtenbörger <https://lechten.gitlab.io/#me>\n#+SPDX-License-Identifier: CC0-1.0\n#+LANGUAGE: de-de"))
+      (should
+       (equal "<div class=\"rdfa-license\" about=\"test.html\" typeof=\"dcmitype:InteractiveResource\"><p>Soweit nicht anders angegeben unterliegt das Werk „<span property=\"dcterms:title\">A test</span>“, <span property=\"dc:rights\">© <span property=\"dcterms:dateCopyrighted\">2019</span> <a rel=\"cc:attributionURL dcterms:creator\" href=\"https://lechten.gitlab.io/#me\" property=\"cc:attributionName\">Jens Lechtenbörger</a></span>, der <a rel=\"license\" href=\"https://creativecommons.org/publicdomain/zero/1.0/\">Creative-Commons-Lizenz CC0 1.0</a>.</p></div>"
+	      (org-test-with-parsed-data
+               header
+	       (oer-reveal-license-to-fmt 'html nil "test.html" nil t t))))
+      (should
+       (equal "Soweit nicht anders angegeben unterliegt das Werk „A test“, © 2019 \\href{https://lechten.gitlab.io/#me}{Jens Lechtenbörger}, der \\href{https://creativecommons.org/publicdomain/zero/1.0/}{Creative-Commons-Lizenz CC0 1.0}."
+	      (org-test-with-parsed-data
+               header
+	       (oer-reveal-license-to-fmt 'pdf nil "dummy")))))
 
-  ;; Multiple licenses, no typeof, no date, no legalese.
-  (let ((header "#+TITLE: A test\n#+SPDX-FileCopyrightText: 2019 Jens Lechtenbörger <https://lechten.gitlab.io/#me>\n#+SPDX-License-Identifier: CC-BY-SA-4.0\n#+SPDX-License-Identifier: CC0-1.0\n"))
-    (should
-     (equal "<div class=\"rdfa-license\" about=\"test.html\" prefix=\"dc: http://purl.org/dc/elements/1.1/ dcterms: http://purl.org/dc/terms/ dcmitype: http://purl.org/dc/dcmitype/ cc: http://creativecommons.org/ns#\"><p>Except where otherwise noted, the work “<span property=\"dcterms:title\">A test</span>”, <span property=\"dc:rights\">© <span property=\"dcterms:dateCopyrighted\">2019</span> <a rel=\"cc:attributionURL dcterms:creator\" href=\"https://lechten.gitlab.io/#me\" property=\"cc:attributionName\">Jens Lechtenbörger</a></span>, is published under the <a rel=\"license\" href=\"https://creativecommons.org/licenses/by-sa/4.0/\">Creative Commons license CC BY-SA 4.0</a> and the <a rel=\"license\" href=\"https://creativecommons.org/publicdomain/zero/1.0/\">Creative Commons license CC0 1.0</a>.</p></div>"
-	    (org-test-with-parsed-data
-                header
-	      (oer-reveal-license-to-fmt 'html nil "test.html" t))))
-    (should
-     (equal "Except where otherwise noted, the work “A test”, © 2019 \\href{https://lechten.gitlab.io/#me}{Jens Lechtenbörger}, is published under the \\href{https://creativecommons.org/licenses/by-sa/4.0/}{Creative Commons license CC BY-SA 4.0} and the \\href{https://creativecommons.org/publicdomain/zero/1.0/}{Creative Commons license CC0 1.0}."
-	    (org-test-with-parsed-data
-                header
-	      (oer-reveal-license-to-fmt 'pdf nil "dummy")))))
+    ;; Multiple licenses, no typeof, no date, no legalese.
+    (let ((header "#+TITLE: A test\n#+SPDX-FileCopyrightText: 2019 Jens Lechtenbörger <https://lechten.gitlab.io/#me>\n#+SPDX-License-Identifier: CC-BY-SA-4.0\n#+SPDX-License-Identifier: CC0-1.0\n"))
+      (should
+       (equal "<div class=\"rdfa-license\" about=\"test.html\" prefix=\"dc: http://purl.org/dc/elements/1.1/ dcterms: http://purl.org/dc/terms/ dcmitype: http://purl.org/dc/dcmitype/ cc: http://creativecommons.org/ns#\"><p>Except where otherwise noted, the work “<span property=\"dcterms:title\">A test</span>”, <span property=\"dc:rights\">© <span property=\"dcterms:dateCopyrighted\">2019</span> <a rel=\"cc:attributionURL dcterms:creator\" href=\"https://lechten.gitlab.io/#me\" property=\"cc:attributionName\">Jens Lechtenbörger</a></span>, is published under the <a rel=\"license\" href=\"https://creativecommons.org/licenses/by-sa/4.0/\">Creative Commons license CC BY-SA 4.0</a> and the <a rel=\"license\" href=\"https://creativecommons.org/publicdomain/zero/1.0/\">Creative Commons license CC0 1.0</a>.</p></div>"
+	      (org-test-with-parsed-data
+               header
+	       (oer-reveal-license-to-fmt 'html nil "test.html" t))))
+      (should
+       (equal "Except where otherwise noted, the work “A test”, © 2019 \\href{https://lechten.gitlab.io/#me}{Jens Lechtenbörger}, is published under the \\href{https://creativecommons.org/licenses/by-sa/4.0/}{Creative Commons license CC BY-SA 4.0} and the \\href{https://creativecommons.org/publicdomain/zero/1.0/}{Creative Commons license CC0 1.0}."
+	      (org-test-with-parsed-data
+               header
+	       (oer-reveal-license-to-fmt 'pdf nil "dummy")))))
 
-  ;; Header with e-mail address instead of HTTP URI, with single license.
-  (let ((header "#+TITLE: A test\n#+SPDX-FileCopyrightText: 2019 Jens Lechtenbörger <mail@example.org>\n#+SPDX-License-Identifier: CC-BY-SA-4.0\n"))
-    (should
-     (equal "Except where otherwise noted, the work “A test”, © 2019 Jens Lechtenbörger, is published under the \\href{https://creativecommons.org/licenses/by-sa/4.0/}{Creative Commons license CC BY-SA 4.0}."
-	    (org-test-with-parsed-data
-                header
-	      (oer-reveal-license-to-fmt 'pdf nil "dummy")))))
+    ;; Header with e-mail address instead of HTTP URI, with single license.
+    (let ((header "#+TITLE: A test\n#+SPDX-FileCopyrightText: 2019 Jens Lechtenbörger <mail@example.org>\n#+SPDX-License-Identifier: CC-BY-SA-4.0\n"))
+      (should
+       (equal "Except where otherwise noted, the work “A test”, © 2019 Jens Lechtenbörger, is published under the \\href{https://creativecommons.org/licenses/by-sa/4.0/}{Creative Commons license CC BY-SA 4.0}."
+	      (org-test-with-parsed-data
+               header
+	       (oer-reveal-license-to-fmt 'pdf nil "dummy")))))
 
-  ;; Header without URL/e-mail address, with single license, neither prefix nor typeof.
-  (let ((header "#+TITLE: A test\n#+SPDX-FileCopyrightText: 2019 Jens Lechtenbörger\n#+SPDX-License-Identifier: CC-BY-SA-4.0\n"))
-    (should
-     (equal "<div class=\"rdfa-license\" about=\"test.html\"><p>Except where otherwise noted, the work “<span property=\"dcterms:title\">A test</span>”, <span property=\"dc:rights\">© <span property=\"dcterms:dateCopyrighted\">2019</span> <span property=\"cc:attributionName\">Jens Lechtenbörger</span></span>, is published under the <a rel=\"license\" href=\"https://creativecommons.org/licenses/by-sa/4.0/\">Creative Commons license CC BY-SA 4.0</a>.</p></div>"
-	    (org-test-with-parsed-data
-                header
-	      (oer-reveal-license-to-fmt 'html nil "test.html")))))
+    ;; Header without URL/e-mail address, with single license, neither prefix nor typeof.
+    (let ((header "#+TITLE: A test\n#+SPDX-FileCopyrightText: 2019 Jens Lechtenbörger\n#+SPDX-License-Identifier: CC-BY-SA-4.0\n"))
+      (should
+       (equal "<div class=\"rdfa-license\" about=\"test.html\"><p>Except where otherwise noted, the work “<span property=\"dcterms:title\">A test</span>”, <span property=\"dc:rights\">© <span property=\"dcterms:dateCopyrighted\">2019</span> <span property=\"cc:attributionName\">Jens Lechtenbörger</span></span>, is published under the <a rel=\"license\" href=\"https://creativecommons.org/licenses/by-sa/4.0/\">Creative Commons license CC BY-SA 4.0</a>.</p></div>"
+	      (org-test-with-parsed-data
+               header
+	       (oer-reveal-license-to-fmt 'html nil "test.html")))))
 
-  ;; Multiple authors with URLs and single license.
-  (let ((header "#+TITLE: A test\n#+SPDX-FileCopyrightText: 2019 Alice <https://example.org/#alice>\n#+SPDX-FileCopyrightText: 2017-2019 Bob <https://example.org/#bob>\n#+SPDX-License-Identifier: CC-BY-SA-4.0\n")
-        (now "2019-12-27 Fri 19:19"))
-    (should
-     (equal "<div class=\"rdfa-license\" about=\"test.html\" prefix=\"dc: http://purl.org/dc/elements/1.1/ dcterms: http://purl.org/dc/terms/ dcmitype: http://purl.org/dc/dcmitype/ cc: http://creativecommons.org/ns#\" typeof=\"dcmitype:InteractiveResource\"><p>Except where otherwise noted, the work “<span property=\"dcterms:title\">A test</span>”, <span property=\"dc:rights\">© <span property=\"dcterms:dateCopyrighted\">2019</span> <a rel=\"cc:attributionURL dcterms:creator\" href=\"https://example.org/#alice\" property=\"cc:attributionName\">Alice</a></span> and <span property=\"dc:rights\">© <span property=\"dcterms:dateCopyrighted\">2017-2019</span> <a rel=\"cc:attributionURL dcterms:creator\" href=\"https://example.org/#bob\" property=\"cc:attributionName\">Bob</a></span>, is published under the <a rel=\"license\" href=\"https://creativecommons.org/licenses/by-sa/4.0/\">Creative Commons license CC BY-SA 4.0</a>.</p></div>"
-	    (org-test-with-parsed-data
-                header
-	      (oer-reveal-license-to-fmt 'html nil "test.html" t t))))
-    (should
-     (equal (concat "Except where otherwise noted, the work “A test”, © 2019 \\href{https://example.org/#alice}{Alice} and © 2017-2019 \\href{https://example.org/#bob}{Bob}, is published under the \\href{https://creativecommons.org/licenses/by-sa/4.0/}{Creative Commons license CC BY-SA 4.0}."
-                    "\n\nCreated: " now)
-	    (org-test-with-parsed-data
-                header
-	      (oer-reveal-license-to-fmt 'pdf now "dummy")))))
+    ;; Multiple authors with URLs and single license.
+    (let ((header "#+TITLE: A test\n#+SPDX-FileCopyrightText: 2019 Alice <https://example.org/#alice>\n#+SPDX-FileCopyrightText: 2017-2019 Bob <https://example.org/#bob>\n#+SPDX-License-Identifier: CC-BY-SA-4.0\n")
+          (now "2019-12-27 Fri 19:19"))
+      (should
+       (equal "<div class=\"rdfa-license\" about=\"test.html\" prefix=\"dc: http://purl.org/dc/elements/1.1/ dcterms: http://purl.org/dc/terms/ dcmitype: http://purl.org/dc/dcmitype/ cc: http://creativecommons.org/ns#\" typeof=\"dcmitype:InteractiveResource\"><p>Except where otherwise noted, the work “<span property=\"dcterms:title\">A test</span>”, <span property=\"dc:rights\">© <span property=\"dcterms:dateCopyrighted\">2019</span> <a rel=\"cc:attributionURL dcterms:creator\" href=\"https://example.org/#alice\" property=\"cc:attributionName\">Alice</a></span> and <span property=\"dc:rights\">© <span property=\"dcterms:dateCopyrighted\">2017-2019</span> <a rel=\"cc:attributionURL dcterms:creator\" href=\"https://example.org/#bob\" property=\"cc:attributionName\">Bob</a></span>, is published under the <a rel=\"license\" href=\"https://creativecommons.org/licenses/by-sa/4.0/\">Creative Commons license CC BY-SA 4.0</a>.</p></div>"
+	      (org-test-with-parsed-data
+               header
+	       (oer-reveal-license-to-fmt 'html nil "test.html" t t))))
+      (should
+       (equal (concat "Except where otherwise noted, the work “A test”, © 2019 \\href{https://example.org/#alice}{Alice} and © 2017-2019 \\href{https://example.org/#bob}{Bob}, is published under the \\href{https://creativecommons.org/licenses/by-sa/4.0/}{Creative Commons license CC BY-SA 4.0}."
+                      "\n\nCreated: " now)
+	      (org-test-with-parsed-data
+               header
+	       (oer-reveal-license-to-fmt 'pdf now "dummy")))))
 
-  ;; Unknown license.
-  (let ((header "#+TITLE: A test\n#+SPDX-FileCopyrightText: 2019 Jens Lechtenbörger <mail@example.org>\n#+SPDX-License-Identifier: CC-BY-SA-42\n"))
-    (should-error
-     (org-test-with-parsed-data
-         header
-       (oer-reveal-license-to-fmt 'pdf nil "dummy"))))
+    ;; Unknown license.
+    (let ((header "#+TITLE: A test\n#+SPDX-FileCopyrightText: 2019 Jens Lechtenbörger <mail@example.org>\n#+SPDX-License-Identifier: CC-BY-SA-42\n"))
+      (should-error
+       (org-test-with-parsed-data
+        header
+        (oer-reveal-license-to-fmt 'pdf nil "dummy"))))
 
-  ;; Missing license.
-  (let ((header "#+TITLE: A test\n#+SPDX-FileCopyrightText: 2019 Jens Lechtenbörger <mail@example.org>\n#+SPDX-Nonsense: CC-BY-SA-42\n"))
-    (should-error
-     (org-test-with-parsed-data
-         header
-       (oer-reveal-license-to-fmt 'html nil "dummy"))))
+    ;; Missing license.
+    (let ((header "#+TITLE: A test\n#+SPDX-FileCopyrightText: 2019 Jens Lechtenbörger <mail@example.org>\n#+SPDX-Nonsense: CC-BY-SA-42\n"))
+      (should-error
+       (org-test-with-parsed-data
+        header
+        (oer-reveal-license-to-fmt 'html nil "dummy"))))
 
-  ;; Missing copyright years.
-  (let ((header "#+TITLE: A test\n#+SPDX-FileCopyrightText: Jens Lechtenbörger <mail@example.org>\n#+SPDX-License-Identifier: CC-BY-SA-4.0\n"))
-    (should-error
-     (org-test-with-parsed-data
-         header
-       (oer-reveal-license-to-fmt 'pdf t "dummy")))
-    (should-error
-     (org-test-with-parsed-data
-         header
-       (oer-reveal-license-to-fmt 'html t "dummy")))))
+    ;; Missing copyright years.
+    (let ((header "#+TITLE: A test\n#+SPDX-FileCopyrightText: Jens Lechtenbörger <mail@example.org>\n#+SPDX-License-Identifier: CC-BY-SA-4.0\n"))
+      (should-error
+       (org-test-with-parsed-data
+        header
+        (oer-reveal-license-to-fmt 'pdf t "dummy")))
+      (should-error
+       (org-test-with-parsed-data
+        header
+        (oer-reveal-license-to-fmt 'html t "dummy"))))))
+
+
 
 ;;; oer-reveal-ert-tests.el ends here
