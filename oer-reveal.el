@@ -7,7 +7,7 @@
 
 ;; Author: Jens Lechtenbörger
 ;; URL: https://gitlab.com/oer/oer-reveal
-;; Version: 2.1.1
+;; Version: 2.2.0
 ;; Package-Requires: ((emacs "24.4") (org-re-reveal "2.12.0"))
 ;; Keywords: hypermedia, tools, slideshow, presentation, OER
 
@@ -361,7 +361,7 @@ contained in this directory.")
 (defconst oer-reveal-submodules-url
   "https://gitlab.com/oer/emacs-reveal-submodules.git"
   "Git URL for submodules of reveal.js and plugins.")
-(defconst oer-reveal-submodules-version "1.0.0"
+(defconst oer-reveal-submodules-version "1.1.0"
   "Version of submodules to check out.")
 (defconst oer-reveal-buffer "*oer-reveal git output*"
   "Name of buffer holding Git output.")
