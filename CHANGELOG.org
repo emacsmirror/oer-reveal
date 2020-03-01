@@ -11,6 +11,12 @@ where version numbers starting with version 1.0.0 adhere to
 
 ** [Unreleased]
 
+** [2.2.1] - 2020-03-01
+*** Fixed
+    - Set ~oer-reveal-submodules-version~ to 1.1.1
+      - Update emacs-reveal-submodules for update of reveal.js jump
+        plugin
+
 ** [2.2.0] - 2020-01-24
 *** Changed
     - Set ~oer-reveal-submodules-version~ to 1.1.0
