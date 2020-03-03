@@ -939,10 +939,10 @@ and return as result."
 If optional NO-NEWLINES is non-nil, return result without newlines."
   (with-temp-buffer
     (insert-file-contents-literally filename)
-    (if no-newlines
-	(replace-regexp-in-string
-	 "\n" " " (buffer-substring-no-properties (point-min) (point-max)))
-      (buffer-substring-no-properties (point-min) (point-max)))))
+    (let ((decoded (decode-coding-region (point-min) (point-max) 'utf-8 t)))
+      (if no-newlines
+	  (replace-regexp-in-string "\n" " " decoded)
+        decoded))))
 
 (defun oer-reveal--attribute-author
     (attributionname attributionurl copyright backend)
