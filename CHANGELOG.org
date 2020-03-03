@@ -11,6 +11,12 @@ where version numbers starting with version 1.0.0 adhere to
 
 ** [Unreleased]
 
+** [2.2.2] - 2020-03-03
+*** Fixed
+    - In ~oer-reveal--file-as-string~, decode file contents to UTF-8
+    - In ~oer-reveal--attribute-author~, allow empty licensetext if
+      permit is given
+
 ** [2.2.1] - 2020-03-01
 *** Fixed
     - Set ~oer-reveal-submodules-version~ to 1.1.1
