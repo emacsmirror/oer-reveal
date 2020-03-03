@@ -1065,7 +1065,9 @@ As side effect, copy figure as described for `oer-reveal-copy-dir-suffix'."
 		      (if licenseurl
 			  (format " under [[%s][%s]];" licenseurl licensetext)
 			(format " under %s" licensetext))
-		    (user-error "Field `licensetext' missing in: %s" metadata)))
+		    (if (< 0 (length permit))
+                        ""
+                      (user-error "Neither `licensetext' nor `permit' given in: %s" metadata))))
 	 (orglicense (cond ((eq shortlicense 'none) "")
 			   (shortlicense
                             (cl-assert (and sourceuri licenseurl) nil
