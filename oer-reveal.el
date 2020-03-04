@@ -1358,40 +1358,140 @@ See URL `https://reuse.software/faq/#licensing'.")
   "Regular expression to match SPDX license identifier.
 See URL `https://reuse.software/faq/'.")
 
-(defun oer-reveal--convert-creator (value fmt)
-  "Convert creator specified by VALUE to FMT."
-  (unless (string-match oer-reveal--copyright-regexp value)
-    (error "Copyright line not matched: %s" value))
-  (let* ((years (match-string 1 value))
-         (name (match-string 2 value))
-         ;; URI is optional, enclosed in <...>.
-         (uri (match-string 4 value))
-         ;; On Emacs 24, string-trim destroys match data; thus trim after
-         ;; final match-string.
-         (years (string-trim years))
-         (name (string-trim name))
-         ;; URI may be an e-mail address, which would be useless.
-         (isurl (and uri (oer-reveal-http-url-p uri)))
-         (html-template
-          (format oer-reveal--rights-html-template
-                  (concat oer-reveal--datecopy-html-template
-                          " "
-                          (if isurl
-                              oer-reveal--creator-html-template
-                            oer-reveal--attribution-html-template))))
-         (pdf-template (concat oer-reveal--copyright-string
-                               " %s "
-                               (if isurl
-                                   oer-reveal--href-pdf-template
-                                 "%s")))
-         (template (cond ((eq fmt 'html) html-template)
-                         ((eq fmt 'pdf) pdf-template)
-                         (t (error "Format `%s' not supported" fmt)))))
-    (if isurl
-        (format template years (string-trim uri) name)
-      (message "If you used a URL in the SPDX copyright header, an attributionURL could be generated.")
-      (sit-for 2)
-      (format template years name))))
+(defcustom oer-reveal-use-year-ranges-p t
+  "If t, use ranges for copyright years.
+E.g., use \"2018-2020\" instead of \"2018, 2019, 2020\".
+Set to nil to use lists of years."
+  :group 'org-export-oer-reveal
+  :type 'boolean
+  :package-version '(oer-reveal . "2.3.0"))
+
+(defun oer-reveal-sort-creators-p (first second)
+  "Sort creators FIRST and SECOND.
+Creators are sorted by date, then by name."
+  (or (string< (nth 1 first) (nth 1 second))
+      (and (string= (nth 1 first) (nth 1 second))
+           (string< (nth 0 first) (nth 0 second)))))
+
+(defcustom oer-reveal-sort-creators-pred #'oer-reveal-sort-creators-p
+  "Predicate to sort structures that represent creators.
+Sorts with `oer-reveal-sort-creators-p' by default."
+  :group 'org-export-oer-reveal
+  :type 'function
+  :package-version '(oer-reveal . "2.3.0"))
+
+(defun oer-reveal--explode-range (range)
+  "Turn RANGE into list of numbers.
+RANGE must be a string, which can either be a single number of a range
+such as \"7-13\"."
+  (let* ((parts (split-string range "-" t " "))
+         (numbers (mapcar #'string-to-number parts)))
+    (if (= 1 (length numbers))
+        numbers
+      (unless (= 2 (length numbers))
+        (user-error "Invalid range: %s" range))
+      (unless (< (car numbers) (cadr numbers))
+        (user-error "First year of range not smaller than second: %s" range))
+      (number-sequence (car numbers) (cadr numbers)))))
+
+(defun oer-reveal--merge-years (strings)
+  "Merge STRINGS, which represent years, into single string."
+  (let ((union (sort
+                (delete-dups (mapcan #'oer-reveal--explode-range strings))
+                #'<))
+         ;; Variable start remembers the beginning of a range,
+         ;; current the max value so far
+        start current result)
+    (mapconcat #'identity
+     (if oer-reveal-use-year-ranges-p
+         (reverse
+          (dolist (year (append union '(nil)) result)
+            (if (and year current (= year (+ 1 current)))
+                ;; Ordinary year.  If one larger than current, continue range.
+                (setq current (+ 1 current))
+              ;; Else, close range if current has value.
+              (when current
+                (if (> current start)
+                    (push (format "%s-%s" start current) result)
+                  (push (format "%s" start) result)))
+              (setq current year)
+              (setq start year))))
+       (mapcar #'number-to-string union))
+     ", ")))
+
+(defun oer-reveal--convert-creators (creators fmt connective)
+  "Convert CREATORS to FMT with CONNECTIVE.
+CREATORS is a list of values of SPDX-FileCopyrightText lines;
+FMT must be `html' or `pdf'; CONNECTIVE is a word to connect multiple
+creators if necessary."
+  (let (lines)
+    (maphash (lambda (key value)
+               (push (list key (oer-reveal--merge-years (car value))
+                           (cdr value))
+                     lines))
+             (oer-reveal--aggregate-creators creators))
+    (let ((sorted (sort lines oer-reveal-sort-creators-pred)))
+      (mapconcat
+       (lambda (entry)
+         (let* ((name (nth 0 entry))
+                (years (nth 1 entry))
+                (uri (nth 2 entry))
+                (html-template
+                 (format oer-reveal--rights-html-template
+                         (concat oer-reveal--datecopy-html-template
+                                 " "
+                                 (if uri
+                                     oer-reveal--creator-html-template
+                                   oer-reveal--attribution-html-template))))
+                (pdf-template (concat oer-reveal--copyright-string
+                                      " %s "
+                                      (if uri
+                                          oer-reveal--href-pdf-template
+                                        "%s")))
+                (template (cond ((eq fmt 'html) html-template)
+                                ((eq fmt 'pdf) pdf-template)
+                                (t (error "Format `%s' not supported" fmt)))))
+           (if uri
+               (format template years uri name)
+             (message "If you used a URL in the SPDX copyright header, an attributionURL could be generated.")
+             (sit-for 2)
+             (format template years name))))
+       sorted connective))))
+
+(defun oer-reveal--aggregate-creators (lines)
+  "Group creators in SPDX-FileCopyrightText LINES.
+A single creator may occur in multiple lines, typically with different pieces
+of year information.  Aggregate those years per unique creator.
+Return TODO."
+  (let ((result (make-hash-table :test 'equal)))
+    (dolist (line lines result)
+      (unless (string-match oer-reveal--copyright-regexp line)
+        (error "Copyright line not matched: %s" line))
+      (let* ((years (match-string 1 line))
+             (name (match-string 2 line))
+             ;; URI is optional, enclosed in <...>.
+             (uri (match-string 4 line))
+             ;; On Emacs 24, string-trim destroys match data;
+             ;; thus trim after final match-string.
+             (years (string-trim years))
+             (name (string-trim name))
+             ;; URI may be an e-mail address, which would be useless.
+             (isurl (and uri (oer-reveal-http-url-p uri)))
+             (info (gethash name result)))
+        (if info
+            (let* ((iyears (car info))
+                   (iuri (or (cdr info)
+                             (and isurl (string-trim uri)))))
+              (when (and uri iuri (not (equal uri iuri)))
+                (user-error
+                 "Different URIs (%s vs %s) for %s.  Unify SPDX headers?"
+                 uri iuri name))
+              (puthash name
+                       (cons (cons years iyears) iuri)
+                       result))
+          (puthash name
+                   (cons (list years) (and isurl (string-trim uri)))
+                   result))))))
 
 (defun oer-reveal--convert-license (value fmt language)
   "Convert license specified by VALUE to FMT in LANGUAGE."
@@ -1414,15 +1514,15 @@ HEADER indicates one of the two types of SPDX headers, namely `copyright'
 or `license'.  LINES are newline-separated lines of such headers.
 FMT specifies `html' or `pdf', while LANGUAGE is a two-letter language
 identifier in `oer-reveal-dictionaries'."
-  (let ((connective (oer-reveal--translate language header)))
-    (mapconcat (lambda (line)
-                 (cond ((eq header 'copyright)
-                        (oer-reveal--convert-creator line fmt))
-                       ((eq header 'license)
+  (let ((connective (oer-reveal--translate language header))
+        (line-list (delete-dups (split-string lines "\n" t " "))))
+    (cond ((eq header 'copyright)
+           (oer-reveal--convert-creators line-list fmt connective))
+          ((eq header 'license)
+           (mapconcat (lambda (line)
                         (oer-reveal--convert-license line fmt language))
-                       (t (error "Unknown SPDX header type: `%s'" header))))
-               (delete-dups (split-string lines "\n" t " "))
-               connective)))
+                      line-list connective))
+          (t (error "Unknown SPDX header type: `%s'" header)))))
 
 (defun oer-reveal--convert-title (title fmt)
   "Convert TITLE to FMT."
