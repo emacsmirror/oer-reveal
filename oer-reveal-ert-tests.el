@@ -438,4 +438,146 @@ variable, and communication channel under `info'."
                                   oer-reveal-copy-dir-suffix)
                           t)))))
 
+(ert-deftest test-explode-range ()
+  (should (equal (oer-reveal--explode-range "1") '(1)))
+  (should (equal (oer-reveal--explode-range "1-3") '(1 2 3)))
+  (should-error (oer-reveal--explode-range "1-2-3"))
+  (should-error (oer-reveal--explode-range "3-1")))
+
+(ert-deftest test-merge-years-with-merge ()
+  (let ((oer-reveal-use-year-ranges-p t))
+    (should (equal (oer-reveal--merge-years '()) ""))
+    (should (equal (oer-reveal--merge-years '("2020")) "2020"))
+    (should (equal (oer-reveal--merge-years '("2020" "2020")) "2020"))
+    (should (equal (oer-reveal--merge-years '("2020" "2018")) "2018, 2020"))
+    (should (equal (oer-reveal--merge-years '("2019" "2020")) "2019-2020"))
+    (should (equal (oer-reveal--merge-years
+                    '("2019" "2020" "2018")) "2018-2020"))
+    (should (equal (oer-reveal--merge-years
+                    '("2019" "2020" "2018" "2019")) "2018-2020"))
+    (should (equal (oer-reveal--merge-years
+                    '("2019-2020" "2018")) "2018-2020"))
+    (should (equal (oer-reveal--merge-years
+                    '("2019-2020" "2018" "2019")) "2018-2020"))
+    (should (equal (oer-reveal--merge-years
+                    '("2019-2020" "2018-2019")) "2018-2020"))
+    (should (equal (oer-reveal--merge-years
+                    '("2019-2020" "2017")) "2017, 2019-2020"))
+    (should (equal (oer-reveal--merge-years
+                    '("2014" "2015" "2019-2020" "2017"))
+                   "2014-2015, 2017, 2019-2020"))
+    (should (equal (oer-reveal--merge-years
+                    '("2014-2015" "2019-2020" "2017"))
+                   "2014-2015, 2017, 2019-2020"))
+    (should (equal (oer-reveal--merge-years
+                    '("2016" "2014-2015" "2019-2020" "2017"))
+                   "2014-2017, 2019-2020"))
+    (should (equal (oer-reveal--merge-years
+                    '("2018" "2016" "2014-2015" "2019-2020" "2017"))
+                   "2014-2020"))
+    (should (equal (oer-reveal--merge-years
+                    '("2018" "2016" "2014-2023" "2019-2020" "2017"))
+                   "2014-2023"))))
+
+(ert-deftest test-merge-years-without-merge ()
+  (let (oer-reveal-use-year-ranges-p)
+    (should (equal (oer-reveal--merge-years '("2020")) "2020"))
+    (should (equal (oer-reveal--merge-years '("2020" "2020")) "2020"))
+    (should (equal (oer-reveal--merge-years '("2020" "2018")) "2018, 2020"))
+    (should (equal (oer-reveal--merge-years '("2019" "2020")) "2019, 2020"))
+    (should (equal (oer-reveal--merge-years
+                    '("2019" "2020" "2018")) "2018, 2019, 2020"))
+    (should (equal (oer-reveal--merge-years
+                    '("2019" "2020" "2018" "2019")) "2018, 2019, 2020"))
+    (should (equal (oer-reveal--merge-years
+                    '("2019-2020" "2018")) "2018, 2019, 2020"))
+    (should (equal (oer-reveal--merge-years
+                    '("2019-2020" "2018" "2019")) "2018, 2019, 2020"))
+    (should (equal (oer-reveal--merge-years
+                    '("2019-2020" "2018-2019")) "2018, 2019, 2020"))
+    (should (equal (oer-reveal--merge-years
+                    '("2019-2020" "2017")) "2017, 2019, 2020"))))
+
+(ert-deftest test-aggregate-creators ()
+  (let ((jl-single "2020 Jens Lechtenbörger <https://lechten.gitlab.io/#me>")
+        (jl-error "2020 Jens Lechtenbörger <https://lechten.gitlab.io/#42>")
+        (jl-part "2020 Jens Lechtenbörger")
+        (jl-range "2017-2019 Jens Lechtenbörger <https://lechten.gitlab.io/#me>"))
+    (should-error (oer-reveal--aggregate-creators (list jl-single jl-error)))
+    (should
+     (equal (gethash "Jens Lechtenbörger"
+                     (oer-reveal--aggregate-creators (list jl-single)))
+            (cons (list "2020") "https://lechten.gitlab.io/#me")))
+    (should
+     (equal (gethash "Jens Lechtenbörger"
+                     (oer-reveal--aggregate-creators (list jl-part)))
+            (cons (list "2020") nil)))
+    (should
+     (equal (gethash "Jens Lechtenbörger"
+                     (oer-reveal--aggregate-creators (list jl-single jl-part)))
+            (cons (list "2020" "2020") "https://lechten.gitlab.io/#me")))
+    (should
+     (equal (gethash "Jens Lechtenbörger"
+                     (oer-reveal--aggregate-creators (list jl-part jl-single)))
+            (cons (list "2020" "2020") "https://lechten.gitlab.io/#me")))
+    (should
+     (equal (gethash "Jens Lechtenbörger"
+                     (oer-reveal--aggregate-creators (list jl-range)))
+            (cons (list "2017-2019") "https://lechten.gitlab.io/#me")))
+    (should
+     (equal (gethash "Jens Lechtenbörger"
+                     (oer-reveal--aggregate-creators (list jl-single jl-range)))
+            (cons (list "2017-2019" "2020") "https://lechten.gitlab.io/#me")))))
+
+(ert-deftest test-convert-creators ()
+  (let ((jl-single "2020 Jens Lechtenbörger <https://lechten.gitlab.io/#me>")
+        (jl-part "2020 Jens Lechtenbörger")
+        (jl-old "2000 Jens Lechtenbörger")
+        (jl-range "2017-2019 Jens Lechtenbörger <https://lechten.gitlab.io/#me>")
+        (alice "2019 Alice <https://example.org/#alice>")
+        (bob "2017-2019 Bob <https://example.org/#bob>"))
+    (should
+     (equal (oer-reveal--convert-creators (list jl-single) 'html " and ")
+            "<span property=\"dc:rights\">© <span property=\"dcterms:dateCopyrighted\">2020</span> <a rel=\"cc:attributionURL dcterms:creator\" href=\"https://lechten.gitlab.io/#me\" property=\"cc:attributionName\">Jens Lechtenbörger</a></span>"))
+    (should
+     (equal (oer-reveal--convert-creators
+             (list jl-single jl-part) 'html " and ")
+            "<span property=\"dc:rights\">© <span property=\"dcterms:dateCopyrighted\">2020</span> <a rel=\"cc:attributionURL dcterms:creator\" href=\"https://lechten.gitlab.io/#me\" property=\"cc:attributionName\">Jens Lechtenbörger</a></span>"))
+    (should
+     (equal (oer-reveal--convert-creators
+             (list jl-part jl-range) 'html " and ")
+            "<span property=\"dc:rights\">© <span property=\"dcterms:dateCopyrighted\">2017-2020</span> <a rel=\"cc:attributionURL dcterms:creator\" href=\"https://lechten.gitlab.io/#me\" property=\"cc:attributionName\">Jens Lechtenbörger</a></span>"))
+    (should
+     (equal (oer-reveal--convert-creators
+             (list jl-single jl-range) 'html " and ")
+            "<span property=\"dc:rights\">© <span property=\"dcterms:dateCopyrighted\">2017-2020</span> <a rel=\"cc:attributionURL dcterms:creator\" href=\"https://lechten.gitlab.io/#me\" property=\"cc:attributionName\">Jens Lechtenbörger</a></span>"))
+    (should
+     (equal (oer-reveal--convert-creators
+             (list jl-single jl-range jl-old) 'html " and ")
+            "<span property=\"dc:rights\">© <span property=\"dcterms:dateCopyrighted\">2000, 2017-2020</span> <a rel=\"cc:attributionURL dcterms:creator\" href=\"https://lechten.gitlab.io/#me\" property=\"cc:attributionName\">Jens Lechtenbörger</a></span>"))
+
+    ;; Two authors.  Sorted by date.
+    (should
+     (equal (oer-reveal--convert-creators
+             (list alice jl-single) 'html " and ")
+            "<span property=\"dc:rights\">© <span property=\"dcterms:dateCopyrighted\">2019</span> <a rel=\"cc:attributionURL dcterms:creator\" href=\"https://example.org/#alice\" property=\"cc:attributionName\">Alice</a></span> and <span property=\"dc:rights\">© <span property=\"dcterms:dateCopyrighted\">2020</span> <a rel=\"cc:attributionURL dcterms:creator\" href=\"https://lechten.gitlab.io/#me\" property=\"cc:attributionName\">Jens Lechtenbörger</a></span>"))
+
+    ;; Two authors with same years, sorted by name.
+    (should
+     (equal (oer-reveal--convert-creators
+             (list jl-range bob) 'html " and ")
+            "<span property=\"dc:rights\">© <span property=\"dcterms:dateCopyrighted\">2017-2019</span> <a rel=\"cc:attributionURL dcterms:creator\" href=\"https://example.org/#bob\" property=\"cc:attributionName\">Bob</a></span> and <span property=\"dc:rights\">© <span property=\"dcterms:dateCopyrighted\">2017-2019</span> <a rel=\"cc:attributionURL dcterms:creator\" href=\"https://lechten.gitlab.io/#me\" property=\"cc:attributionName\">Jens Lechtenbörger</a></span>"))
+
+    ;; Two authors, one with merged entries, sorted by years.
+    (should
+     (equal (oer-reveal--convert-creators
+             (list jl-range bob jl-old) 'html " and ")
+            "<span property=\"dc:rights\">© <span property=\"dcterms:dateCopyrighted\">2000, 2017-2019</span> <a rel=\"cc:attributionURL dcterms:creator\" href=\"https://lechten.gitlab.io/#me\" property=\"cc:attributionName\">Jens Lechtenbörger</a></span> and <span property=\"dc:rights\">© <span property=\"dcterms:dateCopyrighted\">2017-2019</span> <a rel=\"cc:attributionURL dcterms:creator\" href=\"https://example.org/#bob\" property=\"cc:attributionName\">Bob</a></span>"))
+
+    ;; More authors.
+    (should
+     (equal (oer-reveal--convert-creators
+             (list jl-range alice jl-single jl-part bob jl-old) 'html " and ")
+            "<span property=\"dc:rights\">© <span property=\"dcterms:dateCopyrighted\">2000, 2017-2020</span> <a rel=\"cc:attributionURL dcterms:creator\" href=\"https://lechten.gitlab.io/#me\" property=\"cc:attributionName\">Jens Lechtenbörger</a></span> and <span property=\"dc:rights\">© <span property=\"dcterms:dateCopyrighted\">2017-2019</span> <a rel=\"cc:attributionURL dcterms:creator\" href=\"https://example.org/#bob\" property=\"cc:attributionName\">Bob</a></span> and <span property=\"dc:rights\">© <span property=\"dcterms:dateCopyrighted\">2019</span> <a rel=\"cc:attributionURL dcterms:creator\" href=\"https://example.org/#alice\" property=\"cc:attributionName\">Alice</a></span>"))
+    ))
 ;;; oer-reveal-ert-tests.el ends here
