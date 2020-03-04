@@ -617,7 +617,7 @@ Return nil if URL does not look like the URL of a GitLab repository."
       (let* ((path (match-string 3 url))
              (components (split-string path "/"))
              (project-or-group (car components))
-             (path-in-project (string-join (cdr components) "/"))
+             (path-in-project (mapconcat #'identity (cdr components) "/"))
              (source-repo (concat "https://gitlab.com/" path))
              (pages-domain (format "%s.gitlab.io" project-or-group))
              (pages-url (if (string= pages-domain path-in-project)
