@@ -325,6 +325,20 @@ variable, and communication channel under `info'."
                header
 	       (oer-reveal-license-to-fmt 'pdf nil "dummy")))))
 
+    ;; Multiple licenses with one (to be removed) duplicate.
+    ;; Same output as previous case.
+    (let ((header "#+TITLE: A test\n#+SPDX-FileCopyrightText: 2019 Jens Lechtenbörger <https://lechten.gitlab.io/#me>\n#+SPDX-License-Identifier: CC-BY-SA-4.0\n#+SPDX-License-Identifier: CC0-1.0\n#+SPDX-License-Identifier: CC-BY-SA-4.0\n"))
+      (should
+       (equal "<div class=\"rdfa-license\" about=\"test.html\" prefix=\"dc: http://purl.org/dc/elements/1.1/ dcterms: http://purl.org/dc/terms/ dcmitype: http://purl.org/dc/dcmitype/ cc: http://creativecommons.org/ns#\"><p>Except where otherwise noted, the work “<span property=\"dcterms:title\">A test</span>”, <span property=\"dc:rights\">© <span property=\"dcterms:dateCopyrighted\">2019</span> <a rel=\"cc:attributionURL dcterms:creator\" href=\"https://lechten.gitlab.io/#me\" property=\"cc:attributionName\">Jens Lechtenbörger</a></span>, is published under the <a rel=\"license\" href=\"https://creativecommons.org/licenses/by-sa/4.0/\">Creative Commons license CC BY-SA 4.0</a> and the <a rel=\"license\" href=\"https://creativecommons.org/publicdomain/zero/1.0/\">Creative Commons license CC0 1.0</a>.</p></div>"
+	      (org-test-with-parsed-data
+               header
+	       (oer-reveal-license-to-fmt 'html nil "test.html" t))))
+      (should
+       (equal "Except where otherwise noted, the work “A test”, © 2019 \\href{https://lechten.gitlab.io/#me}{Jens Lechtenbörger}, is published under the \\href{https://creativecommons.org/licenses/by-sa/4.0/}{Creative Commons license CC BY-SA 4.0} and the \\href{https://creativecommons.org/publicdomain/zero/1.0/}{Creative Commons license CC0 1.0}."
+	      (org-test-with-parsed-data
+               header
+	       (oer-reveal-license-to-fmt 'pdf nil "dummy")))))
+
     ;; Header with e-mail address instead of HTTP URI, with single license.
     (let ((header "#+TITLE: A test\n#+SPDX-FileCopyrightText: 2019 Jens Lechtenbörger <mail@example.org>\n#+SPDX-License-Identifier: CC-BY-SA-4.0\n"))
       (should
