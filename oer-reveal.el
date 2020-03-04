@@ -1421,7 +1421,7 @@ identifier in `oer-reveal-dictionaries'."
                        ((eq header 'license)
                         (oer-reveal--convert-license line fmt language))
                        (t (error "Unknown SPDX header type: `%s'" header))))
-               (split-string lines "\n" t " ")
+               (delete-dups (split-string lines "\n" t " "))
                connective)))
 
 (defun oer-reveal--convert-title (title fmt)
