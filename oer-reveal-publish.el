@@ -256,6 +256,16 @@ add `oer-reveal-publish-alternate-type-function' to
   "Compute list of plugin projects for `org-publish-project-alist'.
 For each plugin in `oer-reveal-plugins', add what to publish."
   (let (result)
+    (when (member "reveal-a11y" oer-reveal-plugins)
+      (push (list "reveal-a11y"
+		  :base-directory (expand-file-name
+				   "reveal-a11y/accessibility"
+				   oer-reveal-submodules-dir)
+		  :base-extension 'any
+		  :publishing-directory "./public/reveal.js/plugin/accessibility"
+		  :publishing-function 'org-publish-attachment
+		  :recursive t)
+            result))
     (when (member "reveal.js-coursemod" oer-reveal-plugins)
       (push (list "reveal.js-coursemod"
 		  :base-directory (expand-file-name

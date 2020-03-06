@@ -87,6 +87,8 @@ Derive from 're-reveal to add further options and keywords."
 
     :options-alist ; See org-export-options-alist for meaning of parts.
     '((:oer-reveal-plugins "OER_REVEAL_PLUGINS" nil oer-reveal-plugins t)
+      (:oer-reveal-a11y-dependency "OER_REVEAL_A11Y_DEPENDENCY" nil
+                                   oer-reveal-a11y-dependency t)
       (:oer-reveal-anything-dependency "OER_REVEAL_ANYTHING_DEPENDENCY" nil
                                        oer-reveal-anything-dependency t)
       (:oer-reveal-anything-config "OER_REVEAL_ANYTHING_CONFIG" nil
@@ -157,14 +159,15 @@ from the dev branch of reveal.js on 2018-10-04."
 
 (defcustom oer-reveal-plugins
   '("reveal.js-plugins" "Reveal.js-TOC-Progress" "reveal.js-jump-plugin"
-    "reveal.js-quiz" "reveal.js-coursemod")
+    "reveal.js-quiz" "reveal.js-coursemod" "reveal-a11y")
   "List of `plugin' components to initialize.
 Each element here is supposed to be the directory name of the plugin.
 If you remove a plugin from this list, it will no longer be initialized.
 If you add plugins to this list, you need to provide suitable
 initialization code in `oer-reveal-plugin-config'."
   :group 'org-export-oer-reveal
-  :type '(repeat string))
+  :type '(repeat string)
+  :package-version '(oer-reveal . "2.3.0"))
 
 (defcustom oer-reveal-audio-slideshow-dependency
   "{ src: '%splugin/audio-slideshow/audio-slideshow.js', condition: function( ) { return !!document.body.classList && !Reveal.isSpeakerNotes(); } }"
@@ -253,6 +256,13 @@ and opening of speaker notes on click."
   :type 'string
   :package-version '(oer-reveal . "1.3.0"))
 
+(defcustom oer-reveal-a11y-dependency
+  "{ src: '%splugin/accessibility/helper.js', async: true, condition: function() { return !!document.body.classList; } }"
+  "Dependency to initialize accessibility plugin."
+  :group 'org-export-oer-reveal
+  :type 'string
+  :package-version '(oer-reveal . "2.3.0"))
+
 (defcustom oer-reveal-coursemod-dependency
   "{ src: '%splugin/coursemod/coursemod.js', async: true }"
   "Dependency to initialize coursemod plugin."
@@ -301,7 +311,8 @@ Second arguement sets background color."
     ("reveal.js-jump-plugin" (:oer-reveal-jump-dependency) ())
     ("reveal.js-quiz" (:oer-reveal-quiz-dependency) ())
     ("reveal.js-coursemod"
-     (:oer-reveal-coursemod-dependency) (:oer-reveal-coursemod-config)))
+     (:oer-reveal-coursemod-dependency) (:oer-reveal-coursemod-config))
+    ("reveal-a11y" (:oer-reveal-a11y-dependency) ()))
   "Initialization for reveal.js plugins in `oer-reveal-plugins'.
 This is a list of triples.  Each triple consists of
 - the plugin name, which must be its directory name,
@@ -319,7 +330,7 @@ so that its value can be obtained with `plist-get' during export."
            (repeat (choice
                     (symbol :tag "JavaScript config among options-alist")
                     (string :tag "JavaScript config as string")))))
-  :package-version '(oer-reveal . "1.3.0"))
+  :package-version '(oer-reveal . "2.3.0"))
 
 (defcustom oer-reveal-default-figure-title "Figure"
   "Default title for figures whose metadata lacks a title.
@@ -361,7 +372,7 @@ contained in this directory.")
 (defconst oer-reveal-submodules-url
   "https://gitlab.com/oer/emacs-reveal-submodules.git"
   "Git URL for submodules of reveal.js and plugins.")
-(defconst oer-reveal-submodules-version "1.1.1"
+(defconst oer-reveal-submodules-version "1.2.0"
   "Version of submodules to check out.")
 (defconst oer-reveal-buffer "*oer-reveal git output*"
   "Name of buffer holding Git output.")
