@@ -677,17 +677,19 @@ SOURCE-REPO."
         (format oer-reveal-alternate-type-html
                 mime-type url title-attr)))
     types "")
-   (let* ((language (oer-reveal--language))
-          (footnote (oer-reveal--translate language 'pdffootnote)))
-     (if (< 0 (length footnote))
-         (format
-          (format oer-reveal-alternate-type-latex footnote)
-          (concat (if (string-suffix-p "/" html-url)
-                      html-url
-                    (concat html-url "/"))
-                  basename ".html")
-          source-repo)
-       ""))))
+   (if (member 'pdf types)
+       (let* ((language (oer-reveal--language))
+              (footnote (oer-reveal--translate language 'pdffootnote)))
+         (if (< 0 (length footnote))
+             (format
+              (format oer-reveal-alternate-type-latex footnote)
+              (concat (if (string-suffix-p "/" html-url)
+                          html-url
+                        (concat html-url "/"))
+                      basename ".html")
+              source-repo)
+           ""))
+     "")))
 
 (defun oer-reveal-insert-alternate-types (backend)
   "Insert Org code to add links for alternate MIME types, ignoring BACKEND.
