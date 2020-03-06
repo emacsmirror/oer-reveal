@@ -139,13 +139,13 @@
 "))
 
   ;; Links without title attribute.
-  (let ((oer-reveal-alternate-type-config
+  (let ((oer-reveal-with-alternate-types '("org" "pdf"))
+        (oer-reveal-alternate-type-config
          '(("org" "text/org")
            ("pdf" "application/pdf"))))
     (should (equal (oer-reveal-add-alternate-types
                     '("org") "git" "example.org/" "presentation")
                    "#+HTML_HEAD: <link rel=\"alternate\" type=\"text/org\" href=\"git/blob/master/presentation.org\"/>
-#+TITLE: @@latex:\\footnote{This PDF document is an inferior version of an \\href{example.org/presentation.html}{OER HTML presentation}; \\href{git}{free/libre Org mode source repository}.}@@
 "))
     (should (equal (oer-reveal-add-alternate-types
                     '("pdf") "git" "example.org/" "foo/presentation")

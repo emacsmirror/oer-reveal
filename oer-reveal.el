@@ -688,7 +688,7 @@ SOURCE-REPO."
         (format oer-reveal-alternate-type-html
                 mime-type url title-attr)))
     types "")
-   (if (member 'pdf types)
+   (if (member "pdf" types)
        (let* ((language (oer-reveal--language))
               (footnote (oer-reveal--translate language 'pdffootnote)))
          (if (< 0 (length footnote))
