@@ -11,6 +11,24 @@ where version numbers starting with version 1.0.0 adhere to
 
 ** [Unreleased]
 
+** [2.3.0] - 2020-03-06
+*** Added
+    - Variable [[file:oer-reveal.el::(defcustom oer-reveal-use-year-ranges-p t][oer-reveal-use-year-ranges-p t]]
+      controls whether consecutive copyright years are merged into
+      ranges (e.g., “2017, 2018, 2019” to “2017-2019”)
+    - Plugin reveal-a11y for improved accessibility in
+      ~oer-reveal-plugins~; with backend option
+      ~oer-reveal-a11y-dependency~, update of
+      ~oer-reveal-submodules-version~ to 1.2.0
+*** Changed
+    - Merge author information from multiple SPDX headers
+*** Fixed
+    - Do not produce duplicate license information
+    - Support colored links with different Org versions (using
+      org-add-link-type or org-link-set-parameters)
+    - Only add LaTeX title footnote if PDF is requested in
+      oer-reveal-with-alternate-types
+
 ** [2.2.2] - 2020-03-03
 *** Fixed
     - In ~oer-reveal--file-as-string~, decode file contents to UTF-8
