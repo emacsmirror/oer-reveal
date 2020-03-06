@@ -578,21 +578,30 @@ Note that this filename is exported into a subdirectory of
 ;;; Allow colored text.
 ;; The FAQ at http://orgmode.org/worg/org-faq.html contains a recipe
 ;; based on the obsolete function (since Org 9.0) org-add-link-type.
-;; Adapted to use org-link-set-parameters:
-(org-link-set-parameters
- "color"
- :follow (lambda (path)
-	   (message (concat "color "
-			    (progn (add-text-properties
-				    0 (length path)
-				    (list 'face `((t (:foreground ,path))))
-				    path) path))))
- :export (lambda (path desc backend)
-	   (cond
-	    ((eq backend 'html)
-	     (format "<span style=\"color:%s;\">%s</span>" path desc))
-	    ((eq backend 'latex)
-	     (format "{\\color{%s}%s}" path desc)))))
+;; Use org-link-set-parameters if it is available:
+(defun oer-reveal--color-link-follow (path)
+  "Color link PATH."
+  (message (concat "color "
+		   (progn (add-text-properties
+			   0 (length path)
+			   (list 'face `((t (:foreground ,path))))
+			   path)
+                          path))))
+(defun oer-reveal--color-link-export (path desc backend)
+  "Export color link at PATH with DESC to BACKEND."
+  (cond
+   ((eq backend 'html)
+    (format "<span style=\"color:%s;\">%s</span>" path desc))
+   ((eq backend 'latex)
+    (format "{\\color{%s}%s}" path desc))))
+
+(if (fboundp #'org-link-set-parameters)
+    (org-link-set-parameters "color"
+                             :follow #'oer-reveal--color-link-follow
+                             :export #'oer-reveal--color-link-export)
+  (org-add-link-type "color"
+                     #'oer-reveal--color-link-follow
+                     #'oer-reveal--color-link-export))
 
 ;;; Add alternate type links to HTML presentations and pointers to PDF.
 (defconst oer-reveal-alternate-type-html
