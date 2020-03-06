@@ -11,6 +11,11 @@ where version numbers starting with version 1.0.0 adhere to
 
 ** [Unreleased]
 
+** [2.3.1] - 2020-03-06
+*** Fixed
+    - Properly treat "pdf" in ~oer-reveal-add-alternate-types~, with
+      test case
+
 ** [2.3.0] - 2020-03-06
 *** Added
     - Variable [[file:oer-reveal.el::(defcustom oer-reveal-use-year-ranges-p t][oer-reveal-use-year-ranges-p t]]
