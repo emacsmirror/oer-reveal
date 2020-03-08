@@ -11,6 +11,12 @@ where version numbers starting with version 1.0.0 adhere to
 
 ** [Unreleased]
 
+** [2.4.0] - 2020-03-08
+*** Added
+    - Refactor functionality to determine git version (tag) for
+      directory from ~oer-reveal-submodules-ok-p~ to new function
+      ~oer-reveal-submodules-version-string~
+
 ** [2.3.1] - 2020-03-06
 *** Fixed
     - Properly treat "pdf" in ~oer-reveal-add-alternate-types~, with
