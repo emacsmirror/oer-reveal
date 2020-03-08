@@ -446,7 +446,7 @@ returns the version `oer-reveal-submodules-version'
 and make sure that submodules have been initialized by checking the
 existence of file \"reveal.js\"."
   (and (string= oer-reveal-submodules-version
-                (oer-reveal-submodules-version-string))
+                (oer-reveal-git-version-string))
        (let* ((subdirs `(,oer-reveal-submodules-dir "reveal.js" "js"))
               (dir (mapconcat #'file-name-as-directory subdirs "")))
          (file-readable-p (concat dir "reveal.js")))))
