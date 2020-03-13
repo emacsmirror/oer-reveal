@@ -448,15 +448,19 @@ otherwise in `oer-reveal-submodules-dir'."
 
 (defun oer-reveal-submodules-ok-p ()
   "Return t if submodules have correct version.
-Check that \"git describe --tags\" in `oer-reveal-submodules-dir'
+If `oer-reveal-submodules-version' is nil, disable checks and return t.
+Otherwise, check that \"git describe --tags\" in `oer-reveal-submodules-dir'
 returns the version `oer-reveal-submodules-version'
 and make sure that submodules have been initialized by checking the
 existence of file \"reveal.js\"."
-  (and (string= oer-reveal-submodules-version
+  (if oer-reveal-submodules-version
+      (and
+       (string= oer-reveal-submodules-version
                 (oer-reveal-git-version-string))
        (let* ((subdirs `(,oer-reveal-submodules-dir "reveal.js" "js"))
               (dir (mapconcat #'file-name-as-directory subdirs "")))
-         (file-readable-p (concat dir "reveal.js")))))
+         (file-readable-p (concat dir "reveal.js"))))
+    t))
 
 (defun oer-reveal-update-submodules ()
   "Update submodules for this version of oer-reveal.
