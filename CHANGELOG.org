@@ -11,6 +11,13 @@ where version numbers starting with version 1.0.0 adhere to
 
 ** [Unreleased]
 
+** [2.5.0] - 2020-03-13
+*** Changed
+    - Former const ~oer-reveal-submodules-version~ is now a customizable
+      variable that can be set to a Git version tag (as before) or to nil
+    - Function ~oer-reveal-submodules-ok-p~ returns t if
+      ~oer-reveal-submodules-version~ is nil
+
 ** [2.4.1] - 2020-03-08
 *** Fixed
     - Correct invocation of ~oer-reveal-git-version-string~ and
