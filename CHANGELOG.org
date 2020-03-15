@@ -11,6 +11,11 @@ where version numbers starting with version 1.0.0 adhere to
 
 ** [Unreleased]
 
+** [2.5.1] - 2020-03-15
+*** Fixed
+    - Update ~oer-reveal-submodules-version~ for bug fix in
+      reveal.js-coursemod plugin
+
 ** [2.5.0] - 2020-03-13
 *** Changed
     - Former const ~oer-reveal-submodules-version~ is now a customizable
