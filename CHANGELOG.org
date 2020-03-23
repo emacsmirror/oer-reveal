@@ -11,6 +11,10 @@ where version numbers starting with version 1.0.0 adhere to
 
 ** [Unreleased]
 
+** [2.6.0] - 2020-03-18
+*** Added
+    - File [[file:org/learning-objectives-notes.org][org/learning-objectives-notes.org]]
+
 ** [2.5.1] - 2020-03-15
 *** Fixed
     - Update ~oer-reveal-submodules-version~ for bug fix in
