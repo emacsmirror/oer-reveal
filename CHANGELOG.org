@@ -10,9 +10,14 @@ where version numbers starting with version 1.0.0 adhere to
 
 
 ** [Unreleased]
+
+** [2.7.0] - 2020-03-24
 *** Added
     - Files [[file:css/index.css][css/index.css]] and
       [[file:quizzes/usage-hints.js][examples/quizzes/usage-hints.js]]
+*** Changed
+    - Publish sample quizzes under [[file:examples/quizzes][examples/quizzes]]
+      (currently just one) in ~oer-reveal-publish-all~
 
 ** [2.6.0] - 2020-03-18
 *** Added
