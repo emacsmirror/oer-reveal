@@ -11,6 +11,10 @@ where version numbers starting with version 1.0.0 adhere to
 
 ** [Unreleased]
 
+** [2.7.1] - 2020-03-24
+*** Fixed
+    - Overwrite fixed height of quizzes in [[file:css/dbis.css][css/dbis.css]]
+
 ** [2.7.0] - 2020-03-24
 *** Added
     - Files [[file:css/index.css][css/index.css]] and
