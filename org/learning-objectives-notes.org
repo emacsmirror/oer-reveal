@@ -13,7 +13,7 @@ Each learning objective consists of two major components, namely an
 /action/ verb and a topic.  Action verbs specify what actions you
 should be able to perform concerning the topic, and they indicate the
 target level of skill (in Bloom’s Taxonomy or its revised version as
-sketched under a hyperlink in the slide’s notes).
+sketched under the hyperlink above).
 
 You may want to think of learning objectives as sample exam tasks.
 #+end_notes
