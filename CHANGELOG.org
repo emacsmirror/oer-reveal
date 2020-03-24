@@ -12,7 +12,7 @@ where version numbers starting with version 1.0.0 adhere to
 ** [Unreleased]
 *** Added
     - Files [[file:css/index.css][css/index.css]] and
-      [[file:quizzes/usage-hints.js][quizzes/usage-hints.js]]
+      [[file:quizzes/usage-hints.js][examples/quizzes/usage-hints.js]]
 
 ** [2.6.0] - 2020-03-18
 *** Added
