@@ -1,5 +1,5 @@
 /**
- * SPDX-FileCopyrightText: 2017-2019 Jens Lechtenbörger
+ * SPDX-FileCopyrightText: 2017-2020 Jens Lechtenbörger
  *
  * SPDX-License-Identifier: LicenseRef-MIT-JL
  *
@@ -21,6 +21,14 @@ html.jitt h3, html.jitt h4 {
 html.jitt li, html.jitt p {
   font-size: 0.8em; }
 
+
+/*********************************************
+ * Overwrite default pixel height of quizzes
+ *********************************************/
+
+div.quizArea, div.quizResults {
+    height: 66vh;
+}
 
 /*********************************************
  * Logos
