@@ -2,7 +2,7 @@
 ;; -*- Mode: Emacs-Lisp -*-
 ;; -*- coding: utf-8 -*-
 
-;; SPDX-FileCopyrightText: 2017-2019 Jens Lechtenbörger
+;; SPDX-FileCopyrightText: 2017-2020 Jens Lechtenbörger
 ;; SPDX-License-Identifier: GPL-3.0-or-later
 
 ;;; License: GPLv3
@@ -29,7 +29,9 @@
 ;; HTML export back-end).
 ;; If existing, file "index.css" and directories among "audio",
 ;; "figures", "quizzes" are added to `org-publish-project-alist'
-;; for export as attachment (copy).
+;; for export as attachment (copy).  A sample quiz on the usage of
+;; oer-reveal is included and published automatically to directory
+;; "public/quizzes".
 ;;
 ;; You may want to load/require this file from your own publish.el
 ;; with additional entries added to `org-publish-project-alist'.
@@ -407,6 +409,11 @@ Before publication, `org-publish-project-alist' contains the following:
 		 :exclude "index\\|backmatter\\|config\\|course-list\\|license-template\\|imprint\\|privacy\\|README\\|CONTRIBUTING\\|CHANGELOG"
 		 :publishing-function oer-reveal-publish-org-publishing-functions
 		 :publishing-directory "./public")
+           (list "sample-quizzes"
+		 :base-directory (expand-file-name "examples/quizzes" oer-reveal-dir)
+		 :base-extension (regexp-opt '("js"))
+		 :publishing-directory "./public/quizzes"
+		 :publishing-function 'org-publish-attachment)
 	   (list "title-slide"
 		 :base-directory (expand-file-name "title-slide" oer-reveal-dir)
 		 :base-extension (regexp-opt '("png" "jpg" "svg"))
