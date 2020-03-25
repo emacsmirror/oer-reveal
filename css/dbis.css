@@ -24,10 +24,12 @@ html.jitt li, html.jitt p {
 
 /*********************************************
  * Overwrite default pixel height of quizzes
+ * and remove box (to avoid overlaps).
  *********************************************/
 
 div.quizArea, div.quizResults {
-    height: 66vh;
+  height: 75vh;
+  box-shadow: none;
 }
 
 /*********************************************
