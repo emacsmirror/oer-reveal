@@ -150,6 +150,28 @@ browsing that file, subtree export to file."
                (character :tag "Key for subtree export to file"))
   :set #'oer-reveal-define-menu)
 
+;; The following variable with its doc string is derived from AUCTeX's
+;; TeX-master.
+(defcustom oer-reveal-master t
+  "The master file associated with the current buffer.
+If the file being edited is actually included from another file, you
+can tell oer-reveal the name of the master file by setting this variable.
+If there are multiple levels of nesting, specify the top level file.
+
+If this variable is nil, oer-reveal will query you for the name.
+
+If the variable is t, oer-reveal will assume the file is a master file
+itself.
+
+Maybe use File Variables (see Info node `(emacs)Specifying File Variables'
+in the Emacs manual) to set this variable permanently for each file."
+  :group 'org-export-oer-reveal
+  :type '(choice (const :tag "Use current buffer" t)
+                 (const :tag "Query for filename" nil)
+		 (file :format "%v"))
+  :package-version '(oer-reveal . "2.8.0"))
+(make-variable-buffer-local 'oer-reveal-master)
+
 (defcustom oer-reveal-script-files '("js/reveal.js")
   "Value to apply to `org-re-reveal-script-files'.
 By default, `org-re-reveal' also loads head.min.js, which has been removed
@@ -1673,14 +1695,30 @@ function during Org export, which passes an argument)."
   (advice-remove #'org-html-link #'oer-reveal--rewrite-link))
 
 ;;; Export and publication functionality.
+(defun oer-reveal--master-buffer ()
+  "Return master buffer for export of current buffer.
+Use `oer-reveal-master' to determine what buffer to export."
+  (unless oer-reveal-master
+    (setq oer-reveal-master (read-file-name "Master file: ")))
+  (if (stringp oer-reveal-master)
+      (let ((buffer (find-buffer-visiting oer-reveal-master)))
+        (if buffer
+            buffer
+          (error "You must load file of `oer-reveal-master': %s"
+                 oer-reveal-master)))
+    (current-buffer)))
+
 (defun oer-reveal-export-to-html
     (&optional async subtreep visible-only body-only ext-plist)
   "Export current buffer to a reveal.js HTML file.
 Optional ASYNC, SUBTREEP, VISIBLE-ONLY, BODY-ONLY, EXT-PLIST are passed
 to `org-re-reveal-export-to-html'."
   (interactive)
-  (org-re-reveal-export-to-html
-   async subtreep visible-only body-only ext-plist 'oer-reveal))
+  (let ((master-buffer (oer-reveal--master-buffer)))
+    (save-excursion
+      (with-current-buffer master-buffer
+        (org-re-reveal-export-to-html
+         async subtreep visible-only body-only ext-plist 'oer-reveal)))))
 
 (defun oer-reveal-export-to-html-and-browse
     (&optional async subtreep visible-only body-only ext-plist)
