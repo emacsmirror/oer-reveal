@@ -11,6 +11,15 @@ where version numbers starting with version 1.0.0 adhere to
 
 ** [Unreleased]
 
+** [2.8.0] - 2020-03-31
+*** Added
+    - Customizable variable [[file:oer-reveal.el::(defcustom oer-reveal-master t][oer-reveal-master]]
+      - Allow to export from included file; simplified variant of
+        AUCTeX’s master functionality
+*** Changed
+    - Use new variable in export functions such as
+      ~oer-reveal-export-to-html~
+
 ** [2.7.2] - 2020-03-25
 *** Fixed
     - Increase height of and remove box for quizzes in [[file:css/dbis.css][css/dbis.css]]
