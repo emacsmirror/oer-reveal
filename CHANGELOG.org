@@ -11,6 +11,11 @@ where version numbers starting with version 1.0.0 adhere to
 
 ** [Unreleased]
 
+** [2.8.1] - 2020-04-02
+*** Fixed
+    - Update ~oer-reveal-submodules-version~ for bug fix in
+      reveal.js-plugins
+
 ** [2.8.0] - 2020-03-31
 *** Added
     - Customizable variable [[file:oer-reveal.el::(defcustom oer-reveal-master t][oer-reveal-master]]
