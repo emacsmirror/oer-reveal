@@ -63,6 +63,11 @@ pre {
     box-shadow: none;
     margin: 1em; }
 
+code {
+  color: dimgrey;
+  background: whitesmoke;
+  font-family: monospace; }
+
 .title  { text-align: center; }
 
 .status {
