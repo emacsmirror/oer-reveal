@@ -47,7 +47,8 @@ and make use of the HTML presentation framework
       - See [[https://github.com/rajgoel/reveal.js-plugins/tree/master/audio-slideshow#user-content-compatibility-and-known-issues][compatibility and known issues of the underlying audio plugin]]
       - [[https://www.mozilla.org/en-US/firefox/][Firefox]],
         seems to work everywhere
-    - Audio controls are shown at bottom left
+    - Audio controls are shown at bottom left (use right-click for
+      more controls such as Play Speed)
 - Notes
   - Slides contain additional notes as plain text if you see the
     folder icon

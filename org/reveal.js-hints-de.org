@@ -46,7 +46,8 @@ erzeugt und nutzen das HTML-Framework
       - [[https://github.com/rajgoel/reveal.js-plugins/tree/master/audio-slideshow#user-content-compatibility-and-known-issues][Kompatibilität und bekannte Probleme des zugrunde liegenden Audio-Plugins]]
       - [[https://www.mozilla.org/en-US/firefox/][Firefox]]
         scheint überall zu funktionieren
-    - Audio-Steuerung links unten
+    - Audio-Steuerung links unten (weitere Optionen wie
+      Geschwindigkeit per Rechts-Klick)
 - Notizen
   - Folien enthalten Notizen, wenn das Ordner-Symbol dargestellt wird
     [[./reveal.js/css/theme/folder_inbox.png]]
