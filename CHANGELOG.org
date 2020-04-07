@@ -11,6 +11,10 @@ where version numbers starting with version 1.0.0 adhere to
 
 ** [Unreleased]
 
+** [2.8.3] - 2020-04-07
+*** Fixed
+    - Document audio Play Speed in usage hints
+
 ** [2.8.2] - 2020-04-06
 *** Fixed
     - Make code elements more visible in ~css/index.css~
