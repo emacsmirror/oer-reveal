@@ -1716,7 +1716,7 @@ check whether a copyright header with your name is current.
 After showing the message box, move point to first line with a
 copyright header.
 
-Use this function as `before-save-hook', with the message box
+Use this function as `after-save-hook', with the message box
 serving as reminder to update a SPDX-FileCopyrightText header."
   (let ((year (format-time-string "%Y" (current-time))))
     (unless (oer-reveal--copyright-is-current-p year)

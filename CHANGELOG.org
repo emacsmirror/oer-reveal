@@ -16,7 +16,7 @@ where version numbers starting with version 1.0.0 adhere to
     - Customizable variables [[file:oer-reveal.el::(defcustom oer-reveal-spdx-author][oer-reveal-spdx-author]]
       and [[file:oer-reveal.el::(defcustom oer-reveal-spdx-copyright-regexp][oer-reveal-spdx-copyright-regexp]]
     - Function [[file:oer-reveal.el::(defun oer-reveal-copyright-check][oer-reveal-copyright-check]]
-      warns about outdated copyright years; use as ~before-save-hook~
+      warns about outdated copyright years; use as ~after-save-hook~
 
 ** [2.8.3] - 2020-04-07
 *** Fixed
