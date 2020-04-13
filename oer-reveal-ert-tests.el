@@ -580,4 +580,31 @@ variable, and communication channel under `info'."
              (list jl-range alice jl-single jl-part bob jl-old) 'html " and ")
             "<span property=\"dc:rights\">© <span property=\"dcterms:dateCopyrighted\">2000, 2017-2020</span> <a rel=\"cc:attributionURL dcterms:creator\" href=\"https://lechten.gitlab.io/#me\" property=\"cc:attributionName\">Jens Lechtenbörger</a></span> and <span property=\"dc:rights\">© <span property=\"dcterms:dateCopyrighted\">2017-2019</span> <a rel=\"cc:attributionURL dcterms:creator\" href=\"https://example.org/#bob\" property=\"cc:attributionName\">Bob</a></span> and <span property=\"dc:rights\">© <span property=\"dcterms:dateCopyrighted\">2019</span> <a rel=\"cc:attributionURL dcterms:creator\" href=\"https://example.org/#alice\" property=\"cc:attributionName\">Alice</a></span>"))
     ))
+
+(ert-deftest check-years ()
+  (with-temp-buffer
+    (let (oer-reveal-spdx-author)
+      ;; Buffers without SPDX headers are current.
+      (should (oer-reveal--copyright-is-current-p))
+      (insert "Some random text.\n")
+      (should (oer-reveal--copyright-is-current-p))
+
+      ;; Tests with SPDX header.
+      (insert "# SPDX-FileCopyrightText: 2019 Alice <alice@example.org>\n")
+      (should (oer-reveal--copyright-is-current-p "2019"))
+      (should-not (oer-reveal--copyright-is-current-p "2020"))
+
+      ;; This test was created in 2020.  So, 2019 is not current.
+      (should-not (oer-reveal--copyright-is-current-p))
+
+      (insert "# SPDX-FileCopyrightText: 2020 Bob <bob@example.org>\n")
+      (should (oer-reveal--copyright-is-current-p "2020"))
+
+      ;; Look for specific authors.
+      (let ((oer-reveal-spdx-author "Alice"))
+        (should (oer-reveal--copyright-is-current-p "2019"))
+        (should-not (oer-reveal--copyright-is-current-p "2020")))
+      (let ((oer-reveal-spdx-author "Charlie"))
+        (should-not (oer-reveal--copyright-is-current-p "2019"))
+        (should-not (oer-reveal--copyright-is-current-p "2020"))))))
 ;;; oer-reveal-ert-tests.el ends here
