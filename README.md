@@ -1,5 +1,5 @@
 <!--- Local IspellDict: en -->
-<!--- SPDX-FileCopyrightText: 2018-2019 Jens Lechtenbörger -->
+<!--- SPDX-FileCopyrightText: 2018-2020 Jens Lechtenbörger -->
 <!--- SPDX-License-Identifier: CC0-1.0 -->
 
 # Relationships between projects
@@ -80,16 +80,20 @@ which showcases how to publish presentations in a GitLab CI/CD
 infrastructure.
 
 As usual for Org export, use `C-c C-e` to start an export, followed by
-backend specific key bindings.  With `oer-reveal`, the default
+backend specific key bindings.  With *oer-reveal*, the default
 bindings are `C-c C-e w w` and `C-c C-e w b`, which can be customized
 with `oer-reveal-keys`.  (Actually, "ö" seems preferable to "w", if it
 exists on your keyboard.)
 
-Notably, `oer-reveal` simplifies one traditionally cumbersome task
-for OER creators, namely the re-use of figures under free licenses
-that require proper attribution.  Towards that end, macros
-`revealimg`, `reveallicense`, and `revealgrid` are defined and
-documented in file [org/config.org](org/config.org).
+Notably, *oer-reveal* simplifies two traditionally cumbersome task
+for OER creators, namely (1) specification of copyright and license
+information and (2) the re-use of figures under free licenses
+that require proper attribution.  For (1), *oer-reveal* recognizes
+SPDX headers (as advertised by the [REUSE project](https://reuse.software/));
+see file [examples/test-license.org](examples/test-license.org) for an
+example.  For (2), macros `revealimg`, `reveallicense`, and
+`revealgrid` are defined and documented in file
+[org/config.org](org/config.org).
 
 # Usage
 
@@ -107,12 +111,14 @@ want to work with your own copies.
 
 Function `oer-reveal-setup-submodules` downloads and installs
 reveal.js and some of its plugins into the directory
-`oer-reveal-submodules-dir`.  Function
+`oer-reveal-submodules-dir`.  If you use
+[emacs-reveal](https://gitlab.com/oer/emacs-reveal), such updates as
+well as updates of *oer-reveal* itself happen automatically.  Function
 `oer-reveal-generate-include-files` generates Org files under
 `oer-reveal-org-includes-dir`, which include Org files coming with
-`oer-reveal`; when installing `oer-reveal` from MELPA (with
-changing directories upon updates) you can include those generated
-files at stable locations in your own Org files.
+*oer-reveal*; when installing *oer-reveal* from MELPA (with changing
+directories upon updates) you can include those generated files at
+stable locations in your own Org files.
 
 Function `oer-reveal-publish-setq-defaults` changes variables from
 other packages, which may offer some suggestions what to adapt in
@@ -132,7 +138,7 @@ using this code.
 (oer-reveal-publish-setq-defaults)
 ```
 
-# Customizable options
+# Excerpt of customizable options
 
 Variable `oer-reveal-script-files` lists JavaScript files to load
 when initializing reveal.js.  If you use the version of reveal.js
@@ -153,7 +159,16 @@ The names of generated CSS files for image grids are determined by
 `oer-reveal-css-filename-template`.
 
 For language-specific license information generated from SPDX headers,
-see `oer-reveal-dictionaries` and `oer-reveal-licenses`.
+see `oer-reveal-dictionaries`, `oer-reveal-licenses`,
+`oer-reveal-use-year-ranges-p`.
+
+For help in keeping copyright years current, see function
+`oer-reveal-copyright-check` and variables `oer-reveal-spdx-author`,
+`oer-reveal-spdx-copyright-regexp`.
+
+If you include Org files from each other, customizable variable
+`oer-reveal-master` allows to trigger export of the main file from
+included files (inspired by AUCTeX’s master functionality).
 
 To see all customizable variables, check out customization group
 `org-export-oer-reveal`:
