@@ -1672,6 +1672,65 @@ If WITH-LEGALESE is non-nil, add a \"div\" element with pointers to legalese."
             ((eq fmt 'pdf)
              (concat text created))))))
 
+(defcustom oer-reveal-spdx-author nil
+  "Author to restrict search in `oer-reveal-copyright-check'."
+  :group 'org-export-oer-reveal
+  :type '(choice (const nil) string)
+  :package-version '(oer-reveal . "2.9.0"))
+
+(defcustom oer-reveal-spdx-copyright-regexp "SPDX-FileCopyrightText:.*"
+  "Regular expression to match copyright information."
+  :group 'org-export-oer-reveal
+  :type 'regexp
+  :package-version '(oer-reveal . "2.9.0"))
+
+(defun oer-reveal--copyright-is-current-p (&optional year)
+  "Return t if optional YEAR is part of copyright information.
+If YEAR is nil, use current year.
+A file without SPDX copyright information is always current.
+Use `oer-reveal-spdx-author' to restrict search."
+  (let* ((year (or year (format-time-string "%Y" (current-time))))
+         (year-regexp (if oer-reveal-spdx-author
+                          (format "%s.+%s" year oer-reveal-spdx-author)
+                        year))
+         matches)
+    (save-match-data
+      (save-excursion
+        (save-restriction
+          (widen)
+          (goto-char (point-min))
+          (while (search-forward-regexp oer-reveal-spdx-copyright-regexp 800 t)
+            (push (match-string 0) matches)))))
+    (if matches
+        (delete nil
+                (mapcar (lambda (line)
+                          (string-match-p year-regexp line))
+                        matches))
+      t)))
+
+(defun oer-reveal-copyright-check ()
+  "Show message box if year of SPDX copyright header is not current.
+If your files contain SPDX-FileCopyrightText headers for multiple
+authors, customize `oer-reveal-spdx-author' with your own name.  Then,
+check whether a copyright header with your name is current.
+After showing the message box, move point to first line with a
+copyright header.
+
+Use this function as `before-save-hook', with the message box
+serving as reminder to update a SPDX-FileCopyrightText header."
+  (let ((year (format-time-string "%Y" (current-time))))
+    (unless (oer-reveal--copyright-is-current-p year)
+      (message-box
+       (concat
+        "Current year %s not found in SPDX-FileCopyrightText headers"
+        (if oer-reveal-spdx-author
+            (format " (for %s)" oer-reveal-spdx-author)
+          ""))
+       year)
+      (goto-char (point-min))
+      (re-search-forward oer-reveal-spdx-copyright-regexp)
+      (beginning-of-line))))
+
 ;;; Functionality to make org-html-link use org-re-reveal's ID format.
 ;; This is useful when publishing with org-html-publish-to-html
 ;; where the HTML file is supposed to link into presentations.
