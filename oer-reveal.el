@@ -1522,7 +1522,8 @@ creators if necessary."
   "Group creators in SPDX-FileCopyrightText LINES.
 A single creator may occur in multiple lines, typically with different pieces
 of year information.  Aggregate those years per unique creator.
-Return TODO."
+Return a hash table mapping each copyright holder to a pair consisting
+of a list of years and a URI (or nil)."
   (let ((result (make-hash-table :test 'equal)))
     (dolist (line lines result)
       (unless (string-match oer-reveal--copyright-regexp line)
