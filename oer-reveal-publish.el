@@ -232,7 +232,8 @@ add `oer-reveal-publish-alternate-type-function' to
 				   oer-reveal-submodules-dir)
 		  :base-extension 'any
 		  :publishing-directory "./public/reveal.js/plugin/klipse"
-		  :publishing-function 'org-publish-attachment)
+		  :publishing-function 'org-publish-attachment
+                  :recursive t)
             result)
       (push (list "codemirror"
 		  :base-directory (expand-file-name
