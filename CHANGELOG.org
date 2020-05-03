@@ -11,6 +11,15 @@ where version numbers starting with version 1.0.0 adhere to
 
 ** [Unreleased]
 
+** [2.12.0] - 2020-05-03
+*** Added
+    - Macro [[file:org/config-ercis2019.org][contactpreamble]]
+*** Changed
+    - Marco [[file:org/config-ercis2019.org][contactinfo]] uses new
+      macro ~contactpreamble~
+*** Fixed
+    - PDF export of contact information for ERCIS style
+
 ** [2.11.0] - 2020-05-02
 *** Added
     - German ERCIS config [[file:org/config-ercis2019-de.org]]
