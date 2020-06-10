@@ -1067,6 +1067,7 @@ As side effect, copy figure as described for `oer-reveal-copy-dir-suffix'."
   (let* ((org-export-with-sub-superscripts nil)
 	 (alist (read (oer-reveal--file-as-string metadata)))
 	 (filename (alist-get 'filename alist))
+         (dependencies (alist-get 'dependencies alist))
 	 (texfilename (file-name-sans-extension filename))
 	 (licenseurl (alist-get 'licenseurl alist))
 	 (licensetext (alist-get 'licensetext alist))
@@ -1172,6 +1173,7 @@ As side effect, copy figure as described for `oer-reveal-copy-dir-suffix'."
 			 (oer-reveal--export-no-newline orglicense 'latex)
 		       (oer-reveal--export-no-newline title 'latex))))
     (oer-reveal--copy-for-export filename)
+    (mapc #'oer-reveal--copy-for-export dependencies)
     (if (stringp caption)
 	(cons (oer-reveal--export-figure-html
 	       filename dcmitype divclasses htmlcaption htmllicense
