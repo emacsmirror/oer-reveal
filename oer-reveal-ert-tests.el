@@ -251,6 +251,7 @@
       (should (equal (car result-full)
                      "<div about=\"./doesnotexist.png\" typeof=\"dcmitype:StillImage\" class=\"figure fragment appear\" data-fragment-index=\"1\"><p><img data-src=\"./doesnotexist.png\" alt=\"Figure\" style=\"max-height:50vh\" /></p><p>A caption</p><p style=\"max-width:50vh\">&ldquo;<span property=\"dcterms:title\">Figure</span>&rdquo; by <a rel=\"cc:attributionURL dcterms:creator\" href=\"https://gitlab.com/lechten\" property=\"cc:attributionName\">Jens Lechtenbörger</a> under <a rel=\"license\" href=\"https://creativecommons.org/publicdomain/zero/1.0/\">CC0 1.0</a>; from <a rel=\"dcterms:source\" href=\"https://example.org/\">Sample source</a></p></div>")))
     (delete-file meta)
+    (delete-file meta-external)
     (delete-file meta-gif)))
 
 ;;; Following function copied from org-mode/testing/lisp/test-ox.el.
