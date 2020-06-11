@@ -394,7 +394,7 @@ contained in this directory.")
 (defconst oer-reveal-submodules-url
   "https://gitlab.com/oer/emacs-reveal-submodules.git"
   "Git URL for submodules of reveal.js and plugins.")
-(defcustom oer-reveal-submodules-version "1.3.0"
+(defcustom oer-reveal-submodules-version "1.4.0"
   "Version of submodules to check out.
 This can be a string, indicating a git version tag, or nil.
 If nil, `oer-reveal-submodules-ok-p' always returns t, and oer-reveal does
