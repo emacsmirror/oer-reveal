@@ -11,6 +11,10 @@ where version numbers starting with version 1.0.0 adhere to
 
 ** [Unreleased]
 
+** [2.14.0] - 2020-06-11
+*** Changed
+    - Update ~oer-reveal-submodules-version~ to 1.4.0
+
 ** [2.13.0] - 2020-06-10
 *** Added
     - Publish dependencies of figures
