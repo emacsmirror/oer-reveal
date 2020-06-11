@@ -1,6 +1,6 @@
 # Local IspellDict: de
 
-# SPDX-FileCopyrightText: 2018-2019 Jens Lechtenbörger
+# SPDX-FileCopyrightText: 2018-2020 Jens Lechtenbörger
 # SPDX-License-Identifier: CC-BY-SA-4.0
 
 # Diese Datei ist nicht für den direkten HTML-Export gedacht,
@@ -48,6 +48,7 @@ erzeugt und nutzen das HTML-Framework
         scheint überall zu funktionieren
     - Audio-Steuerung links unten (weitere Optionen wie
       Geschwindigkeit per Rechts-Klick)
+    - Taste „+“ startet und pausiert Ton
 - Notizen
   - Folien enthalten Notizen, wenn das Ordner-Symbol dargestellt wird
     [[./reveal.js/css/theme/folder_inbox.png]]

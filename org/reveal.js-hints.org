@@ -1,6 +1,6 @@
 # Local IspellDict: en
 
-# SPDX-FileCopyrightText: 2018-2019 Jens Lechtenbörger
+# SPDX-FileCopyrightText: 2018-2020 Jens Lechtenbörger
 # SPDX-License-Identifier: CC-BY-SA-4.0
 
 # This file is not meant to be exported to HTML directly but to be
@@ -49,6 +49,7 @@ and make use of the HTML presentation framework
         seems to work everywhere
     - Audio controls are shown at bottom left (use right-click for
       more controls such as Play Speed)
+    - Type “+” to toggle audio
 - Notes
   - Slides contain additional notes as plain text if you see the
     folder icon
