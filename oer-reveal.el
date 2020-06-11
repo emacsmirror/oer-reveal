@@ -179,6 +179,13 @@ from the dev branch of reveal.js on 2018-10-04."
   :group 'org-export-oer-reveal
   :type '(repeat string))
 
+(defcustom oer-reveal-warning-delay t
+  "Control whether to pause after display of warnings.
+You may want to set this to nil in batch mode."
+  :group 'org-export-oer-reveal
+  :type 'boolean
+  :package-version '(oer-reveal . "2.15.0"))
+
 (defcustom oer-reveal-plugins
   '("reveal.js-plugins" "Reveal.js-TOC-Progress" "reveal.js-jump-plugin"
     "reveal.js-quiz" "reveal.js-coursemod" "reveal-a11y")
@@ -791,7 +798,7 @@ if applicable.  Raise `user-error' in case of unknown type."
 	(message
 	 "Explicit quoting of symbol in `%s' not necessary (with your Org version)"
 	 object)
-	(sit-for 2)
+	(when oer-reveal-warning-delay (sit-for 2))
 	(cadr object))
     (user-error "Unexpected type `%s' in `%s'" (type-of object) object)))
 
@@ -1516,7 +1523,7 @@ creators if necessary."
            (if uri
                (format template years uri name)
              (message "If you used a URL in the SPDX copyright header, an attributionURL could be generated.")
-             (sit-for 2)
+	     (when oer-reveal-warning-delay (sit-for 2))
              (format template years name))))
        sorted connective))))
 
