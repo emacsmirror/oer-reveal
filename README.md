@@ -140,11 +140,9 @@ using this code.
 
 # Excerpt of customizable options
 
-Variable `oer-reveal-script-files` lists JavaScript files to load
-when initializing reveal.js.  If you use the version of reveal.js
-coming with *oer-reveal*, you may want to assign the value of
-`oer-reveal-script-files` to `org-re-reveal-script-files`.  This
-also happens in `oer-reveal-publish-setq-defaults`.
+Variable `oer-reveal-reveals-version` allows to specify the version of
+reveal.js (which introduced incompatible changes in version 4.0).  It
+takes precedence of `org-re-reveal-revealjs-version`.
 
 Variable `oer-reveal-plugins` lists reveal.js plugins to be
 activated.  To configure those plugins, customize
