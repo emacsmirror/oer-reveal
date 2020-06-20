@@ -51,7 +51,7 @@ erzeugt und nutzen das HTML-Framework
     - Taste „+“ startet und pausiert Ton
 - Notizen
   - Folien enthalten Notizen, wenn das Ordner-Symbol dargestellt wird
-    [[./reveal.js/css/theme/folder_inbox.png]]
+    [[./reveal.js/dist/theme/folder_inbox.png]]
     - Taste „v“ öffnet „Courseware-Ansicht“; alternativ öffnen Klick
       auf das Symbol sowie Taste „s“ die Vortragsansicht
       - Pop-Ups müssen für Vortragsansicht erlaubt werden

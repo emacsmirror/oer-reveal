@@ -422,7 +422,7 @@ Before publication, `org-publish-project-alist' contains the following:
 	   (list "reveal-theme"
 		 :base-directory (expand-file-name "css" oer-reveal-dir)
 		 :base-extension 'any
-		 :publishing-directory "./public/reveal.js/css/theme"
+		 :publishing-directory "./public/reveal.js/dist/theme"
 		 :publishing-function 'org-publish-attachment)
 	   (list "reveal-static"
 		 :base-directory (expand-file-name
