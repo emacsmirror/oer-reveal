@@ -88,7 +88,7 @@ Derive from 're-reveal to add further options and keywords."
     :options-alist ; See org-export-options-alist for meaning of parts.
     '((:oer-reveal-plugins "OER_REVEAL_PLUGINS" nil oer-reveal-plugins t)
       (:oer-reveal-revealjs-version "OER_REVEAL_REVEALJS_VERSION" nil
-                                    oer-reveal-reveals-version t)
+                                    oer-reveal-revealjs-version t)
       (:oer-reveal-a11y-dependency "OER_REVEAL_A11Y_DEPENDENCY" nil
                                    oer-reveal-a11y-dependency t)
       (:oer-reveal-anything-dependency "OER_REVEAL_ANYTHING_DEPENDENCY" nil
@@ -174,7 +174,7 @@ in the Emacs manual) to set this variable permanently for each file."
   :package-version '(oer-reveal . "2.8.0"))
 (make-variable-buffer-local 'oer-reveal-master)
 
-(defcustom oer-reveal-reveals-version "4"
+(defcustom oer-reveal-revealjs-version "4"
   "Version of reveal.js.
 See `org-re-reveal-revealjs-version' for possible values.
 If non-nil, this value is assigned to
@@ -281,8 +281,8 @@ initialization code in `oer-reveal-plugin-config'."
 	     container.addEventListener('click', function(e) { %s });
 	 }) }
 ]"
-          (if (or (not oer-reveal-reveals-version)
-                  (version< oer-reveal-reveals-version "4"))
+          (if (or (not oer-reveal-revealjs-version)
+                  (version< oer-reveal-revealjs-version "4"))
               "RevealNotes.open();"
             "Reveal.getPlugins().notes.open();"))
   "Configuration for anything plugin.
@@ -332,8 +332,8 @@ for available options."
 
 (defcustom oer-reveal-toc-progress-dependency
   (concat "{ src: '%splugin/toc-progress/toc-progress.js', async: true, callback: function() { toc_progress.initialize('reduce', 'rgba(120,138,130,0.2)'"
-          (if (or (not oer-reveal-reveals-version)
-                  (version< oer-reveal-reveals-version "4"))
+          (if (or (not oer-reveal-revealjs-version)
+                  (version< oer-reveal-revealjs-version "4"))
               ""
             ", 'body'")
           "); toc_progress.create(); } }")
