@@ -1912,11 +1912,11 @@ Otherwise, return value of property THING in plist INFO."
 CONTENTS is the transcoded contents string.
 INFO is a plist holding export options.
 Setup plugin and export configuration, then call `org-re-reveal-template'."
-  (let ((org-re-reveal-revealjs-version
-         (or (plist-get info :oer-reveal-revealjs-version)
-             org-re-reveal-revealjs-version))
-        (plugin-dependencies (oer-reveal--plugin-dependencies info))
+  (let ((plugin-dependencies (oer-reveal--plugin-dependencies info))
         (plugin-config (oer-reveal--plugin-config info)))
+    (plist-put info :reveal-version
+	       (or (plist-get info :oer-reveal-revealjs-version)
+		   org-re-reveal-revealjs-version))
     (plist-put info :reveal-external-plugins plugin-dependencies)
     (plist-put info :reveal-init-script plugin-config)
     (org-re-reveal-template contents info)))
