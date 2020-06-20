@@ -205,7 +205,6 @@ add `oer-reveal-publish-alternate-type-function' to
 	org-html-postamble oer-reveal-publish-html-postamble
         org-descriptive-links oer-reveal-publish-descriptive-links
 	oer-reveal-latex-figure-float oer-reveal-publish-figure-float
-	org-re-reveal-script-files oer-reveal-script-files
 	org-re-reveal--href-fragment-prefix org-re-reveal--slide-id-prefix
 	org-re-reveal-body-attrs (concat
                                   oer-reveal-rdf-prefixes
