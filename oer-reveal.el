@@ -87,6 +87,8 @@ Derive from 're-reveal to add further options and keywords."
 
     :options-alist ; See org-export-options-alist for meaning of parts.
     '((:oer-reveal-plugins "OER_REVEAL_PLUGINS" nil oer-reveal-plugins t)
+      (:oer-reveal-revealjs-version "OER_REVEAL_REVEALJS_VERSION" nil
+                                    oer-reveal-reveals-version t)
       (:oer-reveal-a11y-dependency "OER_REVEAL_A11Y_DEPENDENCY" nil
                                    oer-reveal-a11y-dependency t)
       (:oer-reveal-anything-dependency "OER_REVEAL_ANYTHING_DEPENDENCY" nil
@@ -172,12 +174,14 @@ in the Emacs manual) to set this variable permanently for each file."
   :package-version '(oer-reveal . "2.8.0"))
 (make-variable-buffer-local 'oer-reveal-master)
 
-(defcustom oer-reveal-script-files '("js/reveal.js")
-  "Value to apply to `org-re-reveal-script-files'.
-By default, `org-re-reveal' also loads head.min.js, which has been removed
-from the dev branch of reveal.js on 2018-10-04."
+(defcustom oer-reveal-reveals-version "4"
+  "Version of reveal.js.
+See `org-re-reveal-revealjs-version' for possible values.
+If non-nil, this value is assigned to
+`org-re-reveal-revealjs-version' during export."
   :group 'org-export-oer-reveal
-  :type '(repeat string))
+  :type '(choice (const nil) string)
+  :package-version '(oer-reveal . "3.0.0"))
 
 (defcustom oer-reveal-warning-delay t
   "Control whether to pause after display of warnings.
@@ -226,7 +230,7 @@ initialization code in `oer-reveal-plugin-config'."
   :package-version '(oer-reveal . "1.3.0"))
 
 (defcustom oer-reveal-anything-config
-  "anything: [
+  (format "anything: [
         // Following initialization code for class animate from anything-demo.html.
         // Copyright (c) 2016 Asvin Goel, under The MIT License (MIT).
 	{className: \"animate\",  initialize: (function(container, options){
@@ -274,9 +278,13 @@ initialization code in `oer-reveal-plugin-config'."
 	 }) },
 	{className: \"notes\",
 	 initialize: (function(container, options){
-	     container.addEventListener('click', function(e) { RevealNotes.open(); });
+	     container.addEventListener('click', function(e) { %s });
 	 }) }
 ]"
+          (if (or (not oer-reveal-reveals-version)
+                  (version< oer-reveal-reveals-version "4"))
+              "RevealNotes.open();"
+            "Reveal.getPlugins().notes.open();"))
   "Configuration for anything plugin.
 Currently, this sets up animation of SVG graphics,
 random selection of an image among multiple ones,
@@ -323,14 +331,20 @@ for available options."
   :package-version '(oer-reveal . "1.2.0"))
 
 (defcustom oer-reveal-toc-progress-dependency
-  "{ src: '%splugin/toc-progress/toc-progress.js', async: true, callback: function() { toc_progress.initialize('reduce', 'rgba(120,138,130,0.2)'); toc_progress.create(); } }"
+  (concat "{ src: '%splugin/toc-progress/toc-progress.js', async: true, callback: function() { toc_progress.initialize('reduce', 'rgba(120,138,130,0.2)'"
+          (if (or (not oer-reveal-reveals-version)
+                  (version< oer-reveal-reveals-version "4"))
+              ""
+            ", 'body'")
+          "); toc_progress.create(); } }")
   "Dependency to initialize TOC-Progress plugin.
 If there are lots of subsections, 'scroll'ing can be enabled or the font
 size can be 'reduce'd.  Go for the latter with first argument.
-Second arguement sets background color."
+Second arguement sets background color.
+For reveal.js 4, the third argument sets the viewport."
   :group 'org-export-oer-reveal
   :type 'string
-  :package-version '(oer-reveal . "1.1.0"))
+  :package-version '(oer-reveal . "3.0.0"))
 
 (defcustom oer-reveal-plugin-config
   '(("reveal.js-plugins"
@@ -1898,7 +1912,10 @@ Otherwise, return value of property THING in plist INFO."
 CONTENTS is the transcoded contents string.
 INFO is a plist holding export options.
 Setup plugin and export configuration, then call `org-re-reveal-template'."
-  (let ((plugin-dependencies (oer-reveal--plugin-dependencies info))
+  (let ((org-re-reveal-revealjs-version
+         (or (plist-get info :oer-reveal-revealjs-version)
+             org-re-reveal-revealjs-version))
+        (plugin-dependencies (oer-reveal--plugin-dependencies info))
         (plugin-config (oer-reveal--plugin-config info)))
     (plist-put info :reveal-external-plugins plugin-dependencies)
     (plist-put info :reveal-init-script plugin-config)
