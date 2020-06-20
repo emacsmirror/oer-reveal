@@ -53,7 +53,7 @@ and make use of the HTML presentation framework
 - Notes
   - Slides contain additional notes as plain text if you see the
     folder icon
-    [[./reveal.js/css/theme/folder_inbox.png]]
+    [[./reveal.js/dist/theme/folder_inbox.png]]
     - Press “v” to open the “courseware view” or click on that icon or
       press “s” to see the “speaker notes view”
       - For the speaker notes view you need to allow pop-ups

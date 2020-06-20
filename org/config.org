@@ -1,6 +1,6 @@
 # -*- eval: (visual-line-mode) -*-
 
-# SPDX-FileCopyrightText: 2017-2019 Jens Lechtenbörger
+# SPDX-FileCopyrightText: 2017-2020 Jens Lechtenbörger
 # SPDX-License-Identifier: CC-BY-SA-4.0
 
 # Neither generate table of contents nor section numbers
@@ -34,8 +34,8 @@
 
 #+REVEAL_EXTRA_CSS: ./reveal.js/plugin/accessibility/helper.css
 #+REVEAL_EXTRA_CSS: ./reveal.js/plugin/toc-progress/toc-progress.css
-#+REVEAL_EXTRA_CSS: ./reveal.js/css/theme/toc-style.css
-#+REVEAL_EXTRA_CSS: ./reveal.js/lib/font/source-sans-pro/source-sans-pro.css
+#+REVEAL_EXTRA_CSS: ./reveal.js/dist/theme/toc-style.css
+#+REVEAL_EXTRA_CSS: ./reveal.js/dist/theme/fonts/source-sans-pro/source-sans-pro.css
 
 # The following creates an empty footer, for which the css style defines
 # a height that agrees with the TOC-progress footer’s height.
