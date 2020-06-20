@@ -335,7 +335,8 @@ For each plugin in `oer-reveal-plugins', add what to publish."
   "Compute list of optional projects for `org-publish-project-alist'.
 These are \"index.org\" to be published with `org-html-publish-to-html'
 as well as \"index.css\" and the directories \"audio\", \"figures\",
-\"quizzes\" to be published with `org-publish-attachment'."
+\"quizzes\" to be published with `org-publish-attachment'.
+This also includes the multiplex plugin if its folder is present."
   (let (result)
     (when (file-exists-p "index.org")
       (push (list "index"
@@ -365,6 +366,18 @@ as well as \"index.css\" and the directories \"audio\", \"figures\",
 		  :base-directory (concat "figures" oer-reveal-copy-dir-suffix)
 		  :base-extension (regexp-opt '("png" "jpg" "ico" "svg" "gif"))
 		  :publishing-directory "./public/figures"
+		  :publishing-function 'org-publish-attachment
+		  :recursive t)
+            result))
+    (when (file-accessible-directory-p (expand-file-name
+				        "multiplex"
+				        oer-reveal-submodules-dir))
+      (push (list "multiplex"
+		  :base-directory (expand-file-name
+				   "multiplex"
+				   oer-reveal-submodules-dir)
+		  :base-extension (regexp-opt '("js"))
+		  :publishing-directory "./public/reveal.js/plugin/multiplex"
 		  :publishing-function 'org-publish-attachment
 		  :recursive t)
             result))
