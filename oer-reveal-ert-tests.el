@@ -276,7 +276,8 @@ variable, and communication channel under `info'."
 
 (ert-deftest test-spdx-license-info ()
   "Tests for RDFa license information from SPDX headers."
-  (let ((oer-reveal-copy-dir-suffix ""))
+  (let ((oer-reveal-copy-dir-suffix "")
+        (oer-reveal-warning-delay nil))
 
   ;; Header with URL and single license.
     (let ((header "#+TITLE: A test\n#+SPDX-FileCopyrightText: 2019 Jens Lechtenbörger <https://lechten.gitlab.io/#me>\n#+SPDX-License-Identifier: CC-BY-SA-4.0\n")
