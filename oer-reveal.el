@@ -1543,7 +1543,9 @@ of a list of years and a URI (or nil)."
              (uri (match-string 4 line))
              ;; On Emacs 24, string-trim destroys match data;
              ;; thus trim after final match-string.
-             (years (string-trim years))
+             (years (split-string
+                     (string-trim years)
+                     "," t " "))
              (name (string-trim name))
              ;; URI may be an e-mail address, which would be useless.
              (isurl (and uri (oer-reveal-http-url-p uri)))
@@ -1557,10 +1559,10 @@ of a list of years and a URI (or nil)."
                  "Different URIs (%s vs %s) for %s.  Unify SPDX headers?"
                  uri iuri name))
               (puthash name
-                       (cons (cons years iyears) iuri)
+                       (cons (append years iyears) iuri)
                        result))
           (puthash name
-                   (cons (list years) (and isurl (string-trim uri)))
+                   (cons years (and isurl (string-trim uri)))
                    result))))))
 
 (defun oer-reveal--convert-license (value fmt language)
