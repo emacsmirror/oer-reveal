@@ -536,11 +536,15 @@ variable, and communication channel under `info'."
         (jl-part "2020 Jens Lechtenbörger")
         (jl-old "2000 Jens Lechtenbörger")
         (jl-range "2017-2019 Jens Lechtenbörger <https://lechten.gitlab.io/#me>")
+        (jl-split "2017-2018, 2020 Jens Lechtenbörger <https://lechten.gitlab.io/#me>")
         (alice "2019 Alice <https://example.org/#alice>")
         (bob "2017-2019 Bob <https://example.org/#bob>"))
     (should
      (equal (oer-reveal--convert-creators (list jl-single) 'html " and ")
             "<span property=\"dc:rights\">© <span property=\"dcterms:dateCopyrighted\">2020</span> <a rel=\"cc:attributionURL dcterms:creator\" href=\"https://lechten.gitlab.io/#me\" property=\"cc:attributionName\">Jens Lechtenbörger</a></span>"))
+    (should
+     (equal (oer-reveal--convert-creators (list jl-split) 'html " and ")
+            "<span property=\"dc:rights\">© <span property=\"dcterms:dateCopyrighted\">2017-2018, 2020</span> <a rel=\"cc:attributionURL dcterms:creator\" href=\"https://lechten.gitlab.io/#me\" property=\"cc:attributionName\">Jens Lechtenbörger</a></span>"))
     (should
      (equal (oer-reveal--convert-creators
              (list jl-single jl-part) 'html " and ")
