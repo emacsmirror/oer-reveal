@@ -7,8 +7,8 @@
 
 ;; Author: Jens Lechtenbörger
 ;; URL: https://gitlab.com/oer/oer-reveal
-;; Version: 2.15.1
-;; Package-Requires: ((emacs "24.4") (org-re-reveal "2.12.0"))
+;; Version: 3.0.0
+;; Package-Requires: ((emacs "24.4") (org-re-reveal "3.0.0"))
 ;; Keywords: hypermedia, tools, slideshow, presentation, OER
 
 ;; Emacs 24.4 adds advice-add and advice-remove, which are used below.

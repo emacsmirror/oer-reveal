@@ -10,11 +10,15 @@ where version numbers starting with version 1.0.0 adhere to
 
 
 ** [Unreleased]
+
+** [3.0.0] - 2020-06-27
 *** Added
+    - Support for reveal.js 4.x
     - Variable [[file:oer-reveal.el::(defcustom oer-reveal-reveals-version "4"][oer-reveal-reveals-version]]
       with keyword ~OER_REVEAL_REVEALJS_VERSION~ for support of
       reveal.js 4.x
 *** Changed
+    - Require org-re-reveal 3.0.0, which supports reveal.js 4.x
     - Initialization of speaker notes and toc-progress plugin for
       reveal.js 4.x
     - Paths for reveal.js 4.x
