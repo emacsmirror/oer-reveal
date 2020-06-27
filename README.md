@@ -142,7 +142,10 @@ using this code.
 
 Variable `oer-reveal-reveals-version` allows to specify the version of
 reveal.js (which introduced incompatible changes in version 4.0).  It
-takes precedence of `org-re-reveal-revealjs-version`.
+takes precedence of `org-re-reveal-revealjs-version`.  However, this
+setting only affects some settings in generated HTML code; it does not
+aim to install reveal.js for you.  In contrast, the software bundle
+[emacs-reveal](https://gitlab.com/oer/emacs-reveal) contains reveal.js.
 
 Variable `oer-reveal-plugins` lists reveal.js plugins to be
 activated.  To configure those plugins, customize

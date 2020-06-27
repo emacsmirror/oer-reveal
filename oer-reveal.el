@@ -178,7 +178,11 @@ in the Emacs manual) to set this variable permanently for each file."
   "Version of reveal.js.
 See `org-re-reveal-revealjs-version' for possible values.
 If non-nil, this value takes precedence over
-`org-re-reveal-revealjs-version' during export."
+`org-re-reveal-revealjs-version' during export.
+
+Note that you must set this variable to a correct value yourself.
+This package does not attempt to install reveal.js.  If you want that,
+go for `emacs-reveal', see URL `https://gitlab.com/oer/emacs-reveal/'."
   :group 'org-export-oer-reveal
   :type '(choice (const nil) string)
   :package-version '(oer-reveal . "3.0.0"))
