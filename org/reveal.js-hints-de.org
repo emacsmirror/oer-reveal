@@ -25,19 +25,22 @@ erzeugt und nutzen das HTML-Framework
   - Zoom mit Strg-Maus oder Alt-Maus
   - Suche mit Strg-Umschalt-F
 - PDF-Export
-  - Warum wollen Sie das machen?
-    - Die Quelldateien können im Texteditor kommentiert/ergänzt werden
-      - [[https://orgmode.org/][Org Mode]], reines Textformat
-  - Ändern der Browser-URL durch Hinzufügen von ~?print-pdf~ nach ~.html~,
+  - Ändern der Browser-URL durch Hinzufügen von ~?print-pdf~ nach ~.html~
+    (z. B. ~https://oer.gitlab.io/OS/Operating-Systems-JiTT.html?print-pdf~),
     dann in PDF-Datei drucken (Strg-p)
+    - Reveal.js gibt an, dass dies mit dem Chromium/Chrome funktioniert,
+      [[https://revealjs.com/pdf-export/][vorgeschlagene Einstellungen]]
   - Je nach Projekt sind möglicherweise bereits PDF-Dateien aus den
     Quelldateien generiert worden.  In diesem Fall kann die Endung
     ~.html~ der URL einer Präsentation durch ~.pdf~ ersetzt werden.
+  - Alternativ können Sie statt eines PDF-Exports die Quelldateien im
+    Texteditor kommentieren oder ergänzen
+      - [[https://orgmode.org/][Org Mode]], reines Textformat
 - Offline-Verwendung
   - Präsentationen können als ZIP-Archive von Build-Pipelines ihrer
     Quellprojekte heruntergeladen werden
     - Archiv-Inhalte extrahieren, lokale HTML-Datei(en) im Browser öffnen
-    - Z. B. von [[https://gitlab.com/oer/OS/pipelines][Pipelines eines Kurses zu Betriebssystemen]]
+    - Z. B. von [[https://gitlab.com/oer/OS/-/pipelines][Pipelines eines Kurses zu Betriebssystemen]]
       durch Klick auf Download-Icon der aktuellsten Pipeline
   - Alternativ können Präsentationen lokal aus Quelldateien erzeugt werden
 - Audio

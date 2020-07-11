@@ -24,21 +24,24 @@ and make use of the HTML presentation framework
   - Zoom with Ctrl-Mouse or Alt-Mouse
   - Search with Ctrl-Shift-F
 - PDF export
-  - Why do you want to do this?
-    - You may want to download and annotate/enrich source files instead
-      - [[https://orgmode.org/][Org mode]], which is plain text
-  - Change the URL by adding ~?print-pdf~ after ~.html~,
+  - Change the URL by adding ~?print-pdf~ after ~.html~
+    (e.g., ~https://oer.gitlab.io/OS/Operating-Systems-JiTT.html?print-pdf~),
     then print to PDF file (usually, Ctrl-p)
+    - Reveal.js documents this to work with Chromium/Chrome,
+      [[https://revealjs.com/pdf-export/][suggested settings]]
   - Alternatively, depending on the specific project, PDFs might also
     have been generated via LaTeX from org source files.  If
     available, those PDF versions are accessible by replacing
     ~.html~ in a presentation’s URL with ~.pdf~
+  - Alternatively, instead of PDF export you may want to download and
+    annotate/enrich source files
+    - [[https://orgmode.org/][Org mode]], which is plain text
 - Offline use
   - Presentations can be downloaded from build pipelines of
     source projects as self-contained zip archives
     - Extract contents and open local HTML file(s) in browser
     - E.g., for a course on Operating Systems, go to
-      [[https://gitlab.com/oer/OS/pipelines][its pipelines page]],
+      [[https://gitlab.com/oer/OS/-/pipelines][its pipelines page]],
       click on download icon of most recent pipeline
   - Alternatively, clone source repository and build presentations locally
 - Audio
