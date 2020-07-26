@@ -84,6 +84,20 @@ erzeugt und nutzen das HTML-Framework
       - Relativ zu anderer Präsentation (blau mit Symbol)
       - Relativ innerhalb selber Präsentation (blau), entweder zurück
         (◂) oder vorwärts (▸)
+  - Einige Studierende schlagen vor, Verweise zu entfernen.  Dies
+    lässt sich durch Hinzufügen von ~?hidelinks~ nach ~.html~ in der
+    URL konfigurieren, wodurch die meisten Verweise verborgen werden.
+    Zusätzlich können durch einen numerischen Wert wie ~?hidelinks=24~
+    verschiedene Arten von Verweisen basierend auf folgenden
+    Bit-Werten verborgen werden:
+    - 1: Verweise zu vorigen Folien
+    - 2: Verweise zu nachfolgenden Folien
+    - 4: Verweise zwischen Präsentationen
+    - 8: Verweise zu anderen Ressourcen unter ~oer.gitlab.io~
+    - 16: Externe Verweise
+    Beispielsweise werden mit ~?hidelinks=28~ (28 = 16 + 8 + 4) weder
+    externe Verweise (16) noch Verweise unter ~oer.gitlab.io~ (8) noch Verweise
+    zu anderen Präsentationen (4) angezeigt.
 
 Das Dokument
 [[https://gitlab.com/oer/oer.gitlab.io/blob/master/CONTRIBUTING.org][CONTRIBUTING.org]]
