@@ -1,6 +1,6 @@
 /**
  * SPDX-FileCopyrightText: 2014-2016 Hakim El Hattab
- * SPDX-FileCopyrightText: 2017-2019 Jens Lechtenbörger
+ * SPDX-FileCopyrightText: 2017-2020 Jens Lechtenbörger
  *
  * SPDX-License-Identifier: LicenseRef-MIT-HEH-JL
  *
@@ -555,17 +555,21 @@ div.ribbon-legalese a {
 /*********************************************
  * LINKS
  *********************************************/
-.reveal a[href] {
+.reveal a[href].hiddenlink {
+  color: #222;
+  text-decoration: none; }
+
+.reveal a[href]:not(.hiddenlink) {
   color: #00568a;
   text-decoration: none;
   -webkit-transition: color .15s ease;
   -moz-transition: color .15s ease;
   transition: color .15s ease; }
 
-.reveal a[href^="http"], .reveal a[href^="news:"], .reveal a[href^="mailto:"], .reveal a[href^="ftp:"] {
+.reveal a[href^="http"]:not(.hiddenlink), .reveal a[href^="news:"], .reveal a[href^="mailto:"], .reveal a[href^="ftp:"] {
   color: #7ab516; }
 
-.reveal a[href^="https://oer.gitlab.io"] {
+.reveal a[href^="https://oer.gitlab.io"]:not(.hiddenlink) {
   color: #00568a; }
 
 /* Show icon for outgoing/external link.
@@ -583,6 +587,7 @@ div.ribbon-legalese a {
   margin: 0px 1px 0px 3px;
   padding-right: 16px; }
 
+.reveal a[href].hiddenlink:after,
 .reveal a[href^="#"]:not(.nooutlink):after,
 .reveal .figure a[href]:after, .reveal .src a[href]:after,
 .reveal a[href]:empty:after {
@@ -592,9 +597,9 @@ div.ribbon-legalese a {
   background: none; }
 
 /* Indicate direction of internal link. */
-.reveal a[href].backwardlink::before {
+.reveal a[href].backwardlink:not(.hiddenlink):before {
   content: "\25c2\00a0"; }
-.reveal a[href].forwardlink::after {
+.reveal a[href].forwardlink:not(.hiddenlink):after {
   content: "\00a0\25b8"; }
 
 .reveal a[href]:hover {
