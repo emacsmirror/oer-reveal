@@ -11,6 +11,13 @@ where version numbers starting with version 1.0.0 adhere to
 
 ** [Unreleased]
 
+** [3.1.0] - 2020-07-26
+*** Added
+    - File [[file:css/hidelinks.js]] to selectively hide links
+      (activated in [[file:org/config.org]])
+*** Fixed
+    - Add placeholder for title in figure with caption
+
 ** [3.0.0] - 2020-06-27
 *** Added
     - Support for reveal.js 4.x
