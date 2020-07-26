@@ -1185,9 +1185,10 @@ As side effect, copy figure as described for `oer-reveal-copy-dir-suffix'."
 			    (t (concat
 				(format "<p%s>" h-license)
 				;; If title is part of the requested
-				;; caption; omit in license.
+				;; caption, use placeholder in license.
 				(if (and caption (booleanp caption))
-				    ""
+				    (format "%s "
+                                            oer-reveal-default-figure-title)
 				  (format "&ldquo;%s&rdquo; " htmltitle))
 				htmlauthor
 				htmllicensetag
