@@ -11,6 +11,11 @@ where version numbers starting with version 1.0.0 adhere to
 
 ** [Unreleased]
 
+** [3.1.2] - 2020-08-06
+*** Fixed
+    - Improve contrast in [[file:css/oer-reveal.css]] and
+      [[file:css/dbis.css]] for WCAG compliance
+
 ** [3.1.1] - 2020-07-26
 *** Added
     - Class hiddenlink in [[file:css/oer-reveal.css]]
