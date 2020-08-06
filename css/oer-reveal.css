@@ -259,7 +259,7 @@ body {
    Move to right, with same amount as padding-right above. */
 .reveal div.figure p:nth-child(3) {
   font-size: .35em;
-  opacity: 0.5;
+  opacity: 0.66;
   text-align: right;
   margin: 5px;
   position: absolute;
@@ -567,7 +567,7 @@ div.ribbon-legalese a {
   transition: color .15s ease; }
 
 .reveal a[href^="http"]:not(.hiddenlink), .reveal a[href^="news:"], .reveal a[href^="mailto:"], .reveal a[href^="ftp:"] {
-  color: #7ab516; }
+  color: #107010; }
 
 .reveal a[href^="https://oer.gitlab.io"]:not(.hiddenlink) {
   color: #00568a; }
