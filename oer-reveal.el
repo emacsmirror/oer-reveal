@@ -1653,8 +1653,11 @@ When arguments WITH-PREFIX or WITH-DCMITYPE are non-nil, the \"div\"
 element receives \"prefix\" or \"typeof\" attributes based on
 `oer-reveal-rdf-prefixes' and `oer-reveal-dcmitype'.
 If WITH-LEGALESE is non-nil, add a \"div\" element with pointers to legalese."
-  (let* ((uri (or about (concat (cdr (oer-reveal--parse-git-url))
-                                "/"
+  (let* ((pages-url (cdr (oer-reveal--parse-git-url)))
+         (uri (or about (concat pages-url
+                                (if (string-suffix-p "/" pages-url)
+                                    ""
+                                  "/")
                                 (oer-reveal--relative-git-basename (buffer-file-name))
                                 ".html")))
          (info (org-export-get-environment 'oer-reveal))
