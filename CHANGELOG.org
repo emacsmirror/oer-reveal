@@ -11,6 +11,11 @@ where version numbers starting with version 1.0.0 adhere to
 
 ** [Unreleased]
 
+** [3.1.3] - 2020-08-12
+*** Fixed
+    - Avoid duplicate slashes for ~about~ URI in
+      [[file:oer-reveal.el::(defun oer-reveal-license-to-fmt][oer-reveal-license-to-fmt]]
+
 ** [3.1.2] - 2020-08-06
 *** Fixed
     - Improve contrast in [[file:css/oer-reveal.css]] and
