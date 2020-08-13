@@ -10,6 +10,9 @@ where version numbers starting with version 1.0.0 adhere to
 
 
 ** [Unreleased]
+*** Fixed
+    - Use correct customization type for
+      ~oer-reveal-publish-html-postamble~
 
 ** [3.2.1] - 2020-08-13
 *** Fixed
