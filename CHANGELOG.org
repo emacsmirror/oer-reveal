@@ -11,6 +11,11 @@ where version numbers starting with version 1.0.0 adhere to
 
 ** [Unreleased]
 
+** [3.2.1] - 2020-08-13
+*** Fixed
+    - Use green color introduced for higher contrast in version 3.1.2
+      in more places
+
 ** [3.2.0] - 2020-08-13
 *** Added
     - Enable export of speaker notes to PDF in [[file:org/config.org]]
