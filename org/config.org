@@ -13,6 +13,9 @@
 # Disable separate PDF pages for each fragment.  Just use one per slide.
 #+OPTIONS: reveal_pdfseparatefragments:nil
 
+# Display notes on separate page for PDF export.
+#+REVEAL_EXPORT_NOTES_TO_PDF: separate-page
+
 # Enable smart quotes
 #+OPTIONS: ':t
 
