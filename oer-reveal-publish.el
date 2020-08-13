@@ -121,7 +121,7 @@ Assignment happens in `oer-reveal-publish-setq-defaults'.
 The default creates license information and links to imprint and
 privacy policy."
   :group 'org-export-oer-reveal
-  :type 'string
+  :type '(choice string function)
   :package-version '(oer-reveal . "2.0.0"))
 
 (defun oer-reveal-publish-faces ()
