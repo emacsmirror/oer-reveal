@@ -37,7 +37,7 @@ a {
   color: #00568a;
   text-decoration: none; }
 
-a[href^="http"] { color: #7ab516; }
+a[href^="http"] { color: #107010; }
 a[href^="https://oer.gitlab.io"] { color: #00568a; }
 
 /* Show icon for outgoing/external link.

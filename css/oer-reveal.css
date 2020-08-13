@@ -288,7 +288,7 @@ div.legalese a { text-decoration: none; }
 div.ribbon-legalese {
   z-index: 50;
   color: #fff;
-  background: #7ab516;
+  background: #107010;
   font-size: 14px;
   text-align: center;
   padding: 3px 10px;
@@ -309,7 +309,7 @@ div.ribbon-legalese a {
 #forkmeongitlab a, #forkmeongitlab-right a {
   z-index: 20;
   color: #fff;
-  background: #7ab516;
+  background: #107010;
   text-decoration: none;
   text-align: center;
   padding: 3px 20px;
