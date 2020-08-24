@@ -133,16 +133,16 @@
   ;; Default value for oer-reveal-alternate-types, with link titles.
   (should (equal (oer-reveal-add-alternate-types
                   '("org" "pdf") "git" "example.org/" "presentation")
-                 "#+HTML_HEAD: <link rel=\"alternate\" type=\"text/org\" href=\"git/blob/master/presentation.org\" title=\"Org mode source code of OER HTML presentation with reveal.js\"/>
-#+HTML_HEAD: <link rel=\"alternate\" type=\"application/pdf\" href=\"presentation.pdf\" title=\"PDF version of OER HTML presentation with reveal.js\"/>
+                 "#+HTML_HEAD: <link rel=\"alternate\" type=\"text/org\" href=\"git/blob/master/presentation.org\" title=\"Org mode source code of this OER HTML presentation with reveal.js\"/>
+#+HTML_HEAD: <link rel=\"alternate\" type=\"application/pdf\" href=\"presentation.pdf\" title=\"PDF version of this OER HTML presentation with reveal.js\"/>
 #+TITLE: @@latex:\\footnote{This PDF document is an inferior version of an \\href{example.org/presentation.html}{OER HTML presentation with reveal.js}; \\href{git}{free/libre Org mode source repository}.}@@
 "))
 
   ;; Different wording for HTML documents.
   (should (equal (oer-reveal-add-alternate-types
                   '("org" "pdf") "git" "example.org/" "presentation" 'html)
-                 "#+HTML_HEAD: <link rel=\"alternate\" type=\"text/org\" href=\"git/blob/master/presentation.org\" title=\"Org mode source code of OER HTML page\"/>
-#+HTML_HEAD: <link rel=\"alternate\" type=\"application/pdf\" href=\"presentation.pdf\" title=\"PDF version of OER HTML page\"/>
+                 "#+HTML_HEAD: <link rel=\"alternate\" type=\"text/org\" href=\"git/blob/master/presentation.org\" title=\"Org mode source code of this OER HTML page\"/>
+#+HTML_HEAD: <link rel=\"alternate\" type=\"application/pdf\" href=\"presentation.pdf\" title=\"PDF version of this OER HTML page\"/>
 #+TITLE: @@latex:\\footnote{This PDF document is an inferior version of an \\href{example.org/presentation.html}{OER HTML page}; \\href{git}{free/libre Org mode source repository}.}@@
 "))
 
