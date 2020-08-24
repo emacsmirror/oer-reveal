@@ -10,6 +10,17 @@ where version numbers starting with version 1.0.0 adhere to
 
 
 ** [Unreleased]
+
+** [3.3.0] - 2020-08-24
+*** Changed
+    - More entries in ~oer-reveal-dictionaries~ allow to customize
+      language-specific title attributes in link elements for
+      alternate types; const ~oer-reveal-alternate-type-config~ uses
+      new entries by default
+    - Optional ~backend~ argument in function
+      ~oer-reveal-add-alternate-types~ allows to specify different
+      title attribute for HTML and reveal.js export and uses new entries
+      in ~oer-reveal-dictionaries~
 *** Fixed
     - Use correct customization type for
       ~oer-reveal-publish-html-postamble~
