@@ -1381,11 +1381,11 @@ Call `oer-reveal--attribution-strings' with proper metadata."
              (by . "von")
              (created . "Erzeugt")
              (legalese . "<div class=\"legalese\"><p><a href=\"/imprint.html\">Impressum</a> | <a href=\"/privacy-de.html\">Datenschutz</a></p></div>")
-             (htmldoc "OER-HTML-Seite")
-             (revealjsdoc "OER-HTML-Präsentation mit Reveal.js")
-             (sourceversion . "Org-Mode-Quelltext der %s")
-             (pdfversion . "PDF-Version der %s")
-             (pdffootnote "Dieses PDF-Dokument ist eine minderwertige Version einer \\href{%s}{%s}; \\href{%s}{freies Repository mit Org-Mode-Quelltexten}."))))
+             (htmldoc . "OER-HTML-Seite")
+             (revealjsdoc . "OER-HTML-Präsentation mit Reveal.js")
+             (sourceversion . "Org-Mode-Quelltext dieser %s")
+             (pdfversion . "PDF-Version dieser %s")
+             (pdffootnote . "Dieses PDF-Dokument ist eine minderwertige Version einer \\href{%s}{%s}; \\href{%s}{freies Repository mit Org-Mode-Quelltexten}."))))
   "List of pairs specifying dictionaries for licensing related words.
 The first component of each pair is a two-letter language identifier (as
 defined with \"#+LANGUAGE\"), while the second one is a list of pairs from
