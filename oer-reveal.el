@@ -1397,7 +1397,7 @@ language at URL `https://gitlab.com/oer/org-re-reveal/issues/'."
       (unless text
         (user-error
          "Identifier `%s' unknown in language `%s'.  Customize `oer-reveal-dictionaries'"
-         text language))
+         identifier language))
       (cdr text))))
 
 (defcustom oer-reveal-licenses
