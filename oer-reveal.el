@@ -400,12 +400,17 @@ Org source file.  Function `oer-reveal-publish-to-reveal-and-pdf' changes
 this to create links for Org source and PDF variant.")
 
 (defconst oer-reveal-alternate-type-config
-  '(("org" "text/org" "Org mode source code of HTML presentation")
-    ("pdf" "application/pdf" "Concise PDF version of HTML presentation"))
+  '(("org" "text/org" sourceversion)
+    ("pdf" "application/pdf" pdfversion))
   "List of triples for alternate type links in HTML presentations.
-The first entry is a file extension, the second its MIME type, the
-third a title for the link.  If the title's length is zero, no title
-attribute is generated in `oer-reveal-add-alternate-types'.")
+The first entry is a file extension, the second its MIME type; the third
+specifies whether and how to construct a title for the link.
+The title can be a string, to be used literally.  If the title's length is
+zero, no title  attribute is generated in `oer-reveal-add-alternate-types'.
+By default, the third entry indicates a symbol in `oer-reveal-dictionaries',
+which in turn translates to a title string including a placeholder \"%s\";
+depending on the export backend in use, the placeholder is translated with
+`htmldoc' or `revealjsdoc'.")
 
 (defconst oer-reveal-plugin-config-fmt "%s,\n"
   "Format string to embed a line with plugin configuration.")
