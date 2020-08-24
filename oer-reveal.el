@@ -1347,7 +1347,11 @@ Call `oer-reveal--attribution-strings' with proper metadata."
              (by . "by")
              (created . "Created")
              (legalese . "<div class=\"legalese\"><p><a href=\"/imprint.html\">Imprint</a> | <a href=\"/privacy.html\">Privacy Policy</a></p></div>")
-             (pdffootnote . "This PDF document is an inferior version of an \\href{%s}{OER HTML presentation}; \\href{%s}{free/libre Org mode source repository}.")))
+             (htmldoc . "OER HTML page")
+             (revealjsdoc . "OER HTML presentation with reveal.js")
+             (sourceversion . "Org mode source code of %s")
+             (pdfversion . "PDF version of %s")
+             (pdffootnote . "This PDF document is an inferior version of an \\href{%s}{%s}; \\href{%s}{free/libre Org mode source repository}.")))
     ("de" . (("CC0-1.0" . "Creative-Commons-Lizenz CC0 1.0")
              ("CC-BY-SA-4.0" . "Creative-Commons-Lizenz CC BY-SA 4.0")
              (text . "Soweit nicht anders angegeben unterliegt das Werk „%t“, %c, der %l.")
@@ -1356,7 +1360,11 @@ Call `oer-reveal--attribution-strings' with proper metadata."
              (by . "von")
              (created . "Erzeugt")
              (legalese . "<div class=\"legalese\"><p><a href=\"/imprint.html\">Impressum</a> | <a href=\"/privacy-de.html\">Datenschutz</a></p></div>")
-             (pdffootnote "Dieses PDF-Dokument ist eine minderwertige Version einer \\href{%s}{OER-HTML-Präsentation}; \\href{%s}{freies Repository mit Org-Mode-Quelltexten}."))))
+             (htmldoc "OER-HTML-Seite")
+             (revealjsdoc "OER-HTML-Präsentation mit Reveal.js")
+             (sourceversion . "Org-Mode-Quelltext der %s")
+             (pdfversion . "PDF-Version der %s")
+             (pdffootnote "Dieses PDF-Dokument ist eine minderwertige Version einer \\href{%s}{%s}; \\href{%s}{freies Repository mit Org-Mode-Quelltexten}."))))
   "List of pairs specifying dictionaries for licensing related words.
 The first component of each pair is a two-letter language identifier (as
 defined with \"#+LANGUAGE\"), while the second one is a list of pairs from
@@ -1372,10 +1380,17 @@ Currently, the following identifiers are used:
 - `created': Word to indicate when the work was created
 - `legalese': HTML string pointing to legalese (imprint and privacy
   policy); set to empty string to avoid altogether
-- `pdffootnote': Text for a footnote in LaTeX to point to source files;
-  first \"%s\" is replaced with URL to HTML presentation, second one with
-  URL to source code repository; resulting text is used in
-  `oer-reveal-alternate-type-latex'; set to empty string to avoid footnote
+- `htmldoc' and `revealjsdoc': Texts to indicate type of primary
+  target format, either HTML document or reveal.js presentation
+- `pdffootnote': Text for a footnote in LaTeX to point to source and
+  primary target files; first \"%s\" is replaced with URL of primary
+  target variant, second one based on the target format with either
+  `revealjsdoc' or `htmldoc', third one with URL to source code repository;
+  resulting text is used in `oer-reveal-alternate-type-latex';
+  set to empty string to avoid footnote
+- `sourceversion' and `pdfversion': Text for source version and PDF version
+  of target document; text contains \"%s\" to be replaced with
+  `revealjsdoc' or `htmldoc'
 If you add another language, you need to provide translations for all
 identifiers.  Please create an issue (or merge request) to share your
 language at URL `https://gitlab.com/oer/org-re-reveal/issues/'."
@@ -1385,7 +1400,7 @@ language at URL `https://gitlab.com/oer/org-re-reveal/issues/'."
                   (repeat (cons
                            (choice symbol string)
                            (string :tag "Translation")))))
-  :package-version '(oer-reveal . "2.0.0"))
+  :package-version '(oer-reveal . "3.3.0"))
 
 (defun oer-reveal--translate (language identifier)
   "Return text under IDENTIFIER for LANGUAGE in `oer-reveal-dictionaries'."
