@@ -733,7 +733,7 @@ Generate title from BASE-TITLE for LANGUAGE, DOCTYPE, and BACKEND."
       (format title-spec doctype))))
 
 (defun oer-reveal-add-alternate-types
-    (types source-repo html-url basename)
+    (types source-repo html-url basename &optional backend)
   "Construct Org code to add links for types in list TYPES.
 Supported string values for TYPES are defined in
 `oer-reveal-alternate-type-config', currently \"org\" and \"pdf\".
@@ -743,49 +743,55 @@ For other types, including \"pdf\", create a link with relative path.
 Second, add a LaTeX footnote to the title with href links to the source
 file in SOURCE-REPO and to the HTML file under HTML-URL.
 BASENAME is the relative source filename without file extension in
-SOURCE-REPO."
-  (concat
-   (mapconcat
-    (lambda (type)
-      (let* ((triple (assoc type oer-reveal-alternate-type-config))
-             (mime-type (nth 1 triple))
-             (title (nth 2 triple))
-             (title-attr (if (< 0 (length title))
-                             (format " title=\"%s\"" title)
-                           ""))
-             (filename (concat basename "." type))
-             (url (cond
-                   ((equal type "org")
-                    ;; Absolute link to source repository.
-                    (concat source-repo "/blob/master/" filename))
-                   ((equal type "pdf")
-                    ;; Relative link to PDF in same directory.
-                    (file-name-nondirectory filename))
-                   (t (error "Unknown alternate type: `%s'" type)))))
-        (format oer-reveal-alternate-type-html
-                mime-type url title-attr)))
-    types "")
-   (if (member "pdf" types)
-       (let* ((language (oer-reveal--language))
-              (footnote (oer-reveal--translate language 'pdffootnote)))
-         (if (< 0 (length footnote))
-             (format
-              (format oer-reveal-alternate-type-latex footnote)
-              (concat (if (string-suffix-p "/" html-url)
-                          html-url
-                        (concat html-url "/"))
-                      basename ".html")
-              source-repo)
-           ""))
-     "")))
+SOURCE-REPO.
+Optional BACKEND is the export backend, `re-reveal' by default."
+  (let* ((language (oer-reveal--language))
+         (backend (or backend 're-reveal))
+         (doctype (if (org-export-derived-backend-p backend 're-reveal)
+                      (oer-reveal--translate language 'revealjsdoc)
+                    (oer-reveal--translate language 'htmldoc))))
+    (concat
+     (mapconcat
+      (lambda (type)
+        (let* ((triple (assoc type oer-reveal-alternate-type-config))
+               (mime-type (nth 1 triple))
+               (title (oer-reveal--alternate-link-title
+                       (nth 2 triple) language doctype backend))
+               (title-attr (if (< 0 (length title))
+                               (format " title=\"%s\"" title)
+                             ""))
+               (filename (concat basename "." type))
+               (url (cond
+                     ((equal type "org")
+                      ;; Absolute link to source repository.
+                      (concat source-repo "/blob/master/" filename))
+                     ((equal type "pdf")
+                      ;; Relative link to PDF in same directory.
+                      (file-name-nondirectory filename))
+                     (t (error "Unknown alternate type: `%s'" type)))))
+          (format oer-reveal-alternate-type-html
+                  mime-type url title-attr)))
+      types "")
+     (if (member "pdf" types)
+         (let* ((targeturl
+                 (concat (if (string-suffix-p "/" html-url)
+                             html-url
+                           (concat html-url "/"))
+                         basename ".html"))
+                (footnote (oer-reveal--translate language 'pdffootnote)))
+           (if (< 0 (length footnote))
+               (format oer-reveal-alternate-type-latex
+                       (format footnote targeturl doctype source-repo))
+             ""))
+       ""))))
 
 (defun oer-reveal-insert-alternate-types (backend)
-  "Insert Org code to add links for alternate MIME types, ignoring BACKEND.
+  "Insert Org code to add links for alternate MIME types.
 Call `oer-reveal-add-alternate-types' with `oer-reveal-with-alternate-types',
-SOURCE-REPO and HTML-URL derived from the URL of the GitLab repository, and
+SOURCE-REPO and HTML-URL derived from the URL of the GitLab repository,
 BASENAME derived from the name of the buffer's file.
-Insert resulting Org code at end of current buffer."
-  (ignore backend) ; Silence byte compiler.
+Insert resulting Org code at end of current buffer.
+BACKEND defaults to `re-reveal' but can indicate `html' as well."
   (let* ((pair (oer-reveal--parse-git-url))
          (source-repo (car pair))
          (html-url (cdr pair))
