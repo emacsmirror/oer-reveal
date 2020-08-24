@@ -723,6 +723,15 @@ Return nil if URL does not look like the URL of a GitLab repository."
       (file-name-sans-extension
        (file-relative-name filename root)))))
 
+(defun oer-reveal--alternate-link-title
+    (base-title language doctype backend)
+  "Create title attribute for alternate link.
+Generate title from BASE-TITLE for LANGUAGE, DOCTYPE, and BACKEND."
+  (if (stringp base-title)
+      base-title
+    (let ((title-spec (oer-reveal--translate language base-title)))
+      (format title-spec doctype))))
+
 (defun oer-reveal-add-alternate-types
     (types source-repo html-url basename)
   "Construct Org code to add links for types in list TYPES.
