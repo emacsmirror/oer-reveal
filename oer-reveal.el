@@ -804,7 +804,8 @@ BACKEND defaults to `re-reveal' but can indicate `html' as well."
         (insert
          "\n\n"
          (oer-reveal-add-alternate-types
-          oer-reveal-with-alternate-types source-repo html-url basename))))))
+          oer-reveal-with-alternate-types source-repo html-url basename
+          (or backend 're-reveal)))))))
 
 ;;; Function to generate proper CC attribution for images.
 ;; Function oer-reveal-export-attribution is used in macros in org/config.org.
