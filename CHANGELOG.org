@@ -11,6 +11,10 @@ where version numbers starting with version 1.0.0 adhere to
 
 ** [Unreleased]
 
+** [3.3.1] - 2020-09-15
+*** Fixed
+    - Make custom links for colored text compatible with Org 9.4
+
 ** [3.3.0] - 2020-08-24
 *** Changed
     - More entries in ~oer-reveal-dictionaries~ allow to customize
