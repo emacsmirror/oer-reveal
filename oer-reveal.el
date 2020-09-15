@@ -657,8 +657,10 @@ Note that this filename is exported into a subdirectory of
 ;;; Allow colored text.
 ;; The FAQ at http://orgmode.org/worg/org-faq.html contains a recipe
 ;; based on the obsolete function (since Org 9.0) org-add-link-type.
-;; Use org-link-set-parameters if it is available:
-(defun oer-reveal--color-link-follow (path)
+;; Use org-link-set-parameters if it is available.
+;; With Org 9.4, the :follow function needs two arguments, the
+;; :export function four, see org-link-parameters.
+(defun oer-reveal--color-link-follow (path &optional _)
   "Color link PATH."
   (message (concat "color "
 		   (progn (add-text-properties
@@ -666,7 +668,7 @@ Note that this filename is exported into a subdirectory of
 			   (list 'face `((t (:foreground ,path))))
 			   path)
                           path))))
-(defun oer-reveal--color-link-export (path desc backend)
+(defun oer-reveal--color-link-export (path desc backend &optional _)
   "Export color link at PATH with DESC to BACKEND."
   (cond
    ((eq backend 'html)
