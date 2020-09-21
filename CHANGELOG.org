@@ -11,6 +11,10 @@ where version numbers starting with version 1.0.0 adhere to
 
 ** [Unreleased]
 
+** [3.4.0] - 2020-09-21
+*** Added
+    - Variable [[file:oer-reveal-publish.el::(defcustom oer-reveal-publish-html-text-markup-alist][oer-reveal-publish-html-text-markup-alist]]
+
 ** [3.3.1] - 2020-09-15
 *** Fixed
     - Make custom links for colored text compatible with Org 9.4
