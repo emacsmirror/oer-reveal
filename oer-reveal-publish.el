@@ -124,6 +124,23 @@ privacy policy."
   :type '(choice string function)
   :package-version '(oer-reveal . "2.0.0"))
 
+(defcustom oer-reveal-publish-html-text-markup-alist
+  '((bold . "<strong>%s</strong>")
+    (code . "<code>%s</code>")
+    (italic . "<em>%s</em>")
+    (strike-through . "<del>%s</del>")
+    (underline . "<span class=\"underline\">%s</span>")
+    (verbatim . "<code>%s</code>"))
+  "Value to assign to variable `org-html-text-markup-alist'.
+This changes `bold' and `italic' from their default values to
+improve accessibility.
+See URL `https://www.w3.org/TR/WCAG10-HTML-TECHS/#text-emphasis'.
+Assignment happens in `oer-reveal-publish-setq-defaults'."
+  :group 'org-export-oer-reveal
+  :type '(alist :key-type (symbol :tag "Markup type")
+		:value-type (string :tag "Format string"))
+  :package-version '(oer-reveal . "3.4.0"))
+
 (defun oer-reveal-publish-faces ()
   "Call `custom-set-faces' for syntax highlighting in batch mode.
 Invoked from function `oer-reveal-publish-all'."
@@ -203,6 +220,7 @@ add `oer-reveal-publish-alternate-type-function' to
 	org-html-table-default-attributes nil
 	org-html-doctype oer-reveal-publish-html-doctype
 	org-html-postamble oer-reveal-publish-html-postamble
+        org-html-text-markup-alist oer-reveal-publish-html-text-markup-alist
         org-descriptive-links oer-reveal-publish-descriptive-links
 	oer-reveal-latex-figure-float oer-reveal-publish-figure-float
 	org-re-reveal--href-fragment-prefix org-re-reveal--slide-id-prefix
