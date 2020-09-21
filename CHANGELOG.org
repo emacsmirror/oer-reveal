@@ -11,6 +11,11 @@ where version numbers starting with version 1.0.0 adhere to
 
 ** [Unreleased]
 
+** [3.5.0] - 2020-09-21
+*** Added
+    - Variables [[file:oer-reveal-publish.el::(defcustom oer-reveal-publish-html-container-element "section"][oer-reveal-publish-html-container-element]]
+      and [[file:oer-reveal-publish.el::(defcustom oer-reveal-publish-html-divs][oer-reveal-publish-html-divs]]
+
 ** [3.4.0] - 2020-09-21
 *** Added
     - Variable [[file:oer-reveal-publish.el::(defcustom oer-reveal-publish-html-text-markup-alist][oer-reveal-publish-html-text-markup-alist]]
