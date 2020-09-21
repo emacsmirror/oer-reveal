@@ -107,6 +107,37 @@ See URL `https://ctan.org/pkg/float' for float documentation."
   :group 'org-export-oer-reveal
   :type 'string)
 
+(defcustom oer-reveal-publish-html-container-element "section"
+  "Value to assign to `org-html-container-element'.
+Assignment happens in `oer-reveal-publish-setq-defaults'.
+By default, this structures contents into sections.
+If you change this, maybe you want to change `oer-reveal-publish-html-divs'
+as well."
+  :group 'org-export-oer-reveal
+  :type 'string
+  :package-version '(oer-reveal . "3.5.0"))
+
+(defcustom oer-reveal-publish-html-divs
+  '((preamble  "header" "preamble")
+    (content   "article" "content")
+    (postamble "footer" "postamble"))
+  "Value to assign to `org-html-divs'.
+Assignment happens in `oer-reveal-publish-setq-defaults'.
+By default, this prefers semantic elements over div elements.
+If you change this, maybe you want to change
+`oer-reveal-publish-html-container-element' as well."
+  :group 'org-export-oer-reveal
+  :type '(list :greedy t
+	       (list :tag "Preamble"
+		     (const :format "" preamble)
+		     (string :tag "element") (string :tag "     id"))
+	       (list :tag "Content"
+		     (const :format "" content)
+		     (string :tag "element") (string :tag "     id"))
+	       (list :tag "Postamble" (const :format "" postamble)
+		     (string :tag "     id") (string :tag "element")))
+  :package-version '(oer-reveal . "3.5.0"))
+
 (defcustom oer-reveal-publish-html-doctype "html5"
   "Value to assign to variable `org-html-doctype'.
 Assignment happens in `oer-reveal-publish-setq-defaults'."
