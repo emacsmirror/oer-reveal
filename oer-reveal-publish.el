@@ -249,6 +249,8 @@ add `oer-reveal-publish-alternate-type-function' to
 	table-html-table-attribute "class=\"emacs-table\""
         org-entities-user '(("textbackslash" "\\textbackslash{}" nil "\\" "\\" "\\" "\\"))
 	org-html-table-default-attributes nil
+        org-html-container-element oer-reveal-publish-html-container-element
+        org-html-divs oer-reveal-publish-html-divs
 	org-html-doctype oer-reveal-publish-html-doctype
 	org-html-postamble oer-reveal-publish-html-postamble
         org-html-text-markup-alist oer-reveal-publish-html-text-markup-alist
