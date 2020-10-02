@@ -60,8 +60,13 @@
 # Square Bracket Close ]
 #+MACRO: BC @@latex:\char93{}@@@@html:&#93;@@
 
-# MACRO for forced line break, e.g., in titles.
+# Macro for forced line break, e.g., in titles.
 #+MACRO: BR @@latex:\\@@@@html:<br />@@
+
+# Macro to generate abbr element in HTML.  If a second argument is given, it
+# defines the title attribute.  For LaTeX, output first attribute as is and
+# ignore second one.
+#+MACRO: abbr (eval (concat "@@latex:" $1 "@@@@html:<abbr" (if (< 0 (length $2)) (concat " title=\"" $2 "\"") "") ">" $1 "</abbr>@@"))
 
 # Setup for PDF generation via LaTeX export.
 #+LATEX_CLASS_OPTIONS: [a4paper]
