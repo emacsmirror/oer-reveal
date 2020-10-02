@@ -10,6 +10,8 @@ where version numbers starting with version 1.0.0 adhere to
 
 
 ** [Unreleased]
+*** Deprecated
+    - File [[file:org/config-title-notes.org]]
 
 ** [3.6.0] - 2020-10-02
 *** Added
