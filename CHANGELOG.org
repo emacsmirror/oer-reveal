@@ -10,6 +10,10 @@ where version numbers starting with version 1.0.0 adhere to
 
 
 ** [Unreleased]
+*** Added
+    - Placeholder "%n" for speaker notes in title slides
+      [[file:title-slide/dbis-course.html]] and
+      [[file:title-slide/kurs.html]]
 *** Deprecated
     - File [[file:org/config-title-notes.org]]
 
