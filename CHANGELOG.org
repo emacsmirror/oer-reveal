@@ -14,6 +14,8 @@ where version numbers starting with version 1.0.0 adhere to
     - Placeholder "%n" for speaker notes in title slides
       [[file:title-slide/dbis-course.html]] and
       [[file:title-slide/kurs.html]]
+    - Files [[file:org/config-usage-notes.org]] and
+      [[file:org/config-usage-notes-de.org]]
 *** Deprecated
     - File [[file:org/config-title-notes.org]]
 
