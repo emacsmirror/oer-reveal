@@ -10,6 +10,8 @@ where version numbers starting with version 1.0.0 adhere to
 
 
 ** [Unreleased]
+
+** [3.7.0] - 2020-10-02
 *** Added
     - Placeholder "%n" for speaker notes in title slides
       [[file:title-slide/dbis-course.html]] and
