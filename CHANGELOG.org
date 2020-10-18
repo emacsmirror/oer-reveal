@@ -10,6 +10,15 @@ where version numbers starting with version 1.0.0 adhere to
 
 
 ** [Unreleased]
+*** Added
+    - Variable [[file:oer-reveal.el::(defcustom oer-reveal-plugin-4-config][oer-reveal-plugin-4-config]]
+*** Changed
+    - Update ~oer-reveal-submodules-version~ to 2.1.0, where
+      reveal.js-plugins use the API for reveal.js 4
+    - Update settings in
+      [[file:oer-reveal.el::(defcustom oer-reveal-plugin-config][oer-reveal-plugin-config]]
+      for reveal.js-plugins (in combination with new variable
+      ~oer-reveal-plugin-4-config~)
 
 ** [3.7.0] - 2020-10-02
 *** Added

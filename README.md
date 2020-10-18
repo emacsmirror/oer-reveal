@@ -149,8 +149,8 @@ aim to install reveal.js for you.  In contrast, the software bundle
 
 Variable `oer-reveal-plugins` lists reveal.js plugins to be
 activated.  To configure those plugins, customize
-`oer-reveal-plugin-config`, which in turn points to customizable
-variables for individual plugins.
+`oer-reveal-plugin-config` and `oer-reveal-plugin-4-config`, which in
+turn point to customizable variables for individual plugins.
 
 When generating image grids, `oer-reveal-export-dir` specifies
 the directory into which to generate CSS code.  This should

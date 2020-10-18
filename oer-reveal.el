@@ -7,7 +7,7 @@
 
 ;; Author: Jens Lechtenbörger
 ;; URL: https://gitlab.com/oer/oer-reveal
-;; Version: 3.7.0
+;; Version: 3.8.0
 ;; Package-Requires: ((emacs "24.4") (org-re-reveal "3.1.0"))
 ;; Keywords: hypermedia, tools, slideshow, presentation, OER
 
@@ -197,14 +197,15 @@ You may want to set this to nil in batch mode."
 (defcustom oer-reveal-plugins
   '("reveal.js-plugins" "Reveal.js-TOC-Progress" "reveal.js-jump-plugin"
     "reveal.js-quiz" "reveal.js-coursemod" "reveal-a11y")
-  "List of `plugin' components to initialize.
+  "List of `plugin' components to publish.
 Each element here is supposed to be the directory name of the plugin.
-If you remove a plugin from this list, it will no longer be initialized.
+If you remove a plugin from this list, it will no longer be published.
 If you add plugins to this list, you need to provide suitable
-initialization code in `oer-reveal-plugin-config'."
+initialization code in `oer-reveal-plugin-config', for
+plugins for reveal.js 4 and later also in `oer-reveal-plugin-4-config'."
   :group 'org-export-oer-reveal
   :type '(repeat string)
-  :package-version '(oer-reveal . "2.3.0"))
+  :package-version '(oer-reveal . "3.8.0"))
 
 (defcustom oer-reveal-audio-slideshow-dependency
   "{ src: '%splugin/audio-slideshow/audio-slideshow.js', condition: function( ) { return !!document.body.classList && !Reveal.isSpeakerNotes(); } }"
@@ -352,7 +353,7 @@ For reveal.js 4, the third argument sets the viewport."
 
 (defcustom oer-reveal-plugin-config
   '(("reveal.js-plugins"
-     (:oer-reveal-audio-slideshow-dependency :oer-reveal-anything-dependency)
+     ()
      (:oer-reveal-audio-slideshow-config :oer-reveal-anything-config))
     ("Reveal.js-TOC-Progress" (:oer-reveal-toc-progress-dependency) ())
     ("reveal.js-jump-plugin" (:oer-reveal-jump-dependency) ())
@@ -363,7 +364,9 @@ For reveal.js 4, the third argument sets the viewport."
   "Initialization for reveal.js plugins in `oer-reveal-plugins'.
 This is a list of triples.  Each triple consists of
 - the plugin name, which must be its directory name,
-- a list of symbols or strings with JavaScript dependencies,
+- a list of symbols or strings with JavaScript dependencies; for reveal.js 4
+  plugins, configuration needs to be provided with
+  `oer-reveal-plugin-4-config' and this list should be empty,
 - a possibly empty list of symbols or strings with configuration settings.
 The symbols should occur among the options-alist of the backend `oer-reveal'
 so that its value can be obtained with `plist-get' during export."
@@ -377,7 +380,18 @@ so that its value can be obtained with `plist-get' during export."
            (repeat (choice
                     (symbol :tag "JavaScript config among options-alist")
                     (string :tag "JavaScript config as string")))))
-  :package-version '(oer-reveal . "2.3.0"))
+  :package-version '(oer-reveal . "3.8.0"))
+
+(defcustom oer-reveal-plugin-4-config
+  "audioslideshow RevealAudioSlideshow plugin/audio-slideshow/plugin.js
+anything RevealAnything plugin/anything/plugin.js"
+  "Initialization for reveal.js 4 plugins.
+This should be a multi-line string, each line with the format of
+`REVEAL_ADD_PLUGIN'.  If you want to pass initialization options to
+`Reveal.initialize()', add them in `oer-reveal-plugin-config'."
+  :group 'org-export-oer-reveal
+  :type 'string
+  :package-version '(oer-reveal . "3.8.0"))
 
 (defcustom oer-reveal-default-figure-title "Figure"
   "Default title for figures whose metadata lacks a title.
@@ -424,7 +438,7 @@ contained in this directory.")
 (defconst oer-reveal-submodules-url
   "https://gitlab.com/oer/emacs-reveal-submodules.git"
   "Git URL for submodules of reveal.js and plugins.")
-(defcustom oer-reveal-submodules-version "2.0.0"
+(defcustom oer-reveal-submodules-version "2.1.0"
   "Version of submodules to check out.
 This can be a string, indicating a git version tag, or nil.
 If nil, `oer-reveal-submodules-ok-p' always returns t, and oer-reveal does
@@ -1965,6 +1979,7 @@ Setup plugin and export configuration, then call `org-re-reveal-template'."
 		   org-re-reveal-revealjs-version))
     (plist-put info :reveal-external-plugins plugin-dependencies)
     (plist-put info :reveal-init-script plugin-config)
+    (plist-put info :reveal-add-plugin oer-reveal-plugin-4-config)
     (org-re-reveal-template contents info)))
 
 (provide 'oer-reveal)
