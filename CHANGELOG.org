@@ -11,6 +11,11 @@ where version numbers starting with version 1.0.0 adhere to
 
 ** [Unreleased]
 
+** [3.8.1] - 2020-11-03
+*** Fixed
+    - In ~oer-reveal--language~, expand ~INCLUDE~ keywords to make
+      sure that the language is found
+
 ** [3.8.0] - 2020-10-18
 *** Added
     - Variable [[file:oer-reveal.el::(defcustom oer-reveal-plugin-4-config][oer-reveal-plugin-4-config]]
