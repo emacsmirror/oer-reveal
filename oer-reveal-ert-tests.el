@@ -14,6 +14,11 @@
 (ert-deftest parse-external-plugins ()
   "Test parsing of external plugin configuration."
   (let* ((tmp-file (make-temp-file "ert"))
+         ;; Test case uses old plugin format.
+         (oer-reveal-plugin-config
+          '(("reveal.js-plugins"
+             (:oer-reveal-audio-slideshow-dependency :oer-reveal-anything-dependency)
+             (:oer-reveal-audio-slideshow-config :oer-reveal-anything-config))))
          (test-cases `((nil . nil)
                        ("nil" . nil)
                        ("()" . nil)
