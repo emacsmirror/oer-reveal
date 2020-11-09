@@ -11,6 +11,10 @@ where version numbers starting with version 1.0.0 adhere to
 
 ** [Unreleased]
 
+** [3.8.2] - 2020-11-09
+*** Fixed
+    - Add horizontal scroll bar to ~pre~ in [[file:css/index.css]]
+
 ** [3.8.1] - 2020-11-03
 *** Fixed
     - In ~oer-reveal--language~, expand ~INCLUDE~ keywords to make
