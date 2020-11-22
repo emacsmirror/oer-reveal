@@ -405,6 +405,15 @@ You may want to use \"H\" with the float package."
   :group 'org-export-oer-reveal
   :type 'string)
 
+(defcustom oer-reveal-license-font-factor 0.35
+  "Factor for size of font for license information.
+By default, oer-reveal.css uses `.35em' as font size for license
+information.  Use this number to calculate the `max-width' of
+license information from MAXHEIGHT in `oer-reveal-export-attribution'."
+  :group 'org-export-oer-reveal
+  :type 'number
+  :package-version '(oer-reveal . "3.9.0"))
+
 (defvar oer-reveal-with-alternate-types '("org")
   "List of alternate types for which to create links.
 Each element of this list must occur as first entry of a triple in
@@ -887,7 +896,13 @@ If CAPTION is nil, a LaTeX caption is generated anyways to have a numbered
 figure (and frequently to also display license information).
 Optional MAXHEIGHT restricts the height of the image and of the license
 information in HTML.  MAXHEIGHT needs be a full specification including
-the unit, e.g. `50vh'.
+the unit, e.g. `50vh'.  Actually, I stopped using viewport heights:
+With scaling of reveal.js, the viewport size is not calculated properly
+\(this is visible for screens with much larger resolutions than the
+presentation's resolution), and images may overlap the footer.  If you
+use `ex' as unit, note that licence information is displayed with a smaller
+font.  To account for this difference, `oer-reveal-license-font-factor' is
+used to determine the maximum width of license information.
 If present, optional DIVCLASSES must be a string with space separated
 classes for the div element, including `figure'.
 If optional SHORTLICENSE is the symbol `none', do not display license
@@ -1116,6 +1131,18 @@ and (back-) slashes in group 1.")
       (make-directory target-dir t)
       (copy-file filename target-dir t t))))
 
+(defun oer-reveal--license-width (maxheight)
+  "Compute `max-width' for license given MAXHEIGHT.
+If MAXHEIGHT is a string ending in \"ex\", return corresponding string
+where the number is divided by `oer-reveal-license-font-factor'."
+  (if (and (stringp maxheight)
+           (string-suffix-p "ex" maxheight))
+      (format "%.2fex"
+              (/ (string-to-number
+                  (substring maxheight 0 -2))
+                 oer-reveal-license-font-factor))
+    maxheight))
+
 (defun oer-reveal--attribution-strings
     (metadata &optional caption maxheight divclasses shortlicense
     embed-svg extra-attrs)
@@ -1181,8 +1208,9 @@ As side effect, copy figure as described for `oer-reveal-copy-dir-suffix'."
 	 (h-image (if maxheight
 		      (format " style=\"max-height:%s\"" maxheight)
 		    ""))
-	 (h-license (if maxheight
-			(format " style=\"max-width:%s\"" maxheight)
+         (maxwidth (oer-reveal--license-width maxheight))
+	 (h-license (if maxwidth
+			(format " style=\"max-width:%s\"" maxwidth)
 		      ""))
 	 (license (if licensetext
 		      (if licenseurl
