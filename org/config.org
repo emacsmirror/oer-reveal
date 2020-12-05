@@ -133,7 +133,7 @@
 # Macro revealimg() expects up to six arguments, a filename for a
 # file with meta-data about an image and up to five optional
 # arguments: a caption, the maximum height of image in HTML, e.g.,
-# 50vh, a list of CSS classes (space separated, containing "figure"),
+# 50rh, a list of CSS classes (space separated, containing "figure"),
 # an attribute specifying whether
 # - a long (default/nil),
 # - a short (t; in this case `oer-reveal--short-license-template' is
@@ -146,6 +146,16 @@
 # oer-reveal--export-attribution-helper), and a list of space
 # separated additional attributes to assign to the figure’s div
 # element.
+# Note the above unit "rv" for an image’s max-height, added in version
+# 3.10.0 of oer-reveal.  Previously, "vh" was recommended here, but
+# that does not work properly with scaling of reveal.js when the
+# screen’s resolution is larger than the slide height with reveal.js
+# (previously leading to images that might overflow).  Just use rh
+# where you would otherwise use vh.  With rv, oer-reveal replaces your
+# unit with a pixel value that is computed from your slides’ height.
+# E.g., if you use 10rh with a slide height of 700, then your image’s
+# style includes a max-height of 70px, which is scaled properly by
+# reveal.js.
 #
 # Second, reveallicense() displays an image inline in the surrouding
 # paragraph or list, aligned to the right.  Again, license information
