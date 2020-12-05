@@ -408,11 +408,18 @@ You may want to use \"H\" with the float package."
 (defcustom oer-reveal-license-font-factor 0.35
   "Factor for size of font for license information.
 By default, oer-reveal.css uses `.35em' as font size for license
-information.  Use this number to calculate the `max-width' of
-license information from MAXHEIGHT in `oer-reveal-export-attribution'."
+information.  The MAXHEIGHT in `oer-reveal-export-attribution' may use
+different units.  If it specifies `ex', use this number to calculate
+the `max-width' of rotated license information from MAXHEIGHT.
+You may want to specify MAXHEIGHT with oer-reveal's unit `rh'
+instead of `ex', introduced in version 3.10.0."
   :group 'org-export-oer-reveal
   :type 'number
   :package-version '(oer-reveal . "3.9.0"))
+
+(defconst oer-reveal-default-slide-height 700
+  "Default height of slides with reveal.js.
+See URL `https://revealjs.com/presentation-size/'.")
 
 (defvar oer-reveal-with-alternate-types '("org")
   "List of alternate types for which to create links.
@@ -899,10 +906,15 @@ information in HTML.  MAXHEIGHT needs be a full specification including
 the unit, e.g. `50vh'.  Actually, I stopped using viewport heights:
 With scaling of reveal.js, the viewport size is not calculated properly
 \(this is visible for screens with much larger resolutions than the
-presentation's resolution), and images may overlap the footer.  If you
-use `ex' as unit, note that licence information is displayed with a smaller
-font.  To account for this difference, `oer-reveal-license-font-factor' is
-used to determine the maximum width of license information.
+presentation's resolution), and images may overlap the footer.
+The recommended unit for use with oer-reveal as of version 3.10.0 is
+`rh' (reveal.js height), which is meant as replacement of `vh' to work
+correctly with reveal.js, taking scaling into account.  Thus, `50rh'
+should cover 50% of a slide's height.
+If you use `ex' as unit, note that licence information is displayed with
+a smaller font.  To account for this difference,
+`oer-reveal-license-font-factor' determines the maximum width of license
+information.
 If present, optional DIVCLASSES must be a string with space separated
 classes for the div element, including `figure'.
 If optional SHORTLICENSE is the symbol `none', do not display license
@@ -1143,6 +1155,23 @@ where the number is divided by `oer-reveal-license-font-factor'."
                  oer-reveal-license-font-factor))
     maxheight))
 
+(defun oer-reveal--license-height (maxheight)
+  "Compute height unit for image given MAXHEIGHT.
+If MAXHEIGHT is a string ending in \"rh\", treat it as percentage
+value for the slides' height with reveal.js and return height with
+unit `px'.  E.g., with the default height of 700, a unit of `10rh'
+results in `70px'."
+  (if (and (stringp maxheight)
+           (string-suffix-p "rh" maxheight))
+      (let ((height (or (plist-get (org-export-get-environment 're-reveal)
+			           :reveal-height)
+                        oer-reveal-default-slide-height)))
+        (format "%dpx"
+                (* 0.01 height
+                   (string-to-number
+                    (substring maxheight 0 -2)))))
+    maxheight))
+
 (defun oer-reveal--attribution-strings
     (metadata &optional caption maxheight divclasses shortlicense
     embed-svg extra-attrs)
@@ -1205,6 +1234,7 @@ As side effect, copy figure as described for `oer-reveal-copy-dir-suffix'."
                           (concat " " extra-attrs)
                         ""))
 	 (texwidth (alist-get 'texwidth alist 0.9))
+         (maxheight (oer-reveal--license-height maxheight))
 	 (h-image (if maxheight
 		      (format " style=\"max-height:%s\"" maxheight)
 		    ""))
