@@ -10,6 +10,13 @@ where version numbers starting with version 1.0.0 adhere to
 
 
 ** [Unreleased]
+** [3.10.0] - 2020-12-05
+*** Added
+    - Unit "rh" (for Reveal.js Height instead of "vh" for Viewport
+      Height) to be used in max-height CSS specifications of images.
+      See comment before macro ~revealimg~ in
+      [[file:org/config.org][config.org]].
+
 ** [3.9.0] - 2020-11-22
 *** Added
     - Variable [[file:oer-reveal.el::(defcustom oer-reveal-license-font-factor][oer-reveal-license-font-factor]]
