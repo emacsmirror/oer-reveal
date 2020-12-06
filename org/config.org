@@ -188,8 +188,8 @@
 # Its six or seven arguments are as follows:
 # 1. Unique grid number (e.g., starting from one)
 # 2. File with names of images to position on the grid
-# 3. Height of the grid as percentage of the height of the viewport
-#    (used with CSS unit vh)
+# 3. Height of the grid as percentage of the height of the slide
+#    (without unit)
 # 4/5. Numbers of (a) columns and (b) rows of the grid
 # 6. Grid-template-areas to specify what image to position on what
 #    grid cell(s); see, e.g.:
