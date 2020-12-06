@@ -10,6 +10,12 @@ where version numbers starting with version 1.0.0 adhere to
 
 
 ** [Unreleased]
+
+** [3.10.1] - 2020-12-06
+*** Fixed
+    - Use pixel specifications (instead of vh) in image grids as
+      well.
+
 ** [3.10.0] - 2020-12-05
 *** Added
     - Unit "rh" (for Reveal.js Height instead of "vh" for Viewport
