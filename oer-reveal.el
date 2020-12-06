@@ -1155,7 +1155,7 @@ where the number is divided by `oer-reveal-license-font-factor'."
                  oer-reveal-license-font-factor))
     maxheight))
 
-(defun oer-reveal--license-height (maxheight)
+(defun oer-reveal--image-height (maxheight)
   "Compute height unit for image given MAXHEIGHT.
 If MAXHEIGHT is a string ending in \"rh\", treat it as percentage
 value for the slides' height with reveal.js and return height with
@@ -1234,7 +1234,7 @@ As side effect, copy figure as described for `oer-reveal-copy-dir-suffix'."
                           (concat " " extra-attrs)
                         ""))
 	 (texwidth (alist-get 'texwidth alist 0.9))
-         (maxheight (oer-reveal--license-height maxheight))
+         (maxheight (oer-reveal--image-height maxheight))
 	 (h-image (if maxheight
 		      (format " style=\"max-height:%s\"" maxheight)
 		    ""))
