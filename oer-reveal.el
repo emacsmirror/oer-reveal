@@ -984,16 +984,16 @@ timestamp.")
   (concat "." oer-reveal--css-grid-img-class-template
 	  " { grid-area: ga%d; }")
   "Template for CSS of img element.")
-(defconst oer-reveal--css-repeat-template "repeat(%s, 1fr)"
+(defconst oer-reveal--css-repeat-template "repeat(%s)"
   "Template for size of rows and columns.")
 (defconst oer-reveal--css-grid-template ".grid%s {
   display: grid;
-  height: %svh;
+  height: %s;
   max-width: 90%%;
   grid-template-columns: %s;
   grid-template-rows: %s;
   grid-gap: 5px;
-  align-items: center;
+  align-items: start;
   grid-template-areas: %s; }
 "
   "Template for CSS of grid.")
@@ -1351,10 +1351,11 @@ each individual image in the grid."
 	 (no-images (length images))
 	 (numbered (cl-mapcar #'cons (number-sequence 1 no-images) images))
 	 (row-height (/ (* 0.95 height) no-rows))
+         (height-px (oer-reveal--perc-height-to-pixels height))
 	 (image-heights (oer-reveal--compute-image-heights template-areas))
          (frag-class (if (eq 'grid fragment) " fragment" "")))
     (oer-reveal--save-image-grid-css
-     grid-id images height no-columns no-rows template-areas)
+     grid-id images height-px no-columns no-rows template-areas)
     (concat (format "#+REVEAL_EXTRA_CSS: %s\n"
 		    (format oer-reveal-css-filename-template grid-id))
 	    (format "@@html: </p><div class=\"grid%s%s\">" grid-id frag-class)
@@ -1382,8 +1383,10 @@ each individual image in the grid."
 Layout based on `oer-reveal--css-grid-template' requires HEIGHT,
 NO-COLUMNS, NO-ROWS, TEMPLATE-AREAS."
   (format oer-reveal--css-grid-template grid-id height
-	  (format oer-reveal--css-repeat-template no-columns)
-	  (format oer-reveal--css-repeat-template no-rows)
+	  (format oer-reveal--css-repeat-template
+                  (format "%d, %d%%" no-columns (/ 100 no-columns)))
+	  (format oer-reveal--css-repeat-template
+                  (format "%d, %d%%" no-rows (/ 100 no-rows)))
 	  template-areas))
 
 (defun oer-reveal--save-image-grid-css
@@ -1431,8 +1434,8 @@ Call `oer-reveal--attribution-strings' with proper metadata."
         (frag-class (if (and fragment (booleanp fragment)) " fragment" "")))
     (car (oer-reveal--attribution-strings
 	  image nil
-	  (format "%svh"
-		  (* (gethash area image-heights) row-height))
+          (oer-reveal--perc-height-to-pixels
+           (* (gethash area image-heights) row-height))
 	  (concat "figure grid-img "
 		  (format oer-reveal--css-grid-img-class-template
 			  grid-id no)
