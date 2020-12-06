@@ -1155,6 +1155,19 @@ where the number is divided by `oer-reveal-license-font-factor'."
                  oer-reveal-license-font-factor))
     maxheight))
 
+(defun oer-reveal--perc-height-to-pixels (perc)
+  "Compute number of pixels for PERC of height.
+PERC is a percentage value, either a number of a string without unit.
+Given the slides' height, return number of pixels of this percentage
+\(as string, with suffix \"px\")."
+  (let ((height (or (plist-get (org-export-get-environment 're-reveal)
+			       :reveal-height)
+                    oer-reveal-default-slide-height))
+        (perc (if (stringp perc)
+                  (string-to-number perc)
+                perc)))
+    (format "%dpx" (* 0.01 height perc))))
+
 (defun oer-reveal--image-height (maxheight)
   "Compute height unit for image given MAXHEIGHT.
 If MAXHEIGHT is a string ending in \"rh\", treat it as percentage
@@ -1163,13 +1176,7 @@ unit `px'.  E.g., with the default height of 700, a unit of `10rh'
 results in `70px'."
   (if (and (stringp maxheight)
            (string-suffix-p "rh" maxheight))
-      (let ((height (or (plist-get (org-export-get-environment 're-reveal)
-			           :reveal-height)
-                        oer-reveal-default-slide-height)))
-        (format "%dpx"
-                (* 0.01 height
-                   (string-to-number
-                    (substring maxheight 0 -2)))))
+      (oer-reveal--perc-height-to-pixels (substring maxheight 0 -2))
     maxheight))
 
 (defun oer-reveal--attribution-strings
