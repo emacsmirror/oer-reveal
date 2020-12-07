@@ -11,6 +11,13 @@ where version numbers starting with version 1.0.0 adhere to
 
 ** [Unreleased]
 
+** [3.11.0] - 2020-12-07
+*** Added
+    - Link type “local” for references to local HTML files, without
+      the usual translation by Org mode (which may lead to unwanted
+      results for included files)
+      - See [[file:examples/test-local.org]]
+
 ** [3.10.2] - 2020-12-07
 *** Fixed
     - Use full URL for usage notes (instead of broken file link)
