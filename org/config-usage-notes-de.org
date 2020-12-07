@@ -9,7 +9,7 @@
   - Auf Folien mit Tonspur könnte der gesprochene Text gezeigt werden
 - Durch ~?~ werden Tastaturbelegungen gezeigt
 - Präsentationen unterstützen zwei PDF-Formate, siehe
-  [[/hinweise.html][Hinweise zur Nutzung]]
+  [[https://oer.gitlab.io/hinweise.html][Hinweise zur Nutzung]]
   - Schlankes PDF-Format (Ändern von ~.html~ und folgenden Zeichen in
     Adressleiste zu ~.pdf~)
   - „Drucken“ in PDF (Hinzufügen von ~?print-pdf~ nach ~.html~, dann
@@ -17,7 +17,7 @@
     [[https://revealjs.com/pdf-export/][empfohlene Einstellungen]])
 - Reduktion ausgehender Hyperlinks, falls diese als störend empfunden
   werden, siehe
-  [[/hinweise.html][Hinweise zur Nutzung]]
+  [[https://oer.gitlab.io/hinweise.html][Hinweise zur Nutzung]]
   - Hinzufügen von ~?hidelinks~ (ggf. mit Zahl) nach ~.html~
-- Die [[/hinweise.html][Hinweise zur Nutzung]] erläutern weitere nicht
+- Die [[https://oer.gitlab.io/hinweise.html][Hinweise zur Nutzung]] erläutern weitere nicht
   offensichtliche Funktionen der Präsentationen
