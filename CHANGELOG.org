@@ -11,6 +11,10 @@ where version numbers starting with version 1.0.0 adhere to
 
 ** [Unreleased]
 
+** [3.12.0] - 2020-12-07
+*** Added
+    - Function [[file:oer-reveal.el::(defun oer-reveal-publish-to-html][~oer-reveal-publish-to-html~]]
+
 ** [3.11.0] - 2020-12-07
 *** Added
     - Link type “local” for references to local HTML files, without
