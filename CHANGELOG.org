@@ -11,6 +11,10 @@ where version numbers starting with version 1.0.0 adhere to
 
 ** [Unreleased]
 
+** [3.10.2] - 2020-12-07
+*** Fixed
+    - Use full URL for usage notes (instead of broken file link)
+
 ** [3.10.1] - 2020-12-06
 *** Fixed
     - Use pixel specifications (instead of vh) in image grids as
