@@ -714,6 +714,30 @@ Note that this filename is exported into a subdirectory of
                      #'oer-reveal--color-link-follow
                      #'oer-reveal--color-link-export))
 
+(defun oer-reveal--local-path-follow (path &optional _)
+  "Follow local PATH."
+  (message "You should export, not follow local paths: %s" path))
+(defun oer-reveal--local-path-export (path desc backend &optional _)
+  "Export local PATH with DESC to BACKEND, without Org interference.
+This is meant for links in combination with INCLUDE statements where
+Org by default may insert unwanted path components."
+  (cond
+   ((eq backend 'html)
+    (format "<a href=\"%s\">%s</a>" path (or desc path)))
+   ((eq backend 'latex)
+    (let ((path (if (string-suffix-p ".html" path)
+                    (concat (substring path 0 -5) ".pdf")
+                  path)))
+      (format "\\href{%s}{%s}" path (or desc path))))))
+
+(if (fboundp #'org-link-set-parameters)
+    (org-link-set-parameters "local"
+                             :follow #'oer-reveal--local-path-follow
+                             :export #'oer-reveal--local-path-export)
+  (org-add-link-type "local"
+                     #'oer-reveal--local-path-follow
+                     #'oer-reveal--local-path-export))
+
 ;;; Add alternate type links to HTML presentations and pointers to PDF.
 (defconst oer-reveal-alternate-type-html
   "#+HTML_HEAD: <link rel=\"alternate\" type=\"%s\" href=\"%s\"%s/>\n"
