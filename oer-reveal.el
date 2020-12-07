@@ -52,6 +52,7 @@
 (require 'subr-x) ; string-trim
 (require 'url-util) ; url-encode-url
 (require 'org)
+(require 'org-ref)
 (require 'org-re-reveal)
 
 (defvar oer-reveal-keys) ; Silence byte compiler
@@ -2017,6 +2018,15 @@ If `org-re-reveal-client-multiplex-filter' is a regular expression (not
 nil), only publish FILENAME if it matches this regular expression.
 Return output file name."
   (org-re-reveal-publish-to-reveal-client plist filename pub-dir 'oer-reveal))
+
+(defun oer-reveal-publish-to-html
+    (plist filename pub-dir)
+  "Call `org-html-publish-to-html' with PLIST, FILENAME, PUB-DIR.
+Before that, reset `org-ref-ref-html' to its default value; meant for
+ordinary HTML documents in contrast to reveal.js presentations."
+  (let ((org-ref-ref-html
+         "<a class='org-ref-reference' href=\"#%s\">[%s]</a>"))
+    (org-html-publish-to-html plist filename pub-dir)))
 
 ;;; Functionality to set up export.
 (defun oer-reveal--string-or-value (thing info)
