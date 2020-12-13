@@ -10,6 +10,8 @@ where version numbers starting with version 1.0.0 adhere to
 
 
 ** [Unreleased]
+
+** [3.13.0] - 2020-12-13
 *** Added
     - Metadata files can now include relative paths to the image
       files, which implies that oer-reveal changes such paths now.
