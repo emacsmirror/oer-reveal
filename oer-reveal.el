@@ -644,6 +644,16 @@ Org files."
               source-files)))))
 
 ;;; Export of figures
+(defcustom oer-reveal-figures-dir "figures/"
+  "Name of directory of submodule URL `https://gitlab.com/oer/figures/'.
+This variable influences the treatment of filenames in image metadata files.
+If a filename starts with this directory, it is not changed.  (Thus, set
+this to the empty string to leave all filenames unchanged.)
+Otherwise, the filename is treated as being relative to the metadata file."
+  :group 'org-export-oer-reveal
+  :type 'directory
+  :package-version '(oer-reveal . "3.13.0"))
+
 (defcustom oer-reveal-copy-dir-suffix ".for-export"
   "If non-empty string, copy embedded figures into separate directory.
 An oer-reveal project might embed a subset of the OER figure repository
@@ -1203,6 +1213,20 @@ results in `70px'."
       (oer-reveal--perc-height-to-pixels (substring maxheight 0 -2))
     maxheight))
 
+(defun oer-reveal--figure-path (filename metaname)
+  "Return path for figure FILENAME given METANAME.
+If FILENAME is a URI or starts as relative path with directory
+`oer-reveal-figures-dir', return unchanged.
+Otherwise, return path by treating as FILENAME relative to the directory
+of METANAME.
+To return all filenames unchanged, customize `oer-reveal-figures-dir' to
+the empty string."
+  (if (or (string-match "\\`\\(file\\|ftp\\|https?\\)://" filename)
+          (string-match (concat "\\`\\([.]/\\)?" oer-reveal-figures-dir)
+                        filename))
+      filename
+    (concat (file-name-directory metaname) filename)))
+
 (defun oer-reveal--attribution-strings
     (metadata &optional caption maxheight divclasses shortlicense
     embed-svg extra-attrs)
@@ -1215,7 +1239,8 @@ and whose cdr is the LaTeX representation.
 As side effect, copy figure as described for `oer-reveal-copy-dir-suffix'."
   (let* ((org-export-with-sub-superscripts nil)
 	 (alist (read (oer-reveal--file-as-string metadata)))
-	 (filename (alist-get 'filename alist))
+	 (filename (oer-reveal--figure-path
+                    (alist-get 'filename alist) metadata))
          (dependencies (alist-get 'dependencies alist))
 	 (texfilename (file-name-sans-extension filename))
 	 (licenseurl (alist-get 'licenseurl alist))
@@ -1325,7 +1350,8 @@ As side effect, copy figure as described for `oer-reveal-copy-dir-suffix'."
 			 (oer-reveal--export-no-newline orglicense 'latex)
 		       (oer-reveal--export-no-newline title 'latex))))
     (oer-reveal--copy-for-export filename)
-    (mapc #'oer-reveal--copy-for-export dependencies)
+    (mapc #'oer-reveal--copy-for-export
+          (mapcar #'oer-reveal--figure-path dependencies))
     (if (stringp caption)
 	(cons (oer-reveal--export-figure-html
 	       filename dcmitype divclasses htmlcaption htmllicense
