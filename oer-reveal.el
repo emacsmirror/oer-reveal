@@ -52,7 +52,6 @@
 (require 'subr-x) ; string-trim
 (require 'url-util) ; url-encode-url
 (require 'org)
-(require 'org-ref)
 (require 'org-re-reveal)
 
 (defvar oer-reveal-keys) ; Silence byte compiler
