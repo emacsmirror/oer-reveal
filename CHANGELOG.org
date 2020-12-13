@@ -10,6 +10,18 @@ where version numbers starting with version 1.0.0 adhere to
 
 
 ** [Unreleased]
+*** Added
+    - Metadata files can now include relative paths to the image
+      files, which implies that oer-reveal changes such paths now.
+      See new variable ~oer-reveal-figures-dir~ how to turn this off.
+    - Variables
+      - [[file:oer-reveal.el::(defcustom oer-reveal-img-src][~oer-reveal-img-src~]]
+        to use macros ~revealimg~ and ~reveallicense~ also in HTML
+        export with ~oer-reveal-publish-to-html~
+      - [[file:oer-reveal.el::(defcustom oer-reveal-figures-dir][~oer-reveal-figures-dir~]]
+    - CSS for figures and tables in [[file:css/index.css]]
+*** Fixed
+    - Do not require org-ref
 
 ** [3.12.0] - 2020-12-07
 *** Added
