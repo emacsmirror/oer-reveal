@@ -417,6 +417,14 @@ instead of `ex', introduced in version 3.10.0."
   :type 'number
   :package-version '(oer-reveal . "3.9.0"))
 
+(defcustom oer-reveal-img-src "data-src"
+  "Source attribute to use in HTML img tag.
+By default, use \"data-src\" for lazy loading with reveal.js.
+In `oer-reveal-publish-to-html', use \"src\"."
+  :group 'org-export-oer-reveal
+  :type 'string
+  :package-version '(oer-reveal . "3.13.0"))
+
 (defconst oer-reveal-default-slide-height 700
   "Default height of slides with reveal.js.
 See URL `https://revealjs.com/presentation-size/'.")
@@ -1001,7 +1009,7 @@ timestamp.")
 (defconst oer-reveal--href-pdf-template "\\href{%s}{%s}")
 (defconst oer-reveal--attribution-html-template
   "<span property=\"cc:attributionName\">%s</span>")
-(defconst oer-reveal--figure-div-template "<div about=\"%s\" typeof=\"%s\" class=\"%s\"%s><p><img data-src=\"%s\" alt=\"%s\"%s /></p>%s%s</div>")
+(defconst oer-reveal--figure-div-template "<div about=\"%s\" typeof=\"%s\" class=\"%s\"%s><p><img %s=\"%s\" alt=\"%s\"%s /></p>%s%s</div>")
 (defconst oer-reveal--svg-div-template    "<div about=\"%s\" typeof=\"%s\" class=\"%s\"%s><p>%s</p>%s%s</div>")
 (defconst oer-reveal--figure-latex-caption-template "#+BEGIN_EXPORT latex\n\\begin{figure}[%s] \\centering\n  \\includegraphics[width=%s\\linewidth]{%s} \\caption{%s (%s)}\n  \\end{figure}\n#+END_EXPORT\n")
 (defconst oer-reveal--figure-latex-template "         #+BEGIN_EXPORT latex\n     \\begin{figure}[%s] \\centering\n       \\includegraphics[width=%s\\linewidth]{%s} \\caption{%s}\n     \\end{figure}\n         #+END_EXPORT\n")
@@ -1099,6 +1107,7 @@ Templates `oer-reveal--svg-div-template' and
 		  htmlcaption htmllicense)
 	(format oer-reveal--figure-div-template
 		encoded-url dcmitype divclasses extra-attrs
+                oer-reveal-img-src
 		(if (and issingle (not external))
 		    ;; Insert base64 encoded image as single line.
 		    (concat "data:image/" extension ";base64,"
@@ -2047,10 +2056,15 @@ Return output file name."
 (defun oer-reveal-publish-to-html
     (plist filename pub-dir)
   "Call `org-html-publish-to-html' with PLIST, FILENAME, PUB-DIR.
-Before that, reset `org-ref-ref-html' to its default value; meant for
-ordinary HTML documents in contrast to reveal.js presentations."
+Before that,
+- reset `org-ref-ref-html' to its default value,
+- set `oer-reveal-img-src' to \"src\"
+- set `oer-reveal-license-font-factor' to 0.8.
+Meant for ordinary HTML documents in contrast to reveal.js presentations."
   (let ((org-ref-ref-html
-         "<a class='org-ref-reference' href=\"#%s\">[%s]</a>"))
+         "<a class='org-ref-reference' href=\"#%s\">[%s]</a>")
+        (oer-reveal-img-src "src")
+        (oer-reveal-license-font-factor 0.8))
     (org-html-publish-to-html plist filename pub-dir)))
 
 ;;; Functionality to set up export.
