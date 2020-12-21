@@ -800,7 +800,9 @@ Return nil if URL does not look like the URL of a GitLab repository."
 (defun oer-reveal--alternate-link-title
     (base-title language doctype backend)
   "Create title attribute for alternate link.
-Generate title from BASE-TITLE for LANGUAGE, DOCTYPE, and BACKEND."
+Generate title from BASE-TITLE for LANGUAGE, and DOCTYPE.
+Ignore BACKEND."
+  (ignore backend)
   (if (stringp base-title)
       base-title
     (let ((title-spec (oer-reveal--translate language base-title)))
