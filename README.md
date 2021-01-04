@@ -1,6 +1,9 @@
 <!--- Local IspellDict: en -->
-<!--- SPDX-FileCopyrightText: 2018-2020 Jens Lechtenbörger -->
+<!--- SPDX-FileCopyrightText: 2018-2021 Jens Lechtenbörger -->
 <!--- SPDX-License-Identifier: CC0-1.0 -->
+
+[![MELPA Stable](https://stable.melpa.org/packages/oer-reveal-badge.svg)](https://stable.melpa.org/#/oer-reveal)
+[![MELPA](https://melpa.org/packages/oer-reveal-badge.svg)](https://melpa.org/#/oer-reveal)
 
 # Relationships between projects
 
