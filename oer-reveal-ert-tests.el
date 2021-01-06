@@ -425,6 +425,7 @@ variable, and communication channel under `info'."
                                           (prin1-to-string typeof)
                                           "\n")))
            (now "2019-12-27 Fri 19:19"))
+      ;; Default settings for typeof.
       (should
        (equal (concat "<div class=\"rdfa-license\" about=\"test.html\" "
                       oer-reveal-rdf-prefixes
@@ -437,6 +438,7 @@ variable, and communication channel under `info'."
 	      (org-test-with-parsed-data
                header
 	       (oer-reveal-license-to-fmt 'html now "test.html" t t t))))
+      ;; Use custom typeof.
       (should
        (equal (concat "<div class=\"rdfa-license\" about=\"test.html\" "
                       oer-reveal-rdf-prefixes
@@ -447,7 +449,20 @@ variable, and communication channel under `info'."
                       "\n" (oer-reveal--translate "en" 'legalese))
 	      (org-test-with-parsed-data
                header-typeof
-	       (oer-reveal-license-to-fmt 'html now "test.html" t t t)))))))
+	       (oer-reveal-license-to-fmt 'html now "test.html" t t t))))
+      ;; Create typeof for text document (instead of default presentation).
+      (should
+       (equal (concat "<div class=\"rdfa-license\" about=\"test.html\" "
+                      oer-reveal-rdf-prefixes
+                      " typeof=\""
+                      (string-join (cons "schema:TextDigitalDocument" typeof) " ")
+                      "\"><p>Except where otherwise noted, the work “<span property=\"dcterms:title\">A test</span>”, <span property=\"dc:rights\">© <span property=\"dcterms:dateCopyrighted\">2019</span> <a rel=\"cc:attributionURL dcterms:creator\" href=\"https://lechten.gitlab.io/#me\" property=\"cc:attributionName\">Jens Lechtenbörger</a></span>, is published under the <a rel=\"license\" href=\"https://creativecommons.org/licenses/by-sa/4.0/\">Creative Commons license CC BY-SA 4.0</a>.</p>"
+                      "<p class=\"date\">Created: <span property=\"dcterms:created\">"
+                      now "</span></p></div>"
+                      "\n" (oer-reveal--translate "en" 'legalese))
+	      (org-test-with-parsed-data
+               header-typeof
+	       (oer-reveal-license-to-fmt 'html now "test.html" t t t t)))))))
 
 
 ;;; Test helper functions.

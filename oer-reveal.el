@@ -1834,15 +1834,24 @@ identifier in `oer-reveal-dictionaries'."
      ;; Keep relevant prefix of languages such as de, de-de, or de_DE.
      (downcase (car (split-string lang "[-_]"))))))
 
-(defun oer-reveal--rdf-typeof (info)
+(defun oer-reveal--rdf-typeof (info &optional text-p)
   "Return RDFa typeof attribute as string or nil from INFO.
-Look for keyword \"OER_REVEAL_RDF_TYPEOF\" or use `oer-reveal-rdf-typeof'."
-  (let ((typeof (org-re-reveal--parse-listoption info :oer-reveal-rdf-typeof)))
+Look for keyword \"OER_REVEAL_RDF_TYPEOF\" or use `oer-reveal-rdf-typeof'.
+If optional TEXT-P is non-nil, remove \"schema:PresentationDigitalDocument\"
+from `oer-reveal-rdf-typeof' (if present) and add
+\"schema:TextDigitalDocument\"."
+  (let* ((cand (org-re-reveal--parse-listoption info :oer-reveal-rdf-typeof))
+         (typeof (if text-p
+                     (cons "schema:TextDigitalDocument"
+                           (remove "schema:PresentationDigitalDocument"
+                                   cand))
+                   cand)))
     (when typeof
       (format "typeof=\"%s\"" (string-join typeof " ")))))
 
 (defun oer-reveal-license-to-fmt
-    (fmt &optional with-dccreated about with-prefix with-typeof with-legalese)
+    (fmt &optional with-dccreated about with-prefix with-typeof with-legalese
+         text-p)
   "Create license information in FMT for file of current buffer.
 FMT must be `html' or `pdf'.  PDF output uses LaTeX text (with \"\\href\"
 hyperlinks where appropriate).
@@ -1852,14 +1861,16 @@ and with pointers to legalese under identifier `legalese' in
 `oer-reveal-dictionaries'.
 When optional WITH-DCCREATED is non-nil, add time when output was created,
 in HTML with \"dcterms:created\" property.
-Optional attributes ABOUT, WITH-PREFIX, WITH-TYPEOF, WITH-LEGALESE affect
-HTML output only.
+Optional attributes ABOUT, WITH-PREFIX, WITH-TYPEOF, WITH-LEGALESE, TEXT-P
+affect HTML output only.
 If optional ABOUT is nil, derive value for \"about\" attribute from
 base name of published file.
 When arguments WITH-PREFIX or WITH-TYPEOF are non-nil, the \"div\"
 element receives \"prefix\" or \"typeof\" attributes based on
 `oer-reveal-rdf-prefixes' and `oer-reveal-rdf-typeof'.
-If WITH-LEGALESE is non-nil, add a \"div\" element with pointers to legalese."
+If WITH-LEGALESE is non-nil, add a \"div\" element with pointers to legalese.
+If optional TEXT-P is non-nil, produce RDFa typeof information for a text
+document (see `oer-reveal--rdf-typeof')."
   (let* ((pages-url (cdr (oer-reveal--parse-git-url)))
          (uri (or about
                   (concat pages-url
@@ -1878,7 +1889,7 @@ If WITH-LEGALESE is non-nil, add a \"div\" element with pointers to legalese."
          (prefix (if with-prefix
                      (concat " " (plist-get info :oer-reveal-rdf-prefixes))
                    ""))
-         (rdf-typeof (oer-reveal--rdf-typeof info))
+         (rdf-typeof (oer-reveal--rdf-typeof info text-p))
          (typeof (if with-typeof
                      (if rdf-typeof
                          (concat " " rdf-typeof)
