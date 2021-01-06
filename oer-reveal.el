@@ -1595,11 +1595,11 @@ If you add a license here, you also need to add its identifier to
   :package-version '(oer-reveal . "2.0.0"))
 
 (defcustom oer-reveal-rdf-prefixes
-  '"prefix=\"dc: http://purl.org/dc/elements/1.1/ dcterms: http://purl.org/dc/terms/ dcmitype: http://purl.org/dc/dcmitype/ cc: http://creativecommons.org/ns#\""
-  "String with RDF prefixes."
+  "prefix=\"dc: http://purl.org/dc/elements/1.1/ dcterms: http://purl.org/dc/terms/ dcmitype: http://purl.org/dc/dcmitype/ cc: http://creativecommons.org/ns# schema: http://schema.org/\""
+  "String with RDFa prefixes."
   :group 'org-export-oer-reveal
   :type 'string
-  :package-version '(oer-reveal . "2.0.0"))
+  :package-version '(oer-reveal . "3.14.0"))
 
 (defcustom oer-reveal-dcmitype "typeof=\"dcmitype:InteractiveResource\""
   "Specify DCMI type.
