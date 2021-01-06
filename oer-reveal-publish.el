@@ -2,7 +2,7 @@
 ;; -*- Mode: Emacs-Lisp -*-
 ;; -*- coding: utf-8 -*-
 
-;; SPDX-FileCopyrightText: 2017-2020 Jens Lechtenbörger
+;; SPDX-FileCopyrightText: 2017-2021 Jens Lechtenbörger
 ;; SPDX-License-Identifier: GPL-3.0-or-later
 
 ;;; License: GPLv3
@@ -256,10 +256,6 @@ add `oer-reveal-publish-alternate-type-function' to
         org-html-text-markup-alist oer-reveal-publish-html-text-markup-alist
         org-descriptive-links oer-reveal-publish-descriptive-links
 	oer-reveal-latex-figure-float oer-reveal-publish-figure-float
-	org-re-reveal--href-fragment-prefix org-re-reveal--slide-id-prefix
-	org-re-reveal-body-attrs (concat
-                                  oer-reveal-rdf-prefixes
-                                  " " oer-reveal-dcmitype)
 	org-latex-pdf-process oer-reveal-publish-pdf-process
 	;; Add packages that need to be at the beginning of
 	;; org-latex-default-packages-alist.

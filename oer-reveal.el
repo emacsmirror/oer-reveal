@@ -2146,7 +2146,12 @@ CONTENTS is the transcoded contents string.
 INFO is a plist holding export options.
 Setup plugin and export configuration, then call `org-re-reveal-template'."
   (let ((plugin-dependencies (oer-reveal--plugin-dependencies info))
-        (plugin-config (oer-reveal--plugin-config info)))
+        (plugin-config (oer-reveal--plugin-config info))
+	(org-re-reveal--href-fragment-prefix org-re-reveal--slide-id-prefix)
+	(org-re-reveal-body-attrs (concat
+                                   (plist-get info :oer-reveal-rdf-prefixes)
+                                   " "
+                                   (oer-reveal--rdf-typeof info))))
     (plist-put info :reveal-version
 	       (or (plist-get info :oer-reveal-revealjs-version)
 		   org-re-reveal-revealjs-version))
