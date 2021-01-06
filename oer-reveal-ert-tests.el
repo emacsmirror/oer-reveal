@@ -1,6 +1,6 @@
 ;;; oer-reveal-ert-tests.el --- Tests for oer-reveal  -*- lexical-binding: t; -*-
 ;; SPDX-License-Identifier: GPL-3.0-or-later
-;; SPDX-FileCopyrightText: 2019-2020 Jens Lechtenbörger
+;; SPDX-FileCopyrightText: 2019-2021 Jens Lechtenbörger
 
 ;;; Commentary:
 ;; Run tests interactively or as follows (probably with adjusted paths)
@@ -290,9 +290,11 @@ variable, and communication channel under `info'."
 (ert-deftest test-spdx-license-info ()
   "Tests for RDFa license information from SPDX headers."
   (let ((oer-reveal-copy-dir-suffix "")
-        (oer-reveal-warning-delay nil))
+        (oer-reveal-warning-delay nil)
+        (oer-reveal-rdf-typeof nil) ; Test created before variable existed.
+        (oer-reveal-rdf-prefixes "prefix=\"dc: http://purl.org/dc/elements/1.1/ dcterms: http://purl.org/dc/terms/ dcmitype: http://purl.org/dc/dcmitype/ cc: http://creativecommons.org/ns#\""))
 
-  ;; Header with URL and single license.
+    ;; Header with URL and single license.
     (let ((header "#+TITLE: A test\n#+SPDX-FileCopyrightText: 2019 Jens Lechtenbörger <https://lechten.gitlab.io/#me>\n#+SPDX-License-Identifier: CC-BY-SA-4.0\n")
           (now "2019-12-27 Fri 19:19"))
       (should
@@ -409,6 +411,43 @@ variable, and communication channel under `info'."
        (org-test-with-parsed-data
         header
         (oer-reveal-license-to-fmt 'html t "dummy"))))))
+
+(ert-deftest test-rdf-typeof ()
+  "Tests for RDFa typeof information."
+  (let ((oer-reveal-copy-dir-suffix "")
+        (oer-reveal-warning-delay nil))
+
+    ;; Header with URL and single license.
+    (let* ((header "#+TITLE: A test\n#+SPDX-FileCopyrightText: 2019 Jens Lechtenbörger <https://lechten.gitlab.io/#me>\n#+SPDX-License-Identifier: CC-BY-SA-4.0\n")
+           (typeof '("dcmitype:InteractiveResource" "schema:LearningResource"))
+           (header-typeof (concat header
+                                  (concat "#+OER_REVEAL_RDF_TYPEOF: "
+                                          (prin1-to-string typeof)
+                                          "\n")))
+           (now "2019-12-27 Fri 19:19"))
+      (should
+       (equal (concat "<div class=\"rdfa-license\" about=\"test.html\" "
+                      oer-reveal-rdf-prefixes
+                      " typeof=\""
+                      (string-join oer-reveal-rdf-typeof " ")
+                      "\"><p>Except where otherwise noted, the work “<span property=\"dcterms:title\">A test</span>”, <span property=\"dc:rights\">© <span property=\"dcterms:dateCopyrighted\">2019</span> <a rel=\"cc:attributionURL dcterms:creator\" href=\"https://lechten.gitlab.io/#me\" property=\"cc:attributionName\">Jens Lechtenbörger</a></span>, is published under the <a rel=\"license\" href=\"https://creativecommons.org/licenses/by-sa/4.0/\">Creative Commons license CC BY-SA 4.0</a>.</p>"
+                      "<p class=\"date\">Created: <span property=\"dcterms:created\">"
+                      now "</span></p></div>"
+                      "\n" (oer-reveal--translate "en" 'legalese))
+	      (org-test-with-parsed-data
+               header
+	       (oer-reveal-license-to-fmt 'html now "test.html" t t t))))
+      (should
+       (equal (concat "<div class=\"rdfa-license\" about=\"test.html\" "
+                      oer-reveal-rdf-prefixes
+                      " typeof=\"" (string-join typeof " ")
+                      "\"><p>Except where otherwise noted, the work “<span property=\"dcterms:title\">A test</span>”, <span property=\"dc:rights\">© <span property=\"dcterms:dateCopyrighted\">2019</span> <a rel=\"cc:attributionURL dcterms:creator\" href=\"https://lechten.gitlab.io/#me\" property=\"cc:attributionName\">Jens Lechtenbörger</a></span>, is published under the <a rel=\"license\" href=\"https://creativecommons.org/licenses/by-sa/4.0/\">Creative Commons license CC BY-SA 4.0</a>.</p>"
+                      "<p class=\"date\">Created: <span property=\"dcterms:created\">"
+                      now "</span></p></div>"
+                      "\n" (oer-reveal--translate "en" 'legalese))
+	      (org-test-with-parsed-data
+               header-typeof
+	       (oer-reveal-license-to-fmt 'html now "test.html" t t t)))))))
 
 
 ;;; Test helper functions.
