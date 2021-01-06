@@ -11,6 +11,10 @@ where version numbers starting with version 1.0.0 adhere to
 
 ** [Unreleased]
 
+** [3.14.1] - 2021-01-06
+*** Fixed
+    - Remove redundant code from ~oer-reveal-publish-to-html~
+
 ** [3.14.0] - 2021-01-06
 *** Added
     - Variable ~oer-reveal-rdf-typeof~ with keyword ~OER_REVEAL_RDF_TYPEOF~
