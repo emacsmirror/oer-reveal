@@ -380,7 +380,7 @@ For each plugin in `oer-reveal-plugins', add what to publish."
 
 (defun oer-reveal-publish-optional-projects ()
   "Compute list of optional projects for `org-publish-project-alist'.
-These are \"index.org\" to be published with `org-html-publish-to-html'
+These are \"index.org\" to be published with `oer-reveal-publish-to-html'
 as well as \"index.css\" and the directories \"audio\", \"figures\",
 \"quizzes\" to be published with `org-publish-attachment'.
 This also includes the multiplex plugin if its folder is present."
@@ -390,7 +390,7 @@ This also includes the multiplex plugin if its folder is present."
 		  :base-directory "."
 		  :include '("index.org")
 		  :exclude ".*"
-		  :publishing-function '(org-html-publish-to-html)
+		  :publishing-function '(oer-reveal-publish-to-html)
 		  :publishing-directory "./public")
             result))
     (when (file-exists-p "index.css")
