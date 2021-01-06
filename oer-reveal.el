@@ -2098,7 +2098,7 @@ Return output file name."
   "Call `org-html-publish-to-html' with PLIST, FILENAME, PUB-DIR.
 Before that,
 - reset `org-ref-ref-html' to its default value,
-- set `oer-reveal-img-src' to \"src\"
+- set `oer-reveal-img-src' to \"src\",
 - set `oer-reveal-license-font-factor' to 0.8.
 Meant for ordinary HTML documents in contrast to reveal.js presentations."
   (let ((org-ref-ref-html
