@@ -2,7 +2,7 @@
 ;; -*- Mode: Emacs-Lisp -*-
 ;; -*- coding: utf-8 -*-
 
-;; SPDX-FileCopyrightText: 2017-2020 Jens Lechtenbörger
+;; SPDX-FileCopyrightText: 2017-2021 Jens Lechtenbörger
 ;; SPDX-License-Identifier: GPL-3.0-or-later
 
 ;; Author: Jens Lechtenbörger
@@ -49,7 +49,7 @@
 
 ;;; Code:
 (require 'cl-lib) ; cl-mapcar
-(require 'subr-x) ; string-trim
+(require 'subr-x) ; string-trim, string-join
 (require 'url-util) ; url-encode-url
 (require 'org)
 (require 'org-re-reveal)
@@ -109,6 +109,10 @@ Derive from 're-reveal to add further options and keywords."
                                    oer-reveal-quiz-dependency t)
       (:oer-reveal-toc-progress-dependency "OER_REVEAL_TOC_PROGRESS_DEPENDENCY" nil
                                            oer-reveal-toc-progress-dependency t)
+      (:oer-reveal-rdf-prefixes "OER_REVEAL_RDF_PREFIXES" nil
+                                oer-reveal-rdf-prefixes t)
+      (:oer-reveal-rdf-typeof "OER_REVEAL_RDF_TYPEOF" nil
+                              oer-reveal-rdf-typeof t)
       (:oer-reveal-copyright "SPDX-FILECOPYRIGHTTEXT" nil nil newline)
       (:oer-reveal-license "SPDX-LICENSE-IDENTIFIER" nil nil newline))
 
@@ -1601,12 +1605,24 @@ If you add a license here, you also need to add its identifier to
   :type 'string
   :package-version '(oer-reveal . "3.14.0"))
 
+(defcustom oer-reveal-rdf-typeof
+  '("dcmitype:InteractiveResource"
+    "schema:PresentationDigitalDocument" "schema:LearningResource")
+  "Specify RDFa types of document.
+Supercedes `oer-reveal-dcmitype' to also include LRMI vocabulary.
+See URL `http://lrmi.net/about/lrmi/'
+and URL `https://schema.org/LearningResource'."
+  :group 'org-export-oer-reveal
+  :type '(repeat string)
+  :package-version '(oer-reveal . "3.14.0"))
+
 (defcustom oer-reveal-dcmitype "typeof=\"dcmitype:InteractiveResource\""
   "Specify DCMI type.
 See URL `https://www.dublincore.org/specifications/dublin-core/dcmi-terms/'."
   :group 'org-export-oer-reveal
   :type 'string
   :package-version '(oer-reveal . "2.0.0"))
+(make-obsolete-variable 'oer-reveal-dcmitype 'oer-reveal-rdf-typeof "3.14.0")
 
 (defcustom oer-reveal-created-template
   "<p class=\"date\">%s: <span property=\"dcterms:created\">%s</span></p>"
@@ -1818,8 +1834,15 @@ identifier in `oer-reveal-dictionaries'."
      ;; Keep relevant prefix of languages such as de, de-de, or de_DE.
      (downcase (car (split-string lang "[-_]"))))))
 
+(defun oer-reveal--rdf-typeof (info)
+  "Return RDFa typeof attribute as string or nil from INFO.
+Look for keyword \"OER_REVEAL_RDF_TYPEOF\" or use `oer-reveal-rdf-typeof'."
+  (let ((typeof (org-re-reveal--parse-listoption info :oer-reveal-rdf-typeof)))
+    (when typeof
+      (format "typeof=\"%s\"" (string-join typeof " ")))))
+
 (defun oer-reveal-license-to-fmt
-    (fmt &optional with-dccreated about with-prefix with-dcmitype with-legalese)
+    (fmt &optional with-dccreated about with-prefix with-typeof with-legalese)
   "Create license information in FMT for file of current buffer.
 FMT must be `html' or `pdf'.  PDF output uses LaTeX text (with \"\\href\"
 hyperlinks where appropriate).
@@ -1829,21 +1852,22 @@ and with pointers to legalese under identifier `legalese' in
 `oer-reveal-dictionaries'.
 When optional WITH-DCCREATED is non-nil, add time when output was created,
 in HTML with \"dcterms:created\" property.
-Optional attributes ABOUT, WITH-PREFIX, WITH-DCMITYPE, WITH-LEGALESE affect
+Optional attributes ABOUT, WITH-PREFIX, WITH-TYPEOF, WITH-LEGALESE affect
 HTML output only.
 If optional ABOUT is nil, derive value for \"about\" attribute from
 base name of published file.
-When arguments WITH-PREFIX or WITH-DCMITYPE are non-nil, the \"div\"
+When arguments WITH-PREFIX or WITH-TYPEOF are non-nil, the \"div\"
 element receives \"prefix\" or \"typeof\" attributes based on
-`oer-reveal-rdf-prefixes' and `oer-reveal-dcmitype'.
+`oer-reveal-rdf-prefixes' and `oer-reveal-rdf-typeof'.
 If WITH-LEGALESE is non-nil, add a \"div\" element with pointers to legalese."
   (let* ((pages-url (cdr (oer-reveal--parse-git-url)))
-         (uri (or about (concat pages-url
-                                (if (string-suffix-p "/" pages-url)
-                                    ""
-                                  "/")
-                                (oer-reveal--relative-git-basename (buffer-file-name))
-                                ".html")))
+         (uri (or about
+                  (concat pages-url
+                          (if (string-suffix-p "/" pages-url)
+                              ""
+                            "/")
+                          (oer-reveal--relative-git-basename (buffer-file-name))
+                          ".html")))
          (info (org-export-get-environment 'oer-reveal))
          (language (oer-reveal--language))
          (template (oer-reveal--translate language 'text))
@@ -1852,10 +1876,13 @@ If WITH-LEGALESE is non-nil, add a \"div\" element with pointers to legalese."
          (copyright (plist-get info :oer-reveal-copyright))
          (license (plist-get info :oer-reveal-license))
          (prefix (if with-prefix
-                     (concat " " oer-reveal-rdf-prefixes)
+                     (concat " " (plist-get info :oer-reveal-rdf-prefixes))
                    ""))
-         (dcmitype (if with-dcmitype
-                       (concat " " oer-reveal-dcmitype)
+         (rdf-typeof (oer-reveal--rdf-typeof info))
+         (typeof (if with-typeof
+                     (if rdf-typeof
+                         (concat " " rdf-typeof)
+                       (concat " " oer-reveal-dcmitype))
                      ""))
          (now (if (stringp with-dccreated)
                   with-dccreated
@@ -1882,7 +1909,7 @@ If WITH-LEGALESE is non-nil, add a \"div\" element with pointers to legalese."
       (cond ((eq fmt 'html)
              (concat
               (format oer-reveal--legal-html-template
-                      uri prefix dcmitype text created)
+                      uri prefix typeof text created)
               (if (and with-legalese (< 0 (length legalese)))
                   (concat "\n" legalese)
                 "")))
