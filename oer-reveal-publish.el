@@ -146,11 +146,11 @@ Assignment happens in `oer-reveal-publish-setq-defaults'."
 
 (defcustom oer-reveal-publish-html-postamble
   (lambda (ignored)
-    (oer-reveal-license-to-fmt 'html t nil t t t))
+    (oer-reveal-license-to-fmt 'html t nil t t t t))
   "Value to assign to `org-html-postamble' before export.
 Assignment happens in `oer-reveal-publish-setq-defaults'.
-The default creates license information and links to imprint and
-privacy policy."
+The default creates meta-data including license information
+and links to imprint and privacy policy."
   :group 'org-export-oer-reveal
   :type '(choice string function)
   :package-version '(oer-reveal . "2.0.0"))
