@@ -2098,19 +2098,13 @@ Return output file name."
   "Call `org-html-publish-to-html' with PLIST, FILENAME, PUB-DIR.
 Before that,
 - reset `org-ref-ref-html' to its default value,
-- set `oer-reveal-img-src' to \"src\",
-- set `oer-reveal-license-font-factor' to 0.8,
-- remove \"schema:PresentationDigitalDocument\" from `oer-reveal-rdf-typeof'
-  (if present) and add \"schema:TextDigitalDocument\".
+- set `oer-reveal-img-src' to \"src\"
+- set `oer-reveal-license-font-factor' to 0.8.
 Meant for ordinary HTML documents in contrast to reveal.js presentations."
   (let ((org-ref-ref-html
          "<a class='org-ref-reference' href=\"#%s\">[%s]</a>")
         (oer-reveal-img-src "src")
-        (oer-reveal-license-font-factor 0.8)
-        (oer-reveal-rdf-typeof
-         (cons "schema:TextDigitalDocument"
-               (remove "schema:PresentationDigitalDocument"
-                       oer-reveal-rdf-typeof))))
+        (oer-reveal-license-font-factor 0.8))
     (org-html-publish-to-html plist filename pub-dir)))
 
 ;;; Functionality to set up export.
