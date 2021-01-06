@@ -1,6 +1,6 @@
 # Local IspellDict: en
 # SPDX-License-Identifier: GPL-3.0-or-later
-# SPDX-FileCopyrightText: 2019-2020 Jens Lechtenbörger
+# SPDX-FileCopyrightText: 2019-2021 Jens Lechtenbörger
 
 * Changelog
 This file is based on
@@ -10,6 +10,21 @@ where version numbers starting with version 1.0.0 adhere to
 
 
 ** [Unreleased]
+
+** [3.14.0] - 2021-01-06
+*** Added
+    - Variable ~oer-reveal-rdf-typeof~ with keyword ~OER_REVEAL_RDF_TYPEOF~
+    - Keyword ~OER_REVEAL_RDF_PREFIXES~
+    - Optional argument ~text-p~ in ~oer-reveal-license-to-fmt~
+*** Changed
+    - Added schema.org to ~oer-reveal-rdf-prefixes~
+    - Move assignments to variables of org-re-reveal from
+      ~oer-reveal-publish-setq-defaults~ to ~oer-reveal-template~
+    - Use ~oer-reveal-publish-to-html~ to publish "index.org"
+    - Use new argument for ~oer-reveal-license-to-fmt~ in
+      ~oer-reveal-publish-html-postamble~
+*** Deprecated
+    - Variable ~oer-reveal-dcmitype~
 
 ** [3.13.0] - 2020-12-13
 *** Added
