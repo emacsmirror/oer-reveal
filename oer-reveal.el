@@ -133,7 +133,7 @@ SYMBOL must be `oer-reveal-keys' and VALUE its new value."
     (set-default symbol value)
     (oer-reveal-define-backend)))
 
-;; Customizable options
+;;; Customizable options and variables
 (defgroup org-export-oer-reveal nil
   "Options for exporting Org files to reveal.js HTML pressentations.
 The options here are provided by package oer-reveal.  They extend those
@@ -506,7 +506,209 @@ Used in `oer-reveal-generate-include-files'."
   :group 'org-export-oer-reveal
   :type 'directory)
 
-;; Functions to install and update submodules.
+;; Variables to control RDFa meta-data.
+(defcustom oer-reveal-rdf-prefixes
+  "prefix=\"dc: http://purl.org/dc/elements/1.1/ dcterms: http://purl.org/dc/terms/ dcmitype: http://purl.org/dc/dcmitype/ cc: http://creativecommons.org/ns# schema: http://schema.org/\""
+  "String with RDFa prefixes."
+  :group 'org-export-oer-reveal
+  :type 'string
+  :package-version '(oer-reveal . "3.14.0"))
+
+(defcustom oer-reveal-rdf-typeof
+  '("dcmitype:InteractiveResource"
+    "schema:PresentationDigitalDocument" "schema:LearningResource")
+  "Specify RDFa types of document as list of strings.
+Supercedes `oer-reveal-dcmitype' to also include LRMI vocabulary.
+See URL `http://lrmi.net/about/lrmi/'
+and URL `https://schema.org/LearningResource'."
+  :group 'org-export-oer-reveal
+  :type '(repeat string)
+  :package-version '(oer-reveal . "3.14.0"))
+
+
+(defcustom oer-reveal-dcmitype "typeof=\"dcmitype:InteractiveResource\""
+  "Specify DCMI type.
+See URL `https://www.dublincore.org/specifications/dublin-core/dcmi-terms/'."
+  :group 'org-export-oer-reveal
+  :type 'string
+  :package-version '(oer-reveal . "2.0.0"))
+(make-obsolete-variable 'oer-reveal-dcmitype 'oer-reveal-rdf-typeof "3.14.0")
+
+(defcustom oer-reveal-created-template
+  "<p class=\"date\">%s: <span property=\"dcterms:created\">%s</span></p>"
+  "Template string for HTML \"p\" element with creation date.
+Template for `oer-reveal-license-to-fmt'; that funtion replaces first \"%s\"
+with language-specific word for `created' in `oer-reveal-dictionaries',
+second one with creation date."
+  :group 'org-export-oer-reveal
+  :type 'string
+  :package-version '(oer-reveal . "2.0.0"))
+
+;; Variables to control export of figures.
+(defcustom oer-reveal-figures-dir "figures/"
+  "Name of directory of submodule URL `https://gitlab.com/oer/figures/'.
+This variable influences the treatment of filenames in image metadata files.
+If a filename starts with this directory, it is not changed.  (Thus, set
+this to the empty string to leave all filenames unchanged.)
+Otherwise, the filename is treated as being relative to the metadata file."
+  :group 'org-export-oer-reveal
+  :type 'directory
+  :package-version '(oer-reveal . "3.13.0"))
+
+(defcustom oer-reveal-copy-dir-suffix ".for-export"
+  "If non-empty string, copy embedded figures into separate directory.
+An oer-reveal project might embed a subset of the OER figure repository
+at URL `https://gitlab.com/oer/figures/'.  To publish only those figures
+that are actually used, they can be copied to a separate directory for
+export.  If you embed figures, say from \"./figures\", then oer-reveal
+with the default setting \".for-export\" copies each embedded figure to
+the directory \"./figures.for-export\" and publishes only those copied
+figures.
+More precisely, `oer-reveal-copy-dir-suffix' is inserted as suffix of
+the first ordinary directory component of FILENAME.  (Dots and (back-)
+slashes at the beginning of the name are left unchanged.)
+Set to empty string to disable this functionality."
+  :group 'org-export-oer-reveal
+  :type 'string
+  :package-version '(oer-reveal . "2.1.0"))
+
+;; The following options are only relevant if you use
+;; oer-reveal-export-image-grid to generate image grids.
+;; Then, the options control in what directory generated CSS is saved.
+(defcustom oer-reveal-export-dir "public/"
+  "Directory into which HTML, CSS, and Javascript is published.
+The default supposes that `org-publish-all' publishes into a
+subdirectory of `public/'.
+This is only used to publish CSS of image grids with
+`oer-reveal-export-image-grid'."
+  :group 'org-export-oer-reveal
+  :type 'directory)
+
+(defcustom oer-reveal-css-filename-template
+  "figures/internal_grid_css/grid%s.css"
+  "Template for filename of CSS generated for image grid.
+This must contain `%s' as placeholder for the grid's identifier.
+Note that this filename is exported into a subdirectory of
+`oer-reveal-export-dir' under the current directory."
+  :group 'org-export-oer-reveal
+  :type 'string)
+
+;; Variables to control treatment of license information.
+(defcustom oer-reveal-dictionaries
+  '(("en" . (("CC0-1.0" . "Creative Commons license CC0 1.0")
+             ("CC-BY-SA-4.0" . "Creative Commons license CC BY-SA 4.0")
+             (text . "Except where otherwise noted, the work “%t”, %c, is published under the %l.")
+             (license . " and the ")
+             (copyright . " and ")
+             (by . "by")
+             (created . "Created")
+             (legalese . "<div class=\"legalese\"><p><a href=\"/imprint.html\">Imprint</a> | <a href=\"/privacy.html\">Privacy Policy</a></p></div>")
+             (htmldoc . "OER HTML page")
+             (revealjsdoc . "OER HTML presentation with reveal.js")
+             (sourceversion . "Org mode source code of this %s")
+             (pdfversion . "PDF version of this %s")
+             (pdffootnote . "This PDF document is an inferior version of an \\href{%s}{%s}; \\href{%s}{free/libre Org mode source repository}.")))
+    ("de" . (("CC0-1.0" . "Creative-Commons-Lizenz CC0 1.0")
+             ("CC-BY-SA-4.0" . "Creative-Commons-Lizenz CC BY-SA 4.0")
+             (text . "Soweit nicht anders angegeben unterliegt das Werk „%t“, %c, der %l.")
+             (copyright . " und ")
+             (license . " und der ")
+             (by . "von")
+             (created . "Erzeugt")
+             (legalese . "<div class=\"legalese\"><p><a href=\"/imprint.html\">Impressum</a> | <a href=\"/privacy-de.html\">Datenschutz</a></p></div>")
+             (htmldoc . "OER-HTML-Seite")
+             (revealjsdoc . "OER-HTML-Präsentation mit Reveal.js")
+             (sourceversion . "Org-Mode-Quelltext dieser %s")
+             (pdfversion . "PDF-Version dieser %s")
+             (pdffootnote . "Dieses PDF-Dokument ist eine minderwertige Version einer \\href{%s}{%s}; \\href{%s}{freies Repository mit Org-Mode-Quelltexten}."))))
+  "List of pairs specifying dictionaries for licensing related words.
+The first component of each pair is a two-letter language identifier (as
+defined with \"#+LANGUAGE\"), while the second one is a list of pairs from
+identifiers to language-specific words/strings/pieces of code.
+Currently, the following identifiers are used:
+- \"CC0-1.0\" and \"CC-BY-SA-4.0\": Texts to display licenses
+- `text': The license text with %-sequences indicating title (%t),
+  copyright and author information (%c), and license information (%l)
+- `copyright' and `license': Connectors to use when multiple lines
+  with copyright or license information need to be combined;
+  note the whitespace
+- `by': Word to indicate what author created the work
+- `created': Word to indicate when the work was created
+- `legalese': HTML string pointing to legalese (imprint and privacy
+  policy); set to empty string to avoid altogether
+- `htmldoc' and `revealjsdoc': Texts to indicate type of primary
+  target format, either HTML document or reveal.js presentation
+- `pdffootnote': Text for a footnote in LaTeX to point to source and
+  primary target files; first \"%s\" is replaced with URL of primary
+  target variant, second one based on the target format with either
+  `revealjsdoc' or `htmldoc', third one with URL to source code repository;
+  resulting text is used in `oer-reveal-alternate-type-latex';
+  set to empty string to avoid footnote
+- `sourceversion' and `pdfversion': Text for source version and PDF version
+  of target document; text contains \"%s\" to be replaced with
+  `revealjsdoc' or `htmldoc'
+If you add another language, you need to provide translations for all
+identifiers.  Please create an issue (or merge request) to share your
+language at URL `https://gitlab.com/oer/org-re-reveal/issues/'."
+  :group 'org-export-oer-reveal
+  :type '(repeat (cons
+                  (string :tag "Language")
+                  (repeat (cons
+                           (choice symbol string)
+                           (string :tag "Translation")))))
+  :package-version '(oer-reveal . "3.3.0"))
+
+(defcustom oer-reveal-licenses
+  '(("CC-BY-SA-4.0" . "https://creativecommons.org/licenses/by-sa/4.0/")
+    ("CC0-1.0" . "https://creativecommons.org/publicdomain/zero/1.0/"))
+  "License information as list of pairs:
+First, the SPDX identifier for the license; second, a URI for the license.
+If you add a license here, you also need to add its identifier to
+`oer-reveal-dictionaries'."
+  :group 'org-export-oer-reveal
+  :type '(repeat (cons
+                  (string :tag "SPDX identifier")
+                  (string :tag "License URI")))
+  :package-version '(oer-reveal . "2.0.0"))
+
+(defconst oer-reveal--copyright-regexp
+  "^\\([-0-9, ]+\\)\\([^<]+\\)\\([<]\\([^>]+\\)[>]\\)?$"
+  "Regular expression to match SPDX copyright information.
+See URL `https://reuse.software/faq/#licensing'.")
+
+(defconst oer-reveal--license-regexp "^\\(.*\\)$"
+  "Regular expression to match SPDX license identifier.
+See URL `https://reuse.software/faq/'.")
+
+(defcustom oer-reveal-use-year-ranges-p t
+  "If t, use ranges for copyright years.
+E.g., use \"2018-2020\" instead of \"2018, 2019, 2020\".
+Set to nil to use lists of years."
+  :group 'org-export-oer-reveal
+  :type 'boolean
+  :package-version '(oer-reveal . "2.3.0"))
+
+(defcustom oer-reveal-sort-creators-pred #'oer-reveal-sort-creators-p
+  "Predicate to sort structures that represent creators.
+Sorts with `oer-reveal-sort-creators-p' by default."
+  :group 'org-export-oer-reveal
+  :type 'function
+  :package-version '(oer-reveal . "2.3.0"))
+
+(defcustom oer-reveal-spdx-author nil
+  "Author to restrict search in `oer-reveal-copyright-check'."
+  :group 'org-export-oer-reveal
+  :type '(choice (const nil) string)
+  :package-version '(oer-reveal . "2.9.0"))
+
+(defcustom oer-reveal-spdx-copyright-regexp "SPDX-FileCopyrightText:.*"
+  "Regular expression to match copyright information."
+  :group 'org-export-oer-reveal
+  :type 'regexp
+  :package-version '(oer-reveal . "2.9.0"))
+
+
+;;; Functions to install and update submodules.
 (defun oer-reveal-clone-submodules ()
   "Clone submodules from `oer-reveal-submodules-url'.
 Target directory is `oer-reveal-submodules-dir'.
@@ -654,57 +856,6 @@ Org files."
                 (funcall #'oer-reveal--generate-include-file
                          source-file (car spec)))
               source-files)))))
-
-;;; Export of figures
-(defcustom oer-reveal-figures-dir "figures/"
-  "Name of directory of submodule URL `https://gitlab.com/oer/figures/'.
-This variable influences the treatment of filenames in image metadata files.
-If a filename starts with this directory, it is not changed.  (Thus, set
-this to the empty string to leave all filenames unchanged.)
-Otherwise, the filename is treated as being relative to the metadata file."
-  :group 'org-export-oer-reveal
-  :type 'directory
-  :package-version '(oer-reveal . "3.13.0"))
-
-(defcustom oer-reveal-copy-dir-suffix ".for-export"
-  "If non-empty string, copy embedded figures into separate directory.
-An oer-reveal project might embed a subset of the OER figure repository
-at URL `https://gitlab.com/oer/figures/'.  To publish only those figures
-that are actually used, they can be copied to a separate directory for
-export.  If you embed figures, say from \"./figures\", then oer-reveal
-with the default setting \".for-export\" copies each embedded figure to
-the directory \"./figures.for-export\" and publishes only those copied
-figures.
-More precisely, `oer-reveal-copy-dir-suffix' is inserted as suffix of
-the first ordinary directory component of FILENAME.  (Dots and (back-)
-slashes at the beginning of the name are left unchanged.)
-Set to empty string to disable this functionality."
-  :group 'org-export-oer-reveal
-  :type 'string
-  :package-version '(oer-reveal . "2.1.0"))
-
-;; The following options are only relevant if you use
-;; oer-reveal-export-image-grid to generate image grids.
-;; Then, the options control in what directory generated CSS is saved.
-(defcustom oer-reveal-export-dir "public/"
-  "Directory into which HTML, CSS, and Javascript is published.
-The default supposes that `org-publish-all' publishes into a
-subdirectory of `public/'.
-This is only used to publish CSS of image grids with
-`oer-reveal-export-image-grid'."
-  :group 'org-export-oer-reveal
-  :type 'directory)
-
-(defcustom oer-reveal-css-filename-template
-  "figures/internal_grid_css/grid%s.css"
-  "Template for filename of CSS generated for image grid.
-This must contain `%s' as placeholder for the grid's identifier.
-Note that this filename is exported into a subdirectory of
-`oer-reveal-export-dir' under the current directory."
-  :group 'org-export-oer-reveal
-  :type 'string)
-
-;;; Configuration of various components.
 
 ;;; Allow colored text.
 ;; The FAQ at http://orgmode.org/worg/org-faq.html contains a recipe
@@ -1508,70 +1659,6 @@ Call `oer-reveal--attribution-strings' with proper metadata."
 
 ;;; Functionality to display language-specific license information
 ;;; in HTML with RDFa and in PDF.
-(defcustom oer-reveal-dictionaries
-  '(("en" . (("CC0-1.0" . "Creative Commons license CC0 1.0")
-             ("CC-BY-SA-4.0" . "Creative Commons license CC BY-SA 4.0")
-             (text . "Except where otherwise noted, the work “%t”, %c, is published under the %l.")
-             (license . " and the ")
-             (copyright . " and ")
-             (by . "by")
-             (created . "Created")
-             (legalese . "<div class=\"legalese\"><p><a href=\"/imprint.html\">Imprint</a> | <a href=\"/privacy.html\">Privacy Policy</a></p></div>")
-             (htmldoc . "OER HTML page")
-             (revealjsdoc . "OER HTML presentation with reveal.js")
-             (sourceversion . "Org mode source code of this %s")
-             (pdfversion . "PDF version of this %s")
-             (pdffootnote . "This PDF document is an inferior version of an \\href{%s}{%s}; \\href{%s}{free/libre Org mode source repository}.")))
-    ("de" . (("CC0-1.0" . "Creative-Commons-Lizenz CC0 1.0")
-             ("CC-BY-SA-4.0" . "Creative-Commons-Lizenz CC BY-SA 4.0")
-             (text . "Soweit nicht anders angegeben unterliegt das Werk „%t“, %c, der %l.")
-             (copyright . " und ")
-             (license . " und der ")
-             (by . "von")
-             (created . "Erzeugt")
-             (legalese . "<div class=\"legalese\"><p><a href=\"/imprint.html\">Impressum</a> | <a href=\"/privacy-de.html\">Datenschutz</a></p></div>")
-             (htmldoc . "OER-HTML-Seite")
-             (revealjsdoc . "OER-HTML-Präsentation mit Reveal.js")
-             (sourceversion . "Org-Mode-Quelltext dieser %s")
-             (pdfversion . "PDF-Version dieser %s")
-             (pdffootnote . "Dieses PDF-Dokument ist eine minderwertige Version einer \\href{%s}{%s}; \\href{%s}{freies Repository mit Org-Mode-Quelltexten}."))))
-  "List of pairs specifying dictionaries for licensing related words.
-The first component of each pair is a two-letter language identifier (as
-defined with \"#+LANGUAGE\"), while the second one is a list of pairs from
-identifiers to language-specific words/strings/pieces of code.
-Currently, the following identifiers are used:
-- \"CC0-1.0\" and \"CC-BY-SA-4.0\": Texts to display licenses
-- `text': The license text with %-sequences indicating title (%t),
-  copyright and author information (%c), and license information (%l)
-- `copyright' and `license': Connectors to use when multiple lines
-  with copyright or license information need to be combined;
-  note the whitespace
-- `by': Word to indicate what author created the work
-- `created': Word to indicate when the work was created
-- `legalese': HTML string pointing to legalese (imprint and privacy
-  policy); set to empty string to avoid altogether
-- `htmldoc' and `revealjsdoc': Texts to indicate type of primary
-  target format, either HTML document or reveal.js presentation
-- `pdffootnote': Text for a footnote in LaTeX to point to source and
-  primary target files; first \"%s\" is replaced with URL of primary
-  target variant, second one based on the target format with either
-  `revealjsdoc' or `htmldoc', third one with URL to source code repository;
-  resulting text is used in `oer-reveal-alternate-type-latex';
-  set to empty string to avoid footnote
-- `sourceversion' and `pdfversion': Text for source version and PDF version
-  of target document; text contains \"%s\" to be replaced with
-  `revealjsdoc' or `htmldoc'
-If you add another language, you need to provide translations for all
-identifiers.  Please create an issue (or merge request) to share your
-language at URL `https://gitlab.com/oer/org-re-reveal/issues/'."
-  :group 'org-export-oer-reveal
-  :type '(repeat (cons
-                  (string :tag "Language")
-                  (repeat (cons
-                           (choice symbol string)
-                           (string :tag "Translation")))))
-  :package-version '(oer-reveal . "3.3.0"))
-
 (defun oer-reveal--translate (language identifier)
   "Return text under IDENTIFIER for LANGUAGE in `oer-reveal-dictionaries'."
   (let ((dictionary (assoc language oer-reveal-dictionaries)))
@@ -1585,85 +1672,12 @@ language at URL `https://gitlab.com/oer/org-re-reveal/issues/'."
          identifier language))
       (cdr text))))
 
-(defcustom oer-reveal-licenses
-  '(("CC-BY-SA-4.0" . "https://creativecommons.org/licenses/by-sa/4.0/")
-    ("CC0-1.0" . "https://creativecommons.org/publicdomain/zero/1.0/"))
-  "License information as list of pairs:
-First, the SPDX identifier for the license; second, a URI for the license.
-If you add a license here, you also need to add its identifier to
-`oer-reveal-dictionaries'."
-  :group 'org-export-oer-reveal
-  :type '(repeat (cons
-                  (string :tag "SPDX identifier")
-                  (string :tag "License URI")))
-  :package-version '(oer-reveal . "2.0.0"))
-
-(defcustom oer-reveal-rdf-prefixes
-  "prefix=\"dc: http://purl.org/dc/elements/1.1/ dcterms: http://purl.org/dc/terms/ dcmitype: http://purl.org/dc/dcmitype/ cc: http://creativecommons.org/ns# schema: http://schema.org/\""
-  "String with RDFa prefixes."
-  :group 'org-export-oer-reveal
-  :type 'string
-  :package-version '(oer-reveal . "3.14.0"))
-
-(defcustom oer-reveal-rdf-typeof
-  '("dcmitype:InteractiveResource"
-    "schema:PresentationDigitalDocument" "schema:LearningResource")
-  "Specify RDFa types of document.
-Supercedes `oer-reveal-dcmitype' to also include LRMI vocabulary.
-See URL `http://lrmi.net/about/lrmi/'
-and URL `https://schema.org/LearningResource'."
-  :group 'org-export-oer-reveal
-  :type '(repeat string)
-  :package-version '(oer-reveal . "3.14.0"))
-
-(defcustom oer-reveal-dcmitype "typeof=\"dcmitype:InteractiveResource\""
-  "Specify DCMI type.
-See URL `https://www.dublincore.org/specifications/dublin-core/dcmi-terms/'."
-  :group 'org-export-oer-reveal
-  :type 'string
-  :package-version '(oer-reveal . "2.0.0"))
-(make-obsolete-variable 'oer-reveal-dcmitype 'oer-reveal-rdf-typeof "3.14.0")
-
-(defcustom oer-reveal-created-template
-  "<p class=\"date\">%s: <span property=\"dcterms:created\">%s</span></p>"
-  "Template string for HTML \"p\" element with creation date.
-Template for `oer-reveal-license-to-fmt'; that funtion replaces first \"%s\"
-with language-specific word for `created' in `oer-reveal-dictionaries',
-second one with creation date."
-  :group 'org-export-oer-reveal
-  :type 'string
-  :package-version '(oer-reveal . "2.0.0"))
-
-(defconst oer-reveal--copyright-regexp
-  "^\\([-0-9, ]+\\)\\([^<]+\\)\\([<]\\([^>]+\\)[>]\\)?$"
-  "Regular expression to match SPDX copyright information.
-See URL `https://reuse.software/faq/#licensing'.")
-
-(defconst oer-reveal--license-regexp "^\\(.*\\)$"
-  "Regular expression to match SPDX license identifier.
-See URL `https://reuse.software/faq/'.")
-
-(defcustom oer-reveal-use-year-ranges-p t
-  "If t, use ranges for copyright years.
-E.g., use \"2018-2020\" instead of \"2018, 2019, 2020\".
-Set to nil to use lists of years."
-  :group 'org-export-oer-reveal
-  :type 'boolean
-  :package-version '(oer-reveal . "2.3.0"))
-
 (defun oer-reveal-sort-creators-p (first second)
   "Sort creators FIRST and SECOND.
 Creators are sorted by date, then by name."
   (or (string< (nth 1 first) (nth 1 second))
       (and (string= (nth 1 first) (nth 1 second))
            (string< (nth 0 first) (nth 0 second)))))
-
-(defcustom oer-reveal-sort-creators-pred #'oer-reveal-sort-creators-p
-  "Predicate to sort structures that represent creators.
-Sorts with `oer-reveal-sort-creators-p' by default."
-  :group 'org-export-oer-reveal
-  :type 'function
-  :package-version '(oer-reveal . "2.3.0"))
 
 (defun oer-reveal--explode-range (range)
   "Turn RANGE into list of numbers.
@@ -1926,18 +1940,6 @@ document (see `oer-reveal--rdf-typeof')."
                 "")))
             ((eq fmt 'pdf)
              (concat text created))))))
-
-(defcustom oer-reveal-spdx-author nil
-  "Author to restrict search in `oer-reveal-copyright-check'."
-  :group 'org-export-oer-reveal
-  :type '(choice (const nil) string)
-  :package-version '(oer-reveal . "2.9.0"))
-
-(defcustom oer-reveal-spdx-copyright-regexp "SPDX-FileCopyrightText:.*"
-  "Regular expression to match copyright information."
-  :group 'org-export-oer-reveal
-  :type 'regexp
-  :package-version '(oer-reveal . "2.9.0"))
 
 (defun oer-reveal--copyright-is-current-p (&optional year)
   "Return t if optional YEAR is part of copyright information.
