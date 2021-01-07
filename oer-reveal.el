@@ -525,6 +525,23 @@ and URL `https://schema.org/LearningResource'."
   :type '(repeat string)
   :package-version '(oer-reveal . "3.14.0"))
 
+(defcustom oer-reveal-rdf-figure-typeof "schema:ImageObject"
+  "Specify one string value for RDFa type of figure.
+In addition, that attribute contains
+- `oer-reveal--default-figure-dcmitype', which can be overwritten per figure
+  in its meta file, and
+- \"schema:LearningResource\" if that is contained in `oer-reveal-rdf-typeof'
+  for the embedding document."
+  :group 'org-export-oer-reveal
+  :type 'string
+  :package-version '(oer-reveal . "3.15.0"))
+
+(defcustom oer-reveal-rdf-caption-property "schema:caption"
+  "Specify RDFa property as string for caption of figure in HTML format.
+Only used if caption is non-empty."
+  :group 'org-export-oer-reveal
+  :type 'string
+  :package-version '(oer-reveal . "3.15.0"))
 
 (defcustom oer-reveal-dcmitype "typeof=\"dcmitype:InteractiveResource\""
   "Specify DCMI type.
@@ -1249,8 +1266,17 @@ Templates `oer-reveal--svg-div-template' and
   (let* ((extension (file-name-extension filename))
 	 (external (oer-reveal-http-url-p filename))
 	 (issvg (and (string= "svg" extension) (not external)))
-	 (issingle (plist-get (org-export-get-environment 're-reveal)
-			      :reveal-single-file))
+         (info (org-export-get-environment 'oer-reveal))
+	 (issingle (plist-get info :reveal-single-file))
+         (rdf-typeof (oer-reveal--rdf-typeof info))
+         (typeof (concat (org-re-reveal--if-format
+                          "%s " oer-reveal-rdf-figure-typeof)
+                         (if (and rdf-typeof
+                                  (string-match-p "schema:LearningResource"
+                                                  rdf-typeof))
+                             "schema:LearningResource "
+                           "")
+                         dcmitype))
          (encoded-url (url-encode-url filename)))
     (if (and issvg issingle (not embed-svg))
 	(user-error "Cannot produce single file without embedding SVG: %s"
@@ -1258,11 +1284,11 @@ Templates `oer-reveal--svg-div-template' and
       (if embed-svg
 	  ;; Embed SVG's XML directly.
 	  (format oer-reveal--svg-div-template
-		  encoded-url dcmitype divclasses extra-attrs
+		  encoded-url typeof divclasses extra-attrs
 		  (oer-reveal--file-as-string filename t)
 		  htmlcaption htmllicense)
 	(format oer-reveal--figure-div-template
-		encoded-url dcmitype divclasses extra-attrs
+		encoded-url typeof divclasses extra-attrs
                 oer-reveal-img-src
 		(if (and issingle (not external))
 		    ;; Insert base64 encoded image as single line.
@@ -1428,10 +1454,15 @@ As side effect, copy figure as described for `oer-reveal-copy-dir-suffix'."
 			(if (stringp caption)
 			    caption
 			  title)))
-	 (htmlcaption (format "<p>%s</p>"
-			      (if realcaption
-				  (oer-reveal--export-no-newline realcaption 'html)
-				"")))
+	 (htmlcaption (format
+                       "<p%s>%s</p>"
+                       (if realcaption
+                           (org-re-reveal--if-format
+                            " property=\"%s\"" oer-reveal-rdf-caption-property)
+                         "")
+		       (if realcaption
+			   (oer-reveal--export-no-newline realcaption 'html)
+			 "")))
 	 (latexcaption (when realcaption
 			 (oer-reveal--export-no-newline realcaption 'latex)))
 	 (htmltitle (format oer-reveal--title-html-template
