@@ -239,7 +239,10 @@
   (let ((meta (make-temp-file "oer.meta"))
         (meta-external (make-temp-file "oer-external.meta"))
         (meta-gif (make-temp-file "oer-gif.meta"))
-        (oer-reveal-copy-dir-suffix ""))
+        (oer-reveal-copy-dir-suffix "")
+        (oer-reveal-rdf-typeof nil) ; No LearningResource
+        (oer-reveal-rdf-caption-property "") ; No meta-data
+        (oer-reveal-rdf-figure-typeof ""))
     (with-temp-file meta (insert oer-metadata))
     (with-temp-file meta-external (insert oer-metadata-external))
     (with-temp-file meta-gif (insert oer-metadata-gif))
@@ -266,6 +269,25 @@
     (delete-file meta)
     (delete-file meta-external)
     (delete-file meta-gif)))
+
+(ert-deftest test-meta-schema-org ()
+  "More tests for RDFa license information on figures."
+  (let ((meta (make-temp-file "oer.meta"))
+        (oer-reveal-copy-dir-suffix ""))
+    (with-temp-file meta (insert oer-metadata))
+    (let ((result
+           (oer-reveal--attribution-strings meta "A caption"))
+          (result-short
+           (oer-reveal--attribution-strings meta nil nil nil t))
+          (result-full
+           (oer-reveal--attribution-strings meta "A caption" "50vh" "figure fragment appear" nil nil "data-fragment-index=\"1\"")))
+      (should (equal (car result)
+                     "<div about=\"./figures/doesnotexist.png\" typeof=\"schema:ImageObject schema:LearningResource dcmitype:StillImage\" class=\"figure\"><p><img data-src=\"./figures/doesnotexist.png\" alt=\"Figure\" /></p><p property=\"schema:caption\">A caption</p><p>&ldquo;<span property=\"dcterms:title\">Figure</span>&rdquo; by <a rel=\"cc:attributionURL dcterms:creator\" href=\"https://gitlab.com/lechten\" property=\"cc:attributionName\">Jens Lechtenbörger</a> under <a rel=\"license\" href=\"https://creativecommons.org/publicdomain/zero/1.0/\">CC0 1.0</a>; from <a rel=\"dcterms:source\" href=\"https://example.org/\">Sample source</a></p></div>"))
+      (should (equal (car result-short)
+                     "<div about=\"./figures/doesnotexist.png\" typeof=\"schema:ImageObject schema:LearningResource dcmitype:StillImage\" class=\"figure\"><p><img data-src=\"./figures/doesnotexist.png\" alt=\"Figure\" /></p><p></p><p><a rel=\"dcterms:source\" href=\"https://example.org/\">Figure</a> under <a rel=\"license\" href=\"https://creativecommons.org/publicdomain/zero/1.0/\">CC0 1.0</a></p></div>"))
+      (should (equal (car result-full)
+                     "<div about=\"./figures/doesnotexist.png\" typeof=\"schema:ImageObject schema:LearningResource dcmitype:StillImage\" class=\"figure fragment appear\" data-fragment-index=\"1\"><p><img data-src=\"./figures/doesnotexist.png\" alt=\"Figure\" style=\"max-height:50vh\" /></p><p property=\"schema:caption\">A caption</p><p style=\"max-width:50vh\">&ldquo;<span property=\"dcterms:title\">Figure</span>&rdquo; by <a rel=\"cc:attributionURL dcterms:creator\" href=\"https://gitlab.com/lechten\" property=\"cc:attributionName\">Jens Lechtenbörger</a> under <a rel=\"license\" href=\"https://creativecommons.org/publicdomain/zero/1.0/\">CC0 1.0</a>; from <a rel=\"dcterms:source\" href=\"https://example.org/\">Sample source</a></p></div>")))
+    (delete-file meta)))
 
 ;;; Following function copied from org-mode/testing/lisp/test-ox.el.
 ;; Copyright (C) 2012-2016, 2019  Nicolas Goaziou
