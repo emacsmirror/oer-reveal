@@ -1249,7 +1249,6 @@ Templates `oer-reveal--svg-div-template' and
   (let* ((extension (file-name-extension filename))
 	 (external (oer-reveal-http-url-p filename))
 	 (issvg (and (string= "svg" extension) (not external)))
-         (dcmitype (or dcmitype oer-reveal--default-figure-dcmitype))
 	 (issingle (plist-get (org-export-get-environment 're-reveal)
 			      :reveal-single-file))
          (encoded-url (url-encode-url filename)))
