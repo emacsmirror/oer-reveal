@@ -1547,7 +1547,9 @@ As side effect, copy figure as described for `oer-reveal-copy-dir-suffix'."
 		       (oer-reveal--export-no-newline title 'latex))))
     (oer-reveal--copy-for-export filename)
     (mapc #'oer-reveal--copy-for-export
-          (mapcar #'oer-reveal--figure-path dependencies))
+          (mapcar (lambda (dependency)
+                    (oer-reveal--figure-path dependency metadata))
+                  dependencies))
     (if (stringp caption)
 	(cons (oer-reveal--export-figure-html
 	       filename dcmitype divclasses htmlcaption htmllicense
