@@ -11,9 +11,13 @@ where version numbers starting with version 1.0.0 adhere to
 
 ** [Unreleased]
 
+** [3.17.0] - 2021-02-23
+*** Added
+    - Style file [[file:css/wwu-ercis.css]]
+
 ** [3.16.1] - 2021-02-23
 *** Fixed
-    - Call to ~oer-reveal--figure-path~ needs two arguments
+    - Call ~oer-reveal--figure-path~ with two arguments
 
 ** [3.16.0] - 2021-02-21
 *** Added
