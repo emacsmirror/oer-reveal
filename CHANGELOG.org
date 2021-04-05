@@ -11,6 +11,11 @@ where version numbers starting with version 1.0.0 adhere to
 
 ** [Unreleased]
 
+** [3.17.1] - 2021-04-05
+*** Fixed
+    - Add small amounts of time to final slides to work with totalTime
+      of reveal.js
+
 ** [3.17.0] - 2021-02-23
 *** Added
     - Style file [[file:css/wwu-ercis.css]]
