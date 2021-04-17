@@ -409,6 +409,21 @@ variable, and communication channel under `info'."
                header
 	       (oer-reveal-license-to-fmt 'pdf now "dummy")))))
 
+    ;; Previous case but with subtitle.
+    (let ((header "#+TITLE: A test:\n#+SUBTITLE: With subtitle\n#+SPDX-FileCopyrightText: 2019 Alice <https://example.org/#alice>\n#+SPDX-FileCopyrightText: 2017-2019 Bob <https://example.org/#bob>\n#+SPDX-License-Identifier: CC-BY-SA-4.0\n")
+          (now "2019-12-27 Fri 19:19"))
+      (should
+       (equal "<div class=\"rdfa-license\" about=\"test.html\" prefix=\"dc: http://purl.org/dc/elements/1.1/ dcterms: http://purl.org/dc/terms/ dcmitype: http://purl.org/dc/dcmitype/ cc: http://creativecommons.org/ns#\" typeof=\"dcmitype:InteractiveResource\"><p>Except where otherwise noted, the work “<span property=\"dcterms:title\">A test: With subtitle</span>”, <span property=\"dc:rights\">© <span property=\"dcterms:dateCopyrighted\">2017-2019</span> <a rel=\"cc:attributionURL dcterms:creator\" href=\"https://example.org/#bob\" property=\"cc:attributionName\">Bob</a></span> and <span property=\"dc:rights\">© <span property=\"dcterms:dateCopyrighted\">2019</span> <a rel=\"cc:attributionURL dcterms:creator\" href=\"https://example.org/#alice\" property=\"cc:attributionName\">Alice</a></span>, is published under the <a rel=\"license\" href=\"https://creativecommons.org/licenses/by-sa/4.0/\">Creative Commons license CC BY-SA 4.0</a>.</p></div>"
+	      (org-test-with-parsed-data
+               header
+	       (oer-reveal-license-to-fmt 'html nil "test.html" t t))))
+      (should
+       (equal (concat "Except where otherwise noted, the work “A test: With subtitle”, © 2017-2019 \\href{https://example.org/#bob}{Bob} and © 2019 \\href{https://example.org/#alice}{Alice}, is published under the \\href{https://creativecommons.org/licenses/by-sa/4.0/}{Creative Commons license CC BY-SA 4.0}."
+                      "\n\nCreated: " now)
+	      (org-test-with-parsed-data
+               header
+	       (oer-reveal-license-to-fmt 'pdf now "dummy")))))
+
     ;; Unknown license.
     (let ((header "#+TITLE: A test\n#+SPDX-FileCopyrightText: 2019 Jens Lechtenbörger <mail@example.org>\n#+SPDX-License-Identifier: CC-BY-SA-42\n"))
       (should-error
