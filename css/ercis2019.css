@@ -1,5 +1,5 @@
 /**
- * SPDX-FileCopyrightText: 2017-2019 Jens Lechtenbörger
+ * SPDX-FileCopyrightText: 2017-2019, 2021 Jens Lechtenbörger
  *
  * SPDX-License-Identifier: LicenseRef-MIT-JL
  *
@@ -162,6 +162,7 @@
  *********************************************/
 
 #preamble-header {
+  z-index: 50;
   font-size: .3em;
   position: absolute;
   bottom: 0;
