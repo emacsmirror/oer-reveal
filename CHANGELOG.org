@@ -11,6 +11,15 @@ where version numbers starting with version 1.0.0 adhere to
 
 ** [Unreleased]
 
+** [3.18.0] - 2021-04-17
+*** Changed
+    - Function ~oer-reveal-license-to-fmt~ now includes the subtitle
+      in generated license information
+*** Added
+    - New optional argument ~without-subtitle~ in
+      ~oer-reveal-license-to-fmt~ to exclude subtitle from generated
+      license information
+
 ** [3.17.1] - 2021-04-05
 *** Fixed
     - Add small amounts of time to final slides to work with totalTime
