@@ -1897,7 +1897,7 @@ from `oer-reveal-rdf-typeof' (if present) and add
 
 (defun oer-reveal-license-to-fmt
     (fmt &optional with-dccreated about with-prefix with-typeof with-legalese
-         text-p)
+         text-p without-subtitle)
   "Create license information in FMT for file of current buffer.
 FMT must be `html' or `pdf'.  PDF output uses LaTeX text (with \"\\href\"
 hyperlinks where appropriate).
@@ -1916,7 +1916,9 @@ element receives \"prefix\" or \"typeof\" attributes based on
 `oer-reveal-rdf-prefixes' and `oer-reveal-rdf-typeof'.
 If WITH-LEGALESE is non-nil, add a \"div\" element with pointers to legalese.
 If optional TEXT-P is non-nil, produce RDFa typeof information for a text
-document (see `oer-reveal--rdf-typeof')."
+document (see `oer-reveal--rdf-typeof').
+If optional WITHOUT-SUBTITLE is non-nil, ignore subtitle; otherwise,
+concatenate title and subtitle for license information."
   (let* ((pages-url (cdr (oer-reveal--parse-git-url)))
          (uri (or about
                   (concat pages-url
@@ -1929,7 +1931,12 @@ document (see `oer-reveal--rdf-typeof')."
          (language (oer-reveal--language))
          (template (oer-reveal--translate language 'text))
          (legalese (oer-reveal--translate language 'legalese))
-         (title (car (plist-get info :title)))
+         (atitle (car (plist-get info :title)))
+         (subtitle (plist-get info :subtitle))
+         (title (if (and subtitle (not without-subtitle))
+                    (format "%s%s" atitle
+                            (org-re-reveal--if-format " %s" (car subtitle)))
+                  atitle))
          (copyright (plist-get info :oer-reveal-copyright))
          (license (plist-get info :oer-reveal-license))
          (prefix (if with-prefix
