@@ -11,6 +11,10 @@ where version numbers starting with version 1.0.0 adhere to
 
 ** [Unreleased]
 
+** [3.18.2] - 2021-04-17
+*** Fixed
+    - Avoid clutter with license information in ERCIS 2019 style
+
 ** [3.18.1] - 2021-04-17
 *** Fixed
     - Define z-index for preamble and unify handling of title and
