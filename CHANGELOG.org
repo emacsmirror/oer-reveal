@@ -11,6 +11,11 @@ where version numbers starting with version 1.0.0 adhere to
 
 ** [Unreleased]
 
+** [3.18.3] - 2021-04-18
+*** Fixed
+    - Add placeholder for notes to title page in ERCIS 2019 style,
+      point to usage notes
+
 ** [3.18.2] - 2021-04-17
 *** Fixed
     - Avoid clutter with license information in ERCIS 2019 style
