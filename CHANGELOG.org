@@ -11,6 +11,11 @@ where version numbers starting with version 1.0.0 adhere to
 
 ** [Unreleased]
 
+** [3.19.0] - 2021-05-09
+*** Changed
+    - Mention sample keys in [[file:org/config-usage-notes.org]]
+      and [[file:org/config-usage-notes-de.org]]
+
 ** [3.18.3] - 2021-04-18
 *** Fixed
     - Add placeholder for notes to title page in ERCIS 2019 style,
