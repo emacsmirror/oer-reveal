@@ -113,6 +113,7 @@ Derive from 're-reveal to add further options and keywords."
                                 oer-reveal-rdf-prefixes t)
       (:oer-reveal-rdf-typeof "OER_REVEAL_RDF_TYPEOF" nil
                               oer-reveal-rdf-typeof t)
+      (:oer-reveal-without-subtitle "OER_REVEAL_WITHOUT_SUBTITLE" nil nil t)
       (:oer-reveal-copyright "SPDX-FILECOPYRIGHTTEXT" nil nil newline)
       (:oer-reveal-license "SPDX-LICENSE-IDENTIFIER" nil nil newline))
 
@@ -1917,8 +1918,9 @@ element receives \"prefix\" or \"typeof\" attributes based on
 If WITH-LEGALESE is non-nil, add a \"div\" element with pointers to legalese.
 If optional TEXT-P is non-nil, produce RDFa typeof information for a text
 document (see `oer-reveal--rdf-typeof').
-If optional WITHOUT-SUBTITLE is non-nil, ignore subtitle; otherwise,
-concatenate title and subtitle for license information."
+If optional WITHOUT-SUBTITLE or OER_REVEAL_WITHOUT_SUBTITLE are non-nil,
+ignore subtitle; otherwise, concatenate title and subtitle for
+license information."
   (let* ((pages-url (cdr (oer-reveal--parse-git-url)))
          (uri (or about
                   (concat pages-url
@@ -1933,6 +1935,8 @@ concatenate title and subtitle for license information."
          (legalese (oer-reveal--translate language 'legalese))
          (atitle (car (plist-get info :title)))
          (subtitle (plist-get info :subtitle))
+         (without-subtitle (or without-subtitle
+                               (plist-get info :oer-reveal-without-subtitle)))
          (title (if (and subtitle (not without-subtitle))
                     (format "%s%s" atitle
                             (org-re-reveal--if-format " %s" (car subtitle)))
