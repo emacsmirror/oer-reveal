@@ -255,6 +255,7 @@ add `oer-reveal-publish-alternate-type-function' to
 	org-html-postamble oer-reveal-publish-html-postamble
         org-html-text-markup-alist oer-reveal-publish-html-text-markup-alist
         org-descriptive-links oer-reveal-publish-descriptive-links
+	org-re-reveal--href-fragment-prefix org-re-reveal--slide-id-prefix
 	oer-reveal-latex-figure-float oer-reveal-publish-figure-float
 	org-latex-pdf-process oer-reveal-publish-pdf-process
 	;; Add packages that need to be at the beginning of
