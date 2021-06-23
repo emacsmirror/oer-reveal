@@ -11,7 +11,7 @@ where version numbers starting with version 1.0.0 adhere to
 
 ** [Unreleased]
 
-** [3.20.2] - 2021-05-21
+** [3.20.2] - 2021-06-23
 *** Fixed
     - Mention use of enter key in [[file:org/reveal.js-hints.org]] for
       subsequent search hits.
