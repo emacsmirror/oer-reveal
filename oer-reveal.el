@@ -95,6 +95,8 @@ Derive from 're-reveal to add further options and keywords."
                                        oer-reveal-anything-dependency t)
       (:oer-reveal-anything-config "OER_REVEAL_ANYTHING_CONFIG" nil
                                    oer-reveal-anything-config t)
+      (:oer-reveal-anything-svg-opacity "OER_REVEAL_ANYTHING_SVG_OPACITY" nil
+                                        oer-reveal-anything-svg-opacity t)
       (:oer-reveal-audio-slideshow-dependency "OER_REVEAL_AUDIO_SLIDESHOW_DEPENDENCY" nil
                                               oer-reveal-audio-slideshow-dependency t)
       (:oer-reveal-audio-slideshow-config "OER_REVEAL_AUDIO_SLIDESHOW_CONFIG" nil
@@ -103,6 +105,8 @@ Derive from 're-reveal to add further options and keywords."
                                         oer-reveal-coursemod-dependency t)
       (:oer-reveal-coursemod-config "OER_REVEAL_COURSEMOD_CONFIG" nil
                                     oer-reveal-coursemod-config t)
+      (:oer-reveal-navigation-mode "OER_REVEAL_NAVIGATION_MODE" nil
+                                    oer-reveal-navigation-mode t)
       (:oer-reveal-jump-dependency "OER_REVEAL_JUMP_DEPENDENCY" nil
                                    oer-reveal-jump-dependency t)
       (:oer-reveal-quiz-dependency "OER_REVEAL_QUIZ_DEPENDENCY" nil
@@ -191,6 +195,15 @@ go for `emacs-reveal', see URL `https://gitlab.com/oer/emacs-reveal/'."
   :group 'org-export-oer-reveal
   :type '(choice (const nil) string)
   :package-version '(oer-reveal . "3.0.0"))
+
+(defcustom oer-reveal-navigation-mode
+  "navigationMode: window.location.search.match( /default-navigation/gi ) ? 'default' : 'linear'"
+  "Navigation mode of reveal.js.
+By default, use linear mode, but allow URL parameter \"default-navigation\"
+to revert to default mode of reveal.js."
+  :group 'org-export-oer-reveal
+  :type '(choice (const nil) string)
+  :package-version '(oer-reveal . "3.21.0"))
 
 (defcustom oer-reveal-warning-delay t
   "Control whether to pause after display of warnings.
@@ -302,6 +315,24 @@ and opening of speaker notes on click."
   :group 'org-export-oer-reveal
   :type 'string
   :package-version '(oer-reveal . "1.3.0"))
+
+(defcustom oer-reveal-anything-svg-opacity
+  "<script>
+ // I use opacity on g elements for step-wise appearance of SVG figures.
+ // When printing, make sure that all parts are visible.
+ if ( window.location.search.match( /print-pdf/gi ) ) {
+     var layers = document.querySelectorAll('svg.animate > g[opacity]');
+     for (var i=0; i < layers.length; i++) {
+         var layer = layers[i];
+         layer.setAttribute(\"opacity\", 1);
+     }
+ }
+</script>"
+  "Script to set opacity in SVG images to 1 for PDF export.
+Set to nil if you do not want this."
+  :group 'org-export-oer-reveal
+  :type '(choice (const nil) string)
+  :package-version '(oer-reveal . "3.21.0"))
 
 (defcustom oer-reveal-a11y-dependency
   "{ src: '%splugin/accessibility/helper.js', async: true, condition: function() { return !!document.body.classList; } }"
@@ -2196,6 +2227,32 @@ Otherwise, return value of property THING in plist INFO."
            plugins))))
     (append external-plugins dependencies)))
 
+(defun oer-reveal--concat-props (prop1 prop2 info &optional delim)
+  "Concatenate properties PROP1 and PROP2 in INFO with DELIM.
+If either property is nil, return only the other one without delimiter."
+  (let* ((prop1 (plist-get info prop1))
+         (prop1str (or prop1 ""))
+         (prop2 (plist-get info prop2))
+         (prop2str (or prop2 ""))
+         (delim (or delim "")))
+    (if (and prop1 prop2)
+        (concat prop1 delim prop2)
+      (concat prop1str prop2str))))
+
+(defun oer-reveal--postscript (info)
+  "Extend `:reveal-postscript' based on INFO.
+Add contents of `oer-reveal-anything-svg-opacity' if non-nil."
+  (oer-reveal--concat-props :reveal-postscript
+                            :oer-reveal-anything-svg-opacity
+                            info))
+
+(defun oer-reveal--extra-options (info)
+  "Extend `:reveal-extra-options' based on INFO.
+Add contents of `oer-reveal-navigation-mode' if non-nil."
+  (oer-reveal--concat-props :reveal-extra-options
+                            :oer-reveal-navigation-mode
+                            info ",\n"))
+
 (defun oer-reveal-template (contents info)
   "Return complete document string after HTML conversion.
 CONTENTS is the transcoded contents string.
@@ -2212,7 +2269,9 @@ Setup plugin and export configuration, then call `org-re-reveal-template'."
 		   org-re-reveal-revealjs-version))
     (plist-put info :reveal-external-plugins plugin-dependencies)
     (plist-put info :reveal-init-script plugin-config)
+    (plist-put info :reveal-extra-options (oer-reveal--extra-options info))
     (plist-put info :reveal-add-plugin oer-reveal-plugin-4-config)
+    (plist-put info :reveal-postscript (oer-reveal--postscript info))
     (org-re-reveal-template contents info)))
 
 (provide 'oer-reveal)
