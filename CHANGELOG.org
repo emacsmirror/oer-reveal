@@ -10,6 +10,21 @@ where version numbers starting with version 1.0.0 adhere to
 
 
 ** [Unreleased]
+** [3.21.0] - 2021-08-17
+*** Added
+    - Variable ~oer-reveal-anything-svg-opacity~ with keyword
+      ~OER_REVEAL_ANYTHING_SVG_OPACITY~ for export of animated (with
+      anything plugin) SVG images to PDF
+    - Variable ~oer-reveal-navigation-mode~ with keyword
+      ~OER_REVEAL_NAVIGATION_MODE~ to switch navigation mode of
+      reveal.js with URL parameter ~default-navigation~
+    - New link types “basic”, “beyond”, and “revisit” with different
+      CSS classes that open in new tabs as defined in new variable
+      ~oer-reveal-external-url-template~
+*** Changed
+    - Variable ~oer-reveal-audio-slideshow-config~ now understands URL
+      parameter ~audio-autoplay~ for autoplay of audios (with the
+      audio-slideshow plugin)
 
 ** [3.20.2] - 2021-06-23
 *** Fixed
@@ -24,7 +39,7 @@ where version numbers starting with version 1.0.0 adhere to
 
 ** [3.20.0] - 2021-05-12
 *** Added
-    - Keyword OER_REVEAL_WITHOUT_SUBTITLE to exclude subtitles in
+    - Keyword ~OER_REVEAL_WITHOUT_SUBTITLE~ to exclude subtitles in
       license statements per file.  This allows to selectively control
       a change introduced in 3.18.0.
 
