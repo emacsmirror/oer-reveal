@@ -930,37 +930,92 @@ Org files."
    ((eq backend 'latex)
     (format "{\\color{%s}%s}" path desc))))
 
-(if (fboundp #'org-link-set-parameters)
-    (org-link-set-parameters "color"
-                             :follow #'oer-reveal--color-link-follow
-                             :export #'oer-reveal--color-link-export)
-  (org-add-link-type "color"
-                     #'oer-reveal--color-link-follow
-                     #'oer-reveal--color-link-export))
-
-(defun oer-reveal--local-path-follow (path &optional _)
-  "Follow local PATH."
-  (message "You should export, not follow local paths: %s" path))
+;;; Allow local links, to be exported without usual translation by Org.
+;; Useful to preserve relative paths if files are included.
 (defun oer-reveal--local-path-export (path desc backend &optional _)
   "Export local PATH with DESC to BACKEND, without Org interference.
+For HTML export: If PATH ends with \".org\", replace that extension with
+\".html\"; otherwise, use PATH unchanged.
+For LaTeX export, replace extension with \".pdf\".
 This is meant for links in combination with INCLUDE statements where
-Org by default may insert unwanted path components."
+Org by default may insert unwanted path components.  See URL
+`https://gitlab.com/oer/cs/programming/-/blob/master/texts/Git-Workflow-Instructions.org'
+for examples."
+  (let ((extension (file-name-extension path))
+        (sans-extension (file-name-sans-extension path)))
+    (cond
+     ((eq backend 'html)
+      (let ((path (if (string= extension "org")
+                      (concat sans-extension ".html")
+                    path)))
+        (format "<a href=\"%s\">%s</a>" path (or desc path))))
+     ((eq backend 'latex)
+      (let ((path (if (or (string= extension "html")
+                          (string= extension "org"))
+                      (concat sans-extension ".pdf")
+                    path)))
+        (format "\\href{%s}{%s}" path (or desc path)))))))
+
+;;; Create hyperlinks with target and class attributes.
+(defcustom oer-reveal-external-url-template
+  "<a href=\"%s\" target=\"_blank\" rel=\"noopener noreferrer\" class=\"%s\">%s</a>"
+  "Format string for external URLs with three placeholders.
+The first one is the URL, the second one a class attribute, the third one
+the link's text."
+  :group 'org-export-oer-reveal
+  :type 'string
+  :package-version '(oer-reveal . "3.21.0"))
+
+(defun oer-reveal--url-export (path desc backend type)
+  "Export PATH with DESC to BACKEND for TYPE."
   (cond
    ((eq backend 'html)
-    (format "<a href=\"%s\">%s</a>" path (or desc path)))
+    (let ((htmlclass (format "%slink" type)))
+      (format oer-reveal-external-url-template
+              path htmlclass (or desc path))))
    ((eq backend 'latex)
-    (let ((path (if (string-suffix-p ".html" path)
-                    (concat (substring path 0 -5) ".pdf")
-                  path)))
-      (format "\\href{%s}{%s}" path (or desc path))))))
+    (format "\\href{%s}{%s}" path (or desc path)))))
+(defun oer-reveal--basic-url-export (path desc backend &optional _)
+  "Export PATH with DESC to BACKEND.
+This is meant for external hyperlinks to open in new tabs with
+a class to indicate that basic topics are covered."
+  (oer-reveal--url-export path desc backend "basic"))
+(defun oer-reveal--beyond-url-export (path desc backend &optional _)
+  "Export PATH with DESC to BACKEND.
+This is meant for external hyperlinks to open in new tabs with
+a class to indicate that additional topics are covered."
+  (oer-reveal--url-export path desc backend "beyond"))
+(defun oer-reveal--revisit-url-export (path desc backend &optional _)
+  "Export PATH with DESC to BACKEND.
+This is meant for external hyperlinks to open in new tabs with
+a class to indicate that topics are revisited later."
+  (oer-reveal--url-export path desc backend "revisit"))
 
-(if (fboundp #'org-link-set-parameters)
-    (org-link-set-parameters "local"
-                             :follow #'oer-reveal--local-path-follow
-                             :export #'oer-reveal--local-path-export)
-  (org-add-link-type "local"
-                     #'oer-reveal--local-path-follow
-                     #'oer-reveal--local-path-export))
+(defun oer-reveal-register-link (type follow-func export-func)
+  "Register Org link TYPE with FOLLOW-FUNC and EXPORT-FUNC."
+  (if (fboundp #'org-link-set-parameters)
+      (org-link-set-parameters type :follow follow-func :export export-func)
+    (org-add-link-type type follow-func export-func)))
+
+(oer-reveal-register-link "color"
+                          #'oer-reveal--color-link-follow
+                          #'oer-reveal--color-link-export)
+
+(oer-reveal-register-link "local"
+                          #'org-link-open-as-file
+                          #'oer-reveal--local-path-export)
+
+(oer-reveal-register-link "basic"
+                          #'browse-url
+                          #'oer-reveal--basic-url-export)
+
+(oer-reveal-register-link "beyond"
+                          #'browse-url
+                          #'oer-reveal--beyond-url-export)
+
+(oer-reveal-register-link "revisit"
+                          #'browse-url
+                          #'oer-reveal--revisit-url-export)
 
 ;;; Add alternate type links to HTML presentations and pointers to PDF.
 (defconst oer-reveal-alternate-type-html
