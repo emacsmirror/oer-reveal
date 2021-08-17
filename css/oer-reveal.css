@@ -1,6 +1,6 @@
 /**
  * SPDX-FileCopyrightText: 2014-2016 Hakim El Hattab
- * SPDX-FileCopyrightText: 2017-2020 Jens Lechtenbörger
+ * SPDX-FileCopyrightText: 2017-2021 Jens Lechtenbörger
  *
  * SPDX-License-Identifier: LicenseRef-MIT-HEH-JL
  *
@@ -595,6 +595,23 @@ div.ribbon-legalese a {
   padding-right: 0;
   content: none;
   background: none; }
+
+/* Special types of outgoing links. */
+.reveal a[href].basiclink:not(.hiddenlink):after {
+  margin: 0;
+  padding-right: 0;
+  background: none;
+  content: " 🛈"; }
+.reveal a[href].beyondlink:not(.hiddenlink):after {
+  margin: 0;
+  padding-right: 0;
+  background: none;
+  content: " 🚀"; }
+.reveal a[href].revisitlink:not(.hiddenlink):after {
+  margin: 0;
+  padding-right: 0;
+  background: none;
+  content: " ↔"; }
 
 /* Indicate direction of internal link. */
 .reveal a[href].backwardlink:not(.hiddenlink):before {
