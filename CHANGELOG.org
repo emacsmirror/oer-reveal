@@ -10,6 +10,10 @@ where version numbers starting with version 1.0.0 adhere to
 
 
 ** [Unreleased]
+** [3.21.1] - 2021-08-19
+*** Fixed
+    - Mention new ~hidelinks~ value in usage hints
+
 ** [3.21.0] - 2021-08-17
 *** Added
     - Variable ~oer-reveal-anything-svg-opacity~ with keyword
