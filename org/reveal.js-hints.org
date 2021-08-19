@@ -116,6 +116,7 @@ and make use of the HTML presentation framework
     - 4: Hide links between presentations
     - 8: Hide links to other resources under ~oer.gitlab.io~
     - 16: Hide external links
+    - 32: Hide links going beyond current scope
     E.g., with ~hidelinks=28~ (28 = 16 + 8 + 4) neither external
     links (16) nor links to other resources under ~oer.gitlab.io~ (8)
     nor links to other presentations (4) would be displayed

@@ -113,6 +113,7 @@ erzeugt und nutzen das HTML-Framework
     - 4: Verweise zwischen Präsentationen
     - 8: Verweise zu anderen Ressourcen unter ~oer.gitlab.io~
     - 16: Externe Verweise
+    - 32: Verweise, die über Lernziele hinausgehen
     Beispielsweise werden mit ~hidelinks=28~ (28 = 16 + 8 + 4) weder
     externe Verweise (16) noch Verweise unter ~oer.gitlab.io~ (8) noch Verweise
     zu anderen Präsentationen (4) angezeigt.
