@@ -1,11 +1,11 @@
 # Local IspellDict: de
 
-# SPDX-FileCopyrightText: 2018-2021 Jens Lechtenbörger
-# SPDX-License-Identifier: CC-BY-SA-4.0
+#+SPDX-FileCopyrightText: 2018-2021 Jens Lechtenbörger
+#+SPDX-License-Identifier: CC-BY-SA-4.0
 
 # Diese Datei ist nicht für den direkten HTML-Export gedacht,
 # sondern sollte anderswo eingebunden werden.  Beispiel:
-# https://gitlab.com/oer/fediverse/blob/master/index.org
+# https://gitlab.com/oer/oer.gitlab.io/-/blob/master/hinweise.org
 
 Die Präsentationen werden mit
 [[https://gitlab.com/oer/emacs-reveal][emacs-reveal]]
