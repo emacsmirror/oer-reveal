@@ -908,6 +908,57 @@ Org files."
                          source-file (car spec)))
               source-files)))))
 
+;;; Links in new browser tabs.
+(defcustom oer-reveal-new-tab-url-regexp "."
+  "Regular expression or nil.
+If non-nil, URLs matching this pattern open in new browser tabs,
+unless they also match `oer-reveal-no-new-tab-url-regexp'.
+By default, all HTTP(S) links open in new tabs.
+Set to nil if you do not want URLs to open in new tabs.
+Changes of URLs happen via `oer-reveal-filter-parse-tree',
+which is added to `org-export-filter-parse-tree-functions'
+in oer-reveal-publish.  Note that this applies to links in all
+backends derived from `html'."
+  :group 'org-export-oer-reveal
+  :type '(choice (const nil) regexp)
+  :package-version '(oer-reveal . "3.22.0"))
+
+(defcustom oer-reveal-no-new-tab-url-regexp nil
+  "Regular expression or nil.
+If a URL matches this pattern, it does not open in a new tab, regardless of
+`oer-reveal-new-tab-url-regexp'."
+  :group 'org-export-oer-reveal
+  :type '(choice (const nil) regexp)
+  :package-version '(oer-reveal . "3.22.0"))
+
+(defun oer-reveal--link-in-tab (link)
+  "Add attributes to LINK such that it opens in a new browser tab.
+Only applies to HTTP(S) links.
+See also `oer-reveal-new-tab-url-regexp'."
+  (let ((type (org-element-property :type link))
+        (path (org-element-property :path link)))
+    (when
+        (and (member type '("http" "https"))
+             (or (not oer-reveal-new-tab-url-regexp)
+                 (string-match oer-reveal-new-tab-url-regexp path))
+             (or (not oer-reveal-no-new-tab-url-regexp)
+                 (not (string-match oer-reveal-no-new-tab-url-regexp path))))
+      (let ((attrs (org-export-read-attribute :attr_html link)))
+        (push ":target _blank" attrs)
+        (push ":rel noopenener noreferrer" attrs)
+        (org-element-put-property link :attr_html attrs)))
+    link))
+
+(defun oer-reveal-filter-parse-tree (tree backend _)
+  "Filter parse TREE for BACKEND.
+In backends derived from `html', apply `oer-reveal--link-in-tab' to all
+Org links."
+  (when (org-export-derived-backend-p backend 'html)
+    (org-element-map tree 'link
+      (lambda (elem)
+        (oer-reveal--link-in-tab elem))))
+  tree)
+
 ;;; Allow colored text.
 ;; The FAQ at http://orgmode.org/worg/org-faq.html contains a recipe
 ;; based on the obsolete function (since Org 9.0) org-add-link-type.
