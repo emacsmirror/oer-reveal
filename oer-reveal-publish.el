@@ -266,6 +266,9 @@ add `oer-reveal-publish-alternate-type-function' to
         )
   (org-babel-do-load-languages
    'org-babel-load-languages oer-reveal-publish-babel-languages)
+  (when oer-reveal-new-tab-url-regexp
+    (push #'oer-reveal-filter-parse-tree
+          org-export-filter-parse-tree-functions))
   (when oer-reveal-publish-alternate-type-function
     (add-hook 'org-export-before-processing-hook
               oer-reveal-publish-alternate-type-function)))
