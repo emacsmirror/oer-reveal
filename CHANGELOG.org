@@ -10,6 +10,16 @@ where version numbers starting with version 1.0.0 adhere to
 
 
 ** [Unreleased]
+** [3.22.0] - 2021-08-25
+*** Added
+    - New variables ~oer-reveal-new-tab-url-regexp~ and
+      ~oer-reveal-no-new-tab-url-regexp~ with function
+      ~oer-reveal-filter-parse-tree~
+*** Changed
+    - Add ~oer-reveal-filter-parse-tree~ to
+      ~org-export-filter-parse-tree-functions~ in
+      ~oer-reveal-publish-setq-defaults~
+
 ** [3.21.2] - 2021-08-19
 *** Fixed
     - Use Org keyword headers in usage hints
