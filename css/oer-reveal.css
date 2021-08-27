@@ -15,6 +15,12 @@
 section.has-dark-background, section.has-dark-background h1, section.has-dark-background h2, section.has-dark-background h3, section.has-dark-background h4, section.has-dark-background h5, section.has-dark-background h6 {
   color: #fff; }
 
+/* Setup quizzes to show all questions with print-pdf. */
+html.print-pdf li.question { display: list-item; }
+html.print-pdf div.quizArea { box-shadow: none; font-size: 18px; }
+html.print-pdf li.question div.questionCount { display: none; }
+html.print-pdf li.question a.checkAnswer { display: none; }
+
 /*********************************************
  * GLOBAL STYLES
  *********************************************/
