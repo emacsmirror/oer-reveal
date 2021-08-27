@@ -10,6 +10,11 @@ where version numbers starting with version 1.0.0 adhere to
 
 
 ** [Unreleased]
+** [3.23.0] - 2021-08-27
+*** Added
+    - CSS rules in [[file:css/oer-reveal.css]] to show all questions of
+      quizzes when printing to PDF
+
 ** [3.22.0] - 2021-08-25
 *** Added
     - New variables ~oer-reveal-new-tab-url-regexp~ and
