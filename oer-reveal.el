@@ -981,17 +981,12 @@ Org links."
    ((eq backend 'latex)
     (format "{\\color{%s}%s}" path desc))))
 
-;;; Allow local links, to be exported without usual translation by Org.
-;; Useful to preserve relative paths if files are included.
-(defun oer-reveal--local-path-export (path desc backend &optional _)
-  "Export local PATH with DESC to BACKEND, without Org interference.
+(defun oer-reveal--path-export (path desc backend hyper)
+  "Export hyperlink for PATH with DESC to BACKEND.
 For HTML export: If PATH ends with \".org\", replace that extension with
 \".html\"; otherwise, use PATH unchanged.
 For LaTeX export, replace extension with \".pdf\".
-This is meant for links in combination with INCLUDE statements where
-Org by default may insert unwanted path components.  See URL
-`https://gitlab.com/oer/cs/programming/-/blob/master/texts/Git-Workflow-Instructions.org'
-for examples."
+For HTML backends, create hyperlink with format string HYPER."
   (let ((extension (file-name-extension path))
         (sans-extension (file-name-sans-extension path)))
     (cond
@@ -999,13 +994,33 @@ for examples."
       (let ((path (if (string= extension "org")
                       (concat sans-extension ".html")
                     path)))
-        (format "<a href=\"%s\">%s</a>" path (or desc path))))
+        (format hyper path (or desc path))))
      ((eq backend 'latex)
       (let ((path (if (or (string= extension "html")
                           (string= extension "org"))
                       (concat sans-extension ".pdf")
                     path)))
         (format "\\href{%s}{%s}" path (or desc path)))))))
+
+;;; Allow local links, to be exported without usual translation by Org.
+;; Useful to preserve relative paths if files are included.
+(defun oer-reveal--local-path-export (path desc backend &optional _)
+  "Export local PATH with DESC to BACKEND, without Org interference.
+This is meant for links in combination with INCLUDE statements where
+Org by default may insert unwanted path components.  Here, just
+the file extension in PATH may be changed.  See URL
+`https://gitlab.com/oer/cs/programming/-/blob/master/texts/Git-Workflow-Instructions.org'
+for examples."
+  (oer-reveal--path-export path desc backend "<a href=\"%s\">%s</a>"))
+
+;;; Create hyperlink with hasPart RDFa information.
+(defun oer-reveal--haspart-export (path desc backend &optional _)
+  "Export PATH with DESC to BACKEND.
+For HTML export, create hyperlink for a learning resource that is
+a part of the current document.  Use RDFa markup."
+  (oer-reveal--path-export
+   path desc backend
+   "<a typeof=\"schema:LearningResource\" rel=\"schema:hasPart\" href=\"%s\">%s</a>"))
 
 ;;; Create hyperlinks with target and class attributes.
 (defcustom oer-reveal-external-url-template
@@ -1055,6 +1070,10 @@ a class to indicate that topics are revisited later."
 (oer-reveal-register-link "local"
                           #'org-link-open-as-file
                           #'oer-reveal--local-path-export)
+
+(oer-reveal-register-link "hasPart"
+                          #'org-link-open-as-file
+                          #'oer-reveal--haspart-export)
 
 (oer-reveal-register-link "basic"
                           #'browse-url
