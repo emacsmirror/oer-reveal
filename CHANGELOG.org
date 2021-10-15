@@ -10,6 +10,12 @@ where version numbers starting with version 1.0.0 adhere to
 
 
 ** [Unreleased]
+** [3.25.0] - 2021-10-15
+*** Changed
+    - Update oer-reveal-submodules-version to 2.2.2
+    - Use package grffile for LaTeX export to support figure names
+      with space characters
+
 ** [3.24.0] - 2021-09-15
 *** Added
     - Link type ~hasPart~ to markup (with RDFa) a link target as
