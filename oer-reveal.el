@@ -220,7 +220,9 @@ Each element here is supposed to be the directory name of the plugin.
 If you remove a plugin from this list, it will no longer be published.
 If you add plugins to this list, you need to provide suitable
 initialization code in `oer-reveal-plugin-config', for
-plugins for reveal.js 4 and later also in `oer-reveal-plugin-4-config'."
+plugins for reveal.js 4 and later also in `oer-reveal-plugin-4-config'.
+If you remove plugins here, you also should remove corresponding
+lines from `oer-reveal-plugin-4-config'."
   :group 'org-export-oer-reveal
   :type '(repeat string)
   :package-version '(oer-reveal . "3.8.0"))
