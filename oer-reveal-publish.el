@@ -209,7 +209,9 @@ syntax highlighting."
     ;; Load grffile with options space.
     ("space" "grffile" nil))
   "Packages to add to beginning of `org-latex-default-packages-alist'.
-Assignment happens in `oer-reveal-publish-setq-defaults'."
+LaTeX only allows to include packages multiple times if subsequent inclusions
+come with fewer options.
+Oer-reveal also includes other packages in file org/config.org."
   :group 'org-export-oer-reveal
   :type '(repeat
 	  (choice
@@ -220,7 +222,8 @@ Assignment happens in `oer-reveal-publish-setq-defaults'."
 		 (choice
 		  (const :tag "For all compilers" nil)
 		  (repeat :tag "Allowed compiler" string)))
-	   (string :tag "A line of LaTeX"))))
+	   (string :tag "A line of LaTeX")))
+  :package-version '(oer-reveal . "4.0.0"))
 
 (defcustom oer-reveal-publish-babel-languages '((emacs-lisp . t))
   "Babel languages to activate in `oer-reveal-publish-setq-defaults'."
