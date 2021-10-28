@@ -2,7 +2,7 @@
 ;; -*- Mode: Emacs-Lisp -*-
 ;; -*- coding: utf-8 -*-
 
-;; SPDX-FileCopyrightText: 2019 Jens Lechtenbörger
+;; SPDX-FileCopyrightText: 2019,2021 Jens Lechtenbörger
 ;; SPDX-License-Identifier: GPL-3.0-or-later
 
 ;;; License: GPLv3
@@ -12,7 +12,8 @@
 ;; functionality offered by org-re-reveal and oer-reveal.
 ;;
 ;; Initialization code for both is also provided by emacs-reveal, e.g.,
-;; in the Docker image emacs-reveal: https://gitlab.com/oer/docker
+;; in the Docker image emacs-reveal:
+;; https://gitlab.com/oer/emacs-reveal/container_registry/976295
 ;; Org-re-reveal and oer-reveal are also available on MELPA.
 ;;
 ;; Use this file from its parent directory with the following shell
