@@ -205,7 +205,9 @@ syntax highlighting."
     ;; Load float package.  This must come before hyperref to avoid
     ;; warnings for figures:
     ;; warning (ext4): destination with the same identifier
-    ("" "float" nil))
+    ("" "float" nil)
+    ;; Load grffile with options space.
+    ("space" "grffile" nil))
   "Packages to add to beginning of `org-latex-default-packages-alist'.
 Assignment happens in `oer-reveal-publish-setq-defaults'."
   :group 'org-export-oer-reveal

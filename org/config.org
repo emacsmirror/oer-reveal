@@ -70,7 +70,6 @@
 
 # Setup for PDF generation via LaTeX export.
 #+LATEX_CLASS_OPTIONS: [a4paper]
-#+LATEX_HEADER: \usepackage[space]{grffile}
 #+LATEX_HEADER: \usepackage[backend=biber,style=alphabetic]{biblatex}
 #+LATEX_HEADER: \addbibresource{references.bib}
 #+LATEX_HEADER: \newenvironment{notes}{\par\footnotesize}{\par}
