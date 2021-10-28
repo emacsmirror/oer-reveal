@@ -50,9 +50,9 @@
 ;; highlighting in batch mode; set that variable to nil to avoid such
 ;; changes.
 ;;
-;; Function `oer-reveal-publish-setq-defaults' uses `setq' to change
-;; various variables of other packages related to export to HTML and
-;; LaTeX.  Please check what it does before invoking it.
+;; Function `oer-reveal-publish-setq-defaults' activates Org Babel
+;; languages and changes `org-export-before-processing-hook'.
+;; Please check what it does before invoking it.
 ;;
 ;; Originally inspired by publish.el by Rasmus:
 ;; https://gitlab.com/pages/org-mode/blob/master/publish.el
@@ -74,16 +74,14 @@ general Emacs sessions."
   "Functions to publish Org source files.
 By default, with `oer-reveal-publish-to-reveal-and-pdf', publish Org files
 as reveal.js presentations and as PDF.  For the latter,
-`org-latex-pdf-process' is set to `oer-reveal-publish-pdf-process'
-in `oer-reveal-publish-setq-defaults'.
+`org-latex-pdf-process' is set to `oer-reveal-publish-pdf-process'.
 To avoid PDF output, use `oer-reveal-publish-to-reveal'."
   :group 'org-export-oer-reveal
   :type '(repeat function)
   :package-version '(oer-reveal . "2.0.1"))
 
 (defcustom oer-reveal-publish-descriptive-links nil
-  "Value to assign to `org-descriptive-links'.
-Assignment happens in `oer-reveal-publish-setq-defaults'."
+  "Value to assign to `org-descriptive-links'."
   :group 'org-export-oer-reveal
   :type 'boolean
   :package-version '(oer-reveal . "1.6.0"))
@@ -95,14 +93,12 @@ Assignment happens in `oer-reveal-publish-setq-defaults'."
 
 (defcustom oer-reveal-publish-pdf-process
   '("latexmk -outdir=%o -interaction=nonstopmode -shell-escape -bibtex -pdf %f")
-  "Value to assign to `org-latex-pdf-process'.
-Assignment happens in `oer-reveal-publish-setq-defaults'."
+  "Value to assign to `org-latex-pdf-process'."
   :group 'org-export-oer-reveal
   :type '(repeat string))
 
 (defcustom oer-reveal-publish-figure-float "H"
   "Value to assign to `oer-reveal-latex-figure-float'.
-Assignment happens in `oer-reveal-publish-setq-defaults'.
 The default uses the LaTeX float package to position figures \"here\",
 which results in a layout that is more similar to HTML slides.
 See URL `https://ctan.org/pkg/float' for float documentation."
@@ -111,7 +107,6 @@ See URL `https://ctan.org/pkg/float' for float documentation."
 
 (defcustom oer-reveal-publish-html-container-element "section"
   "Value to assign to `org-html-container-element'.
-Assignment happens in `oer-reveal-publish-setq-defaults'.
 By default, this structures contents into sections.
 If you change this, maybe you want to change `oer-reveal-publish-html-divs'
 as well."
@@ -124,7 +119,6 @@ as well."
     (content   "article" "content")
     (postamble "footer" "postamble"))
   "Value to assign to `org-html-divs'.
-Assignment happens in `oer-reveal-publish-setq-defaults'.
 By default, this prefers semantic elements over div elements.
 If you change this, maybe you want to change
 `oer-reveal-publish-html-container-element' as well."
@@ -141,8 +135,7 @@ If you change this, maybe you want to change
   :package-version '(oer-reveal . "3.5.0"))
 
 (defcustom oer-reveal-publish-html-doctype "html5"
-  "Value to assign to variable `org-html-doctype'.
-Assignment happens in `oer-reveal-publish-setq-defaults'."
+  "Value to assign to variable `org-html-doctype'."
   :group 'org-export-oer-reveal
   :type 'string)
 
@@ -150,7 +143,6 @@ Assignment happens in `oer-reveal-publish-setq-defaults'."
   (lambda (ignored)
     (oer-reveal-license-to-fmt 'html t nil t t t t))
   "Value to assign to `org-html-postamble' before export.
-Assignment happens in `oer-reveal-publish-setq-defaults'.
 The default creates meta-data including license information
 and links to imprint and privacy policy."
   :group 'org-export-oer-reveal
@@ -167,8 +159,7 @@ and links to imprint and privacy policy."
   "Value to assign to variable `org-html-text-markup-alist'.
 This changes `bold' and `italic' from their default values to
 improve accessibility.
-See URL `https://www.w3.org/TR/WCAG10-HTML-TECHS/#text-emphasis'.
-Assignment happens in `oer-reveal-publish-setq-defaults'."
+See URL `https://www.w3.org/TR/WCAG10-HTML-TECHS/#text-emphasis'."
   :group 'org-export-oer-reveal
   :type '(alist :key-type (symbol :tag "Markup type")
 		:value-type (string :tag "Format string"))
@@ -248,34 +239,11 @@ links are created from GitLab repository URLs."
 ;;;###autoload
 (defun oer-reveal-publish-setq-defaults ()
   "Change Emacs environment.
-Set various variables with `setq',
-load babel languages in `oer-reveal-publish-babel-languages',
+Load babel languages in `oer-reveal-publish-babel-languages',
 add `oer-reveal-publish-alternate-type-function' to
 `org-export-before-processing-hook'."
-  (setq table-html-th-rows 1
-	table-html-table-attribute "class=\"emacs-table\""
-        org-entities-user '(("textbackslash" "\\textbackslash{}" nil "\\" "\\" "\\" "\\"))
-	org-html-table-default-attributes nil
-        org-html-container-element oer-reveal-publish-html-container-element
-        org-html-divs oer-reveal-publish-html-divs
-	org-html-doctype oer-reveal-publish-html-doctype
-	org-html-postamble oer-reveal-publish-html-postamble
-        org-html-text-markup-alist oer-reveal-publish-html-text-markup-alist
-        org-descriptive-links oer-reveal-publish-descriptive-links
-	org-re-reveal--href-fragment-prefix org-re-reveal--slide-id-prefix
-	oer-reveal-latex-figure-float oer-reveal-publish-figure-float
-	org-latex-pdf-process oer-reveal-publish-pdf-process
-	;; Add packages that need to be at the beginning of
-	;; org-latex-default-packages-alist.
-	org-latex-default-packages-alist
-	(append oer-reveal-publish-latex-packages
-		org-latex-default-packages-alist)
-        )
   (org-babel-do-load-languages
    'org-babel-load-languages oer-reveal-publish-babel-languages)
-  (when oer-reveal-new-tab-url-regexp
-    (push #'oer-reveal-filter-parse-tree
-          org-export-filter-parse-tree-functions))
   (when oer-reveal-publish-alternate-type-function
     (add-hook 'org-export-before-processing-hook
               oer-reveal-publish-alternate-type-function)))

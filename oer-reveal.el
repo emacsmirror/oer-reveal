@@ -46,6 +46,8 @@
 ;;
 ;; Package *oer-reveal* is really meant to be used as part of
 ;; emacs-reveal (https://gitlab.com/oer/emacs-reveal).
+;;
+;; Note that you should require oer-reveal-publish, not oer-reveal.
 
 ;;; Code:
 (require 'cl-lib) ; cl-mapcar
@@ -2215,6 +2217,32 @@ function during Org export, which passes an argument)."
   (advice-remove #'org-html-link #'oer-reveal--rewrite-link))
 
 ;;; Export and publication functionality.
+(defun oer-reveal--setup-env (func)
+  "Setup environment for oer-reveal export, then execute FUNC with ARGS."
+    (let ((table-html-th-rows 1)
+	  (table-html-table-attribute "class=\"emacs-table\"")
+          (org-entities-user '(("textbackslash" "\\textbackslash{}" nil "\\" "\\" "\\" "\\")))
+          (org-html-table-default-attributes nil)
+          (org-html-container-element oer-reveal-publish-html-container-element)
+          (org-html-divs oer-reveal-publish-html-divs)
+	  (org-html-doctype oer-reveal-publish-html-doctype)
+	  (org-html-postamble oer-reveal-publish-html-postamble)
+          (org-html-text-markup-alist oer-reveal-publish-html-text-markup-alist)
+          (org-descriptive-links oer-reveal-publish-descriptive-links)
+          (org-re-reveal-revealjs-version oer-reveal-revealjs-version)
+	  (org-re-reveal--href-fragment-prefix org-re-reveal--slide-id-prefix)
+	  (oer-reveal-latex-figure-float oer-reveal-publish-figure-float)
+	  (org-latex-pdf-process oer-reveal-publish-pdf-process)
+	  (org-latex-default-packages-alist
+	   (append oer-reveal-publish-latex-packages
+		   org-latex-default-packages-alist))
+          (org-export-filter-parse-tree-functions
+           (if oer-reveal-new-tab-url-regexp
+               (cons #'oer-reveal-filter-parse-tree
+                     org-export-filter-parse-tree-functions)
+             org-export-filter-parse-tree-functions)))
+      (funcall func)))
+
 (defun oer-reveal--master-buffer ()
   "Return master buffer for export of current buffer.
 Use `oer-reveal-master' to determine what buffer to export."
@@ -2234,11 +2262,13 @@ Use `oer-reveal-master' to determine what buffer to export."
 Optional ASYNC, SUBTREEP, VISIBLE-ONLY, BODY-ONLY, EXT-PLIST are passed
 to `org-re-reveal-export-to-html'."
   (interactive)
-  (let ((master-buffer (oer-reveal--master-buffer)))
-    (save-excursion
-      (with-current-buffer master-buffer
-        (org-re-reveal-export-to-html
-         async subtreep visible-only body-only ext-plist 'oer-reveal)))))
+  (oer-reveal--setup-env
+   (lambda ()
+     (let ((master-buffer (oer-reveal--master-buffer)))
+       (save-excursion
+         (with-current-buffer master-buffer
+           (org-re-reveal-export-to-html
+            async subtreep visible-only body-only ext-plist 'oer-reveal)))))))
 
 (defun oer-reveal-export-to-html-and-browse
     (&optional async subtreep visible-only body-only ext-plist)
@@ -2272,7 +2302,9 @@ FILENAME is the filename of the Org file to be published.  PLIST
 is the property list for the given project.  PUB-DIR is the
 publishing directory.
 Return output file name."
-  (org-re-reveal-publish-to-reveal plist filename pub-dir 'oer-reveal))
+  (oer-reveal--setup-env
+   (lambda ()
+     (org-re-reveal-publish-to-reveal plist filename pub-dir 'oer-reveal))))
 
 ;;;###autoload
 (defun oer-reveal-publish-to-reveal-and-pdf
@@ -2282,9 +2314,11 @@ FILENAME is the filename of the Org file to be published.  PLIST
 is the property list for the given project.  PUB-DIR is the
 publishing directory.
 Return output file name."
-  (let ((oer-reveal-with-alternate-types '("org" "pdf")))
-    (org-re-reveal-publish-to-reveal plist filename pub-dir 'oer-reveal)
-    (org-latex-publish-to-pdf plist filename pub-dir)))
+  (oer-reveal--setup-env
+   (lambda ()
+     (let ((oer-reveal-with-alternate-types '("org" "pdf")))
+       (org-re-reveal-publish-to-reveal plist filename pub-dir 'oer-reveal)
+       (org-latex-publish-to-pdf plist filename pub-dir)))))
 
 ;;;###autoload
 (defun oer-reveal-publish-to-reveal-client
@@ -2296,7 +2330,9 @@ publishing directory.
 If `org-re-reveal-client-multiplex-filter' is a regular expression (not
 nil), only publish FILENAME if it matches this regular expression.
 Return output file name."
-  (org-re-reveal-publish-to-reveal-client plist filename pub-dir 'oer-reveal))
+  (oer-reveal--setup-env
+   (lambda ()
+     (org-re-reveal-publish-to-reveal-client plist filename pub-dir 'oer-reveal))))
 
 (defun oer-reveal-publish-to-html
     (plist filename pub-dir)
@@ -2306,11 +2342,13 @@ Before that,
 - set `oer-reveal-img-src' to \"src\",
 - set `oer-reveal-license-font-factor' to 0.8.
 Meant for ordinary HTML documents in contrast to reveal.js presentations."
-  (let ((org-ref-ref-html
-         "<a class='org-ref-reference' href=\"#%s\">[%s]</a>")
-        (oer-reveal-img-src "src")
-        (oer-reveal-license-font-factor 0.8))
-    (org-html-publish-to-html plist filename pub-dir)))
+  (oer-reveal--setup-env
+   (lambda ()
+     (let ((org-ref-ref-html
+            "<a class='org-ref-reference' href=\"#%s\">[%s]</a>")
+           (oer-reveal-img-src "src")
+           (oer-reveal-license-font-factor 0.8))
+       (org-html-publish-to-html plist filename pub-dir)))))
 
 ;;; Functionality to set up export.
 (defun oer-reveal--string-or-value (thing info)
@@ -2393,9 +2431,6 @@ Setup plugin and export configuration, then call `org-re-reveal-template'."
                                    (plist-get info :oer-reveal-rdf-prefixes)
                                    " "
                                    (oer-reveal--rdf-typeof info))))
-    (plist-put info :reveal-version
-	       (or (plist-get info :oer-reveal-revealjs-version)
-		   org-re-reveal-revealjs-version))
     (plist-put info :reveal-external-plugins plugin-dependencies)
     (plist-put info :reveal-init-script plugin-config)
     (plist-put info :reveal-extra-options (oer-reveal--extra-options info))
