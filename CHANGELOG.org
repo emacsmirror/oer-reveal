@@ -10,6 +10,15 @@ where version numbers starting with version 1.0.0 adhere to
 
 
 ** [Unreleased]
+** [4.0.0] - 2021-10-28
+*** Changed
+    - Prefer (temporary) let bindings over settings with setq in
+      oer-reveal-publish-setq-defaults, as the latter pollutes the
+      user’s environment
+*** Fixed
+    - Load grffile via oer-reveal-publish-latex-packages to avoid
+      option clash with older Org versions
+
 ** [3.25.0] - 2021-10-15
 *** Changed
     - Update oer-reveal-submodules-version to 2.2.2
