@@ -428,7 +428,8 @@ div.ribbon-legalese a {
   font-size: 0.8em;
   margin-left: 0; }
 
-.reveal .org-ref-bib {
+.reveal .org-ref-bib,
+.reveal div.csl-bib-body {
   font-size: 0.6em;
   overflow: auto;
   padding-right: 5px;
