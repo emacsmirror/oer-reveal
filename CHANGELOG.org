@@ -10,6 +10,10 @@ where version numbers starting with version 1.0.0 adhere to
 
 
 ** [Unreleased]
+** [4.1.1] - 2021-12-07
+*** Fixed
+    - Update oer-reveal-submodules-version to 2.2.3
+
 ** [4.1.0] - 2021-10-29
 *** Added
     - [[file:css/oer-reveal.css::.reveal div.csl-bib-body][CSS]] for
