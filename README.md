@@ -49,6 +49,10 @@ expect:
    `org-publish-project-alist`, while interactive export of
    individual Org files only creates an HTML file, for which
    necessary resources must be available locally.
+3. In your `org` files, you may want to include
+   [org/config.org](org/config.org), which (a) defines several
+   macros and (b) contains customizations for reveal.js plugins
+   and PDF export via LaTeX.
 
 # Functionality
 
