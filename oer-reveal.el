@@ -443,7 +443,10 @@ Also used in display of short licenses."
 
 (defcustom oer-reveal-latex-figure-float "htp"
   "Define position for floating figures in LaTeX export.
-You may want to use \"H\" with the float package."
+This only applies to figures exported by macros of oer-reveal.
+For other figures, see `org-latex-default-figure-position'.
+You may want to use \"H\" with the float package, which is used
+with oer-reveal-publish based on `oer-reveal-publish-figure-float'."
   :group 'org-export-oer-reveal
   :type 'string)
 
