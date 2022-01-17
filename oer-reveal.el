@@ -2430,6 +2430,10 @@ INFO is a plist holding export options.
 Setup plugin and export configuration, then call `org-re-reveal-template'."
   (let ((plugin-dependencies (oer-reveal--plugin-dependencies info))
         (plugin-config (oer-reveal--plugin-config info))
+        (add-plugins (concat
+                      (or (plist-get info :reveal-add-plugin) "")
+                      "\n"
+                      oer-reveal-plugin-4-config))
 	(org-re-reveal-body-attrs (concat
                                    (plist-get info :oer-reveal-rdf-prefixes)
                                    " "
@@ -2437,7 +2441,7 @@ Setup plugin and export configuration, then call `org-re-reveal-template'."
     (plist-put info :reveal-external-plugins plugin-dependencies)
     (plist-put info :reveal-init-script plugin-config)
     (plist-put info :reveal-extra-options (oer-reveal--extra-options info))
-    (plist-put info :reveal-add-plugin oer-reveal-plugin-4-config)
+    (plist-put info :reveal-add-plugin add-plugins)
     (plist-put info :reveal-postscript (oer-reveal--postscript info))
     (org-re-reveal-template contents info)))
 
