@@ -1,6 +1,6 @@
 # Local IspellDict: en
 # SPDX-License-Identifier: GPL-3.0-or-later
-# SPDX-FileCopyrightText: 2019-2021 Jens Lechtenbörger
+# SPDX-FileCopyrightText: 2019-2022 Jens Lechtenbörger
 
 * Changelog
 This file is based on
@@ -10,6 +10,13 @@ where version numbers starting with version 1.0.0 adhere to
 
 
 ** [Unreleased]
+** [4.1.2] - 2022-01-17
+*** Fixed
+    - Enable ~REVEAL_ADD_PLUGIN~ in addition to ~oer-reveal-plugin-4-config~.
+      Related to
+      [[https://gitlab.com/oer/emacs-reveal/-/issues/30][issue #30 of
+      emacs-reveal]]
+
 ** [4.1.1] - 2021-12-07
 *** Fixed
     - Update oer-reveal-submodules-version to 2.2.3
