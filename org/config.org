@@ -1,6 +1,6 @@
 # -*- eval: (visual-line-mode) -*-
 
-# SPDX-FileCopyrightText: 2017-2021 Jens Lechtenbörger
+# SPDX-FileCopyrightText: 2017-2022 Jens Lechtenbörger
 # SPDX-License-Identifier: CC-BY-SA-4.0
 
 # Neither generate table of contents nor section numbers
@@ -87,6 +87,7 @@
 #+LATEX_HEADER: \usepackage{newunicodechar}
 #+LATEX_HEADER: \newunicodechar{≈}{$\approx$}
 #+LATEX_HEADER: \newunicodechar{⋮}{\vdots}
+#+LATEX_HEADER: \newunicodechar{→}{$\to$}
 #+LATEX_HEADER: \newunicodechar{ }{~}
 #+LATEX_HEADER: \usepackage{xcolor}
 #+LATEX_HEADER: \definecolor{darkred}{rgb}{0.3, 0.0, 0.0}
