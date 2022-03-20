@@ -10,6 +10,10 @@ where version numbers starting with version 1.0.0 adhere to
 
 
 ** [Unreleased]
+** [4.2.0] - 2022-03-20
+*** Added
+    - Function ~oer-reveal-publish-to-pdf~
+
 ** [4.1.2] - 2022-01-17
 *** Fixed
     - Enable ~REVEAL_ADD_PLUGIN~ in addition to ~oer-reveal-plugin-4-config~.
