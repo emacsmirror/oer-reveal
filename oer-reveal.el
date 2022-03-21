@@ -2360,6 +2360,14 @@ Before that, adjust settings for oer-reveal."
    (lambda ()
      (let ((oer-reveal-with-alternate-types '("org" "pdf")))
        (org-latex-publish-to-pdf plist filename pub-dir)))))
+(defun oer-reveal-publish-to-html-and-pdf
+    (plist filename pub-dir)
+  "Publish HTML and PDF with PLIST, FILENAME, PUB-DIR.
+Set up `oer-reveal-with-alternate-types' to produce source and PDF
+links in HTML and source and HTML links in PDF."
+  (let ((oer-reveal-with-alternate-types '("org" "pdf")))
+    (oer-reveal-publish-to-html plist filename pub-dir)
+    (oer-reveal-publish-to-pdf plist filename pub-dir)))
 
 ;;; Functionality to set up export.
 (defun oer-reveal--string-or-value (thing info)
