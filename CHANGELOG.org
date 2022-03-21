@@ -10,6 +10,13 @@ where version numbers starting with version 1.0.0 adhere to
 
 
 ** [Unreleased]
+** [4.3.0] - 2022-03-21
+*** Added
+    - Function ~oer-reveal-publish-to-html-and-pdf~
+*** Fixed
+    - Do not modify ~oer-reveal-with-alternate-types~ in
+      ~oer-reveal-publish-to-pdf~.
+
 ** [4.2.1] - 2022-03-21
 *** Fixed
     - Add package ~textcomp~ in [[file:org/config.org]] to prevent
