@@ -2358,8 +2358,8 @@ Meant for ordinary HTML documents in contrast to reveal.js presentations."
 Before that, adjust settings for oer-reveal."
   (oer-reveal--setup-env
    (lambda ()
-     (let ((oer-reveal-with-alternate-types '("org" "pdf")))
-       (org-latex-publish-to-pdf plist filename pub-dir)))))
+     (org-latex-publish-to-pdf plist filename pub-dir))))
+
 (defun oer-reveal-publish-to-html-and-pdf
     (plist filename pub-dir)
   "Publish HTML and PDF with PLIST, FILENAME, PUB-DIR.
