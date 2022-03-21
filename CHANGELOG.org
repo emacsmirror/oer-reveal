@@ -10,6 +10,11 @@ where version numbers starting with version 1.0.0 adhere to
 
 
 ** [Unreleased]
+** [4.2.1] - 2022-03-21
+*** Fixed
+    - Add package ~textcomp~ in [[file:org/config.org]] to prevent
+      errors when using €
+
 ** [4.2.0] - 2022-03-20
 *** Added
     - Function ~oer-reveal-publish-to-pdf~
