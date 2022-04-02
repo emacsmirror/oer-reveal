@@ -198,6 +198,15 @@ go for `emacs-reveal', see URL `https://gitlab.com/oer/emacs-reveal/'."
   :type '(choice (const nil) string)
   :package-version '(oer-reveal . "3.0.0"))
 
+(defcustom oer-reveal-mobile-app t
+  "Value to asssign to `org-re-reveal-mobile-app' in `oer-reveal--setup-env'.
+If t, add meta tags to the exported HTML file, see `org-re-reveal-mobile-app'.
+Set to nil to omit such tags (and, please, open an issue to let me know why
+this is a bad setting)."
+  :group 'org-export-oer-reveal
+  :type 'boolean
+  :package-version '(org-re-reveal . "3.13.0"))
+
 (defcustom oer-reveal-navigation-mode
   "navigationMode: window.location.search.match( /default-navigation/gi ) ? 'default' : 'linear'"
   "Navigation mode of reveal.js.
@@ -2232,6 +2241,7 @@ function during Org export, which passes an argument)."
 	  (org-html-postamble oer-reveal-publish-html-postamble)
           (org-html-text-markup-alist oer-reveal-publish-html-text-markup-alist)
           (org-descriptive-links oer-reveal-publish-descriptive-links)
+          (org-re-reveal-mobile-app oer-reveal-mobile-app)
           (org-re-reveal-revealjs-version oer-reveal-revealjs-version)
 	  (oer-reveal-latex-figure-float oer-reveal-publish-figure-float)
 	  (org-latex-pdf-process oer-reveal-publish-pdf-process)
