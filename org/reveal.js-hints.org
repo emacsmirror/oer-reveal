@@ -1,6 +1,6 @@
 # Local IspellDict: en
 
-#+SPDX-FileCopyrightText: 2018-2021 Jens Lechtenbörger
+#+SPDX-FileCopyrightText: 2018-2022 Jens Lechtenbörger
 #+SPDX-License-Identifier: CC-BY-SA-4.0
 
 # This file is not meant to be exported to HTML directly but to be
@@ -19,8 +19,7 @@ and make use of the HTML presentation framework
   - Up/down (swiping, arrows) move within sections,
     left/right jump between sections (type “o” to see what is where)
   - Type slide’s number followed by Enter to jump to that slide
-  - Browser history (buttons, Alt-CursorLeft, Alt-CursorRight; may
-    need /two/ attempts to work)
+  - Browser history (may need /two/ attempts to work)
   - Zoom with Ctrl-Mouse or Alt-Mouse
   - Search with Ctrl-Shift-F (press “enter” for subsequent search hits)
   - Since August 2021, presentations use the ~linear~
@@ -59,8 +58,7 @@ and make use of the HTML presentation framework
         seems to work everywhere
     - Audio controls are shown at bottom left (use right-click for
       more controls such as Play Speed)
-    - To toggle audio, type “a”  or “+” (depending on the version of
-      the audio plugin)
+    - To toggle audio, type “a” (or “+” for older presentations)
 - Notes
   - Slides contain additional notes as plain text if you see the
     folder icon
@@ -121,6 +119,11 @@ and make use of the HTML presentation framework
     links (16) nor links to other resources under ~oer.gitlab.io~ (8)
     nor links to other presentations (4) would be displayed
 
+Reveal.js is restricted on mobile browsers without keyboard shortcuts.
+Newer presentations (since April 2022) allow, depending on OS and
+browser, to open in fullscreen mode (without superfluous address bar)
+if the presentation is added as app icon the home screen and started
+from there.
 
 The document
 [[https://gitlab.com/oer/oer.gitlab.io/blob/master/CONTRIBUTING.org][CONTRIBUTING.org]]

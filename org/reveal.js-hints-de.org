@@ -1,6 +1,6 @@
 # Local IspellDict: de
 
-#+SPDX-FileCopyrightText: 2018-2021 Jens Lechtenbörger
+#+SPDX-FileCopyrightText: 2018-2022 Jens Lechtenbörger
 #+SPDX-License-Identifier: CC-BY-SA-4.0
 
 # Diese Datei ist nicht für den direkten HTML-Export gedacht,
@@ -20,8 +20,7 @@ erzeugt und nutzen das HTML-Framework
     links/rechts zwischen Abschnitten („o“ zeigt, was wo liegt)
   - Eingabe von Foliennummer gefolgt von Return/Enter/Eingabetaste
     führt zur entsprechenden Folie
-  - Browser-Historie (Vor und Zurück im Browser, Alt-CursorLinks,
-    Alt-CursorRechts; möglicherweise sind /zwei/ Versuche nötig)
+  - Browser-Historie (möglicherweise sind /zwei/ Versuche nötig)
   - Zoom mit Strg-Maus oder Alt-Maus
   - Suche mit Strg-Umschalt-F („Eingabetaste“ für weitere Suchtreffer)
   - Seit August 2021 nutzen Präsentationen den *linearen*
@@ -58,7 +57,7 @@ erzeugt und nutzen das HTML-Framework
         scheint überall zu funktionieren
     - Audio-Steuerung links unten (weitere Optionen wie
       Geschwindigkeit per Rechts-Klick)
-    - Start und Pause von Ton über Taste „+“ oder „a“ (je nach Version des Audio-Plugins)
+    - Start und Pause von Ton über Taste „+“ (oder „a“ für ältere Präsentationen)
 - Notizen
   - Folien enthalten Notizen, wenn das Ordner-Symbol dargestellt wird
     [[./reveal.js/dist/theme/folder_inbox.png]]
@@ -117,6 +116,13 @@ erzeugt und nutzen das HTML-Framework
     Beispielsweise werden mit ~hidelinks=28~ (28 = 16 + 8 + 4) weder
     externe Verweise (16) noch Verweise unter ~oer.gitlab.io~ (8) noch Verweise
     zu anderen Präsentationen (4) angezeigt.
+
+Die Nutzung der Präsentationen ist bei fehlenden Tastatureingaben in
+mobilen Browsern stark eingeschränkt.  Neuere Präsentationen (seit
+April 2022) können je nach Betriebssystem und Browser ggf. im
+Browser-Menü als App-Icon zum Startbildschirm hinzugefügt werden und
+öffnen sich über dieses Icon ohne störende Adresszeile im
+Vollbildmodus.
 
 Das Dokument
 [[https://gitlab.com/oer/oer.gitlab.io/blob/master/CONTRIBUTING.org][CONTRIBUTING.org]]
