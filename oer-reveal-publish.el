@@ -2,7 +2,7 @@
 ;; -*- Mode: Emacs-Lisp -*-
 ;; -*- coding: utf-8 -*-
 
-;; SPDX-FileCopyrightText: 2017-2021 Jens Lechtenbörger
+;; SPDX-FileCopyrightText: 2017-2022 Jens Lechtenbörger
 ;; SPDX-License-Identifier: GPL-3.0-or-later
 
 ;;; License: GPLv3
@@ -241,12 +241,18 @@ links are created from GitLab repository URLs."
   "Change Emacs environment.
 Load babel languages in `oer-reveal-publish-babel-languages',
 add `oer-reveal-publish-alternate-type-function' to
-`org-export-before-processing-hook'."
+`org-export-before-processing-hook'.
+Also fix internal slide references by assignment to
+`org-re-reveal--href-fragment-prefix', see its doc string.  Note that
+this change needs `setq' before `org-re-reveal-ref' is loaded, as
+that library again uses `setq'.  Also, using `oer-reveal--add-advice-link'
+during publication needs the proper value."
   (org-babel-do-load-languages
    'org-babel-load-languages oer-reveal-publish-babel-languages)
   (when oer-reveal-publish-alternate-type-function
     (add-hook 'org-export-before-processing-hook
-              oer-reveal-publish-alternate-type-function)))
+              oer-reveal-publish-alternate-type-function))
+  (setq org-re-reveal--href-fragment-prefix org-re-reveal--slide-id-prefix))
 
 (defun oer-reveal-publish-klipse-projects ()
   "Compute project list for local klipse libraries."
