@@ -10,6 +10,13 @@ where version numbers starting with version 1.0.0 adhere to
 
 
 ** [Unreleased]
+** [4.4.0] - 2022-04-02
+*** Added
+    - Variable ~oer-reveal-mobile-app~ to enable web app meta tags by
+      default
+*** Changed
+    - Update ~oer-reveal-submodules-version~ to 2.3.1
+
 ** [4.3.1] - 2022-04-02
 *** Fixed
     - Fix internal bibliography links.
