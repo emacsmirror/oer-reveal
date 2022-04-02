@@ -10,6 +10,13 @@ where version numbers starting with version 1.0.0 adhere to
 
 
 ** [Unreleased]
+** [4.3.1] - 2022-04-02
+*** Fixed
+    - Fix internal bibliography links.
+      Re-add assignment to ~org-re-reveal--href-fragment-prefix~
+      in ~oer-reveal-publish-setq-defaults~, which was removed in
+      version 4.0.0, leading to broken links.
+
 ** [4.3.0] - 2022-03-21
 *** Added
     - Function ~oer-reveal-publish-to-html-and-pdf~
