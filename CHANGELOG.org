@@ -10,6 +10,10 @@ where version numbers starting with version 1.0.0 adhere to
 
 
 ** [Unreleased]
+** [4.4.1] - 2022-05-16
+*** Fixed
+    - Change opacity of SVG layers at any depth
+
 ** [4.4.0] - 2022-04-02
 *** Added
     - Variable ~oer-reveal-mobile-app~ to enable web app meta tags by
