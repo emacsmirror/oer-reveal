@@ -336,7 +336,7 @@ and opening of speaker notes on click."
  // I use opacity on g elements for step-wise appearance of SVG figures.
  // When printing, make sure that all parts are visible.
  if ( window.location.search.match( /print-pdf/gi ) ) {
-     var layers = document.querySelectorAll('svg.animate > g[opacity]');
+     var layers = document.querySelectorAll('svg.animate g[opacity]');
      for (var i=0; i < layers.length; i++) {
          var layer = layers[i];
          layer.setAttribute(\"opacity\", 1);
