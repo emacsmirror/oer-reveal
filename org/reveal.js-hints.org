@@ -33,6 +33,8 @@ and make use of the HTML presentation framework
     then print to PDF file (usually, Ctrl-p)
     - Reveal.js documents this to work with Chromium/Chrome,
       [[https://revealjs.com/pdf-export/][suggested settings]]
+    - Newer build pipelines may generate this type of PDF as well;
+      your instructor might inform you about this
   - Alternatively, depending on the specific project, PDFs might also
     have been generated via LaTeX from org source files.  If
     available, those PDF versions are accessible by replacing
