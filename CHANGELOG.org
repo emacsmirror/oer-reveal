@@ -10,6 +10,10 @@ where version numbers starting with version 1.0.0 adhere to
 
 
 ** [Unreleased]
+** [4.4.4] - 2022-06-03
+*** Fixed
+    - Update ~oer-reveal-submodules-version~ to 2.3.3
+
 ** [4.4.3] - 2022-06-03
 *** Fixed
     - Update ~oer-reveal-submodules-version~ to 2.3.2
