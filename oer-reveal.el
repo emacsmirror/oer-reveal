@@ -247,11 +247,12 @@ lines from `oer-reveal-plugin-4-config'."
 (defcustom oer-reveal-audio-slideshow-config
   "audioStartAtFragment: true,
   audio: {
-    advance: -1, autoplay: window.location.search.match( /audio-autoplay/gi ), defaultDuration: 0, defaultAudios: false, playerOpacity: 0.8, playerStyle: 'position: fixed; bottom: 9.5vh; left: 0%; width: 30%; height:30px; z-index: 33;' }"
+    advance: -1, autoplay: window.location.search.match( /audio-autoplay/gi ), defaultDuration: 0, defaultAudios: false, defaultAudioRate: window.location.search.match( /audio-speed/gi )? parseFloat((new URL(window.location.href)).searchParams.get('audio-speed')) : 1.0, playerOpacity: 0.8, playerStyle: 'position: fixed; bottom: 9.5vh; left: 0%; width: 30%; height:30px; z-index: 33;' }"
   "Configuration for audio-slideshow plugin:
 - Do not advance after end of audio.
 - Do not start playing audio automatically, but allow URL parameter
   \"audio-autoplay\" for autoplay.
+- Derive playback speed for audio from URL parameter \"audio-speed\".
 - Do not display controls if no local audio file is given.
 - Do not try to download audio files with default names.
 - Increase opacity when unfocused (students found default too easy to miss).
@@ -516,7 +517,7 @@ contained in this directory.")
 (defconst oer-reveal-submodules-url
   "https://gitlab.com/oer/emacs-reveal-submodules.git"
   "Git URL for submodules of reveal.js and plugins.")
-(defcustom oer-reveal-submodules-version "2.3.3"
+(defcustom oer-reveal-submodules-version "2.4.0"
   "Version of submodules to check out.
 This can be a string, indicating a git version tag, or nil.
 If nil, `oer-reveal-submodules-ok-p' always returns t, and oer-reveal does
