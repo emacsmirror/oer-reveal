@@ -60,6 +60,9 @@ and make use of the HTML presentation framework
         seems to work everywhere
     - Audio controls are shown at bottom left (use right-click for
       more controls such as Play Speed)
+      - Set the playback speed for the entire presentation with URL
+        parameter ~audio-speed~, e.g., ~audio-speed=2.0~ for double
+        speed (parameter added in June 2022)
     - To toggle audio, type “a” (or “+” for older presentations)
 - Notes
   - Slides contain additional notes as plain text if you see the

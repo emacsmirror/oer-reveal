@@ -59,6 +59,9 @@ erzeugt und nutzen das HTML-Framework
         scheint überall zu funktionieren
     - Audio-Steuerung links unten (weitere Optionen wie
       Geschwindigkeit per Rechts-Klick)
+      - URL-Parameter ~audio-speed~ ändert die Geschwindigkeit für die
+        gesamte Präsentation, z. B. ~audio-speed=2.0~ für doppelte
+        Geschwindigkeit (Parameter existiert seit Juni 2022)
     - Start und Pause von Ton über Taste „+“ (oder „a“ für ältere Präsentationen)
 - Notizen
   - Folien enthalten Notizen, wenn das Ordner-Symbol dargestellt wird
