@@ -60,7 +60,7 @@
 # Square Bracket Close ]
 #+MACRO: BC @@latex:\char93{}@@@@html:&#93;@@
 
-# Macro for forced line break, e.g., in titles.
+# Macro for forced line break/newline, e.g., in titles.
 #+MACRO: BR @@latex:\\@@@@html:<br />@@
 
 # Macro to generate abbr element in HTML.  If a second argument is given, it
