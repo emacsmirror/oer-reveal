@@ -7,6 +7,8 @@
 #+OPTIONS: toc:nil num:nil
 
 # Enable: browser history, fragment IDs in URLs, mouse wheel, links between presentations
+# Note that option "history" implies option "hash", which makes sure that
+# reload leads to the same slide: https://revealjs.com/config/
 #+OPTIONS: reveal_history:t reveal_fragmentinurl:t
 #+OPTIONS: reveal_mousewheel:t reveal_inter_presentation_links:t
 
