@@ -1,5 +1,5 @@
 <!--- Local IspellDict: en -->
-<!--- SPDX-FileCopyrightText: 2018-2021 Jens Lechtenbörger -->
+<!--- SPDX-FileCopyrightText: 2018-2022 Jens Lechtenbörger -->
 <!--- SPDX-License-Identifier: CC0-1.0 -->
 
 [![MELPA Stable](https://stable.melpa.org/packages/oer-reveal-badge.svg)](https://stable.melpa.org/#/oer-reveal)
@@ -112,7 +112,10 @@ function `oer-reveal-publish-all` of file
 Note that subdirectory "title-slide" contains some variants for
 title slides of presentations, and subdirectory "css" contains
 sample CSS.  Subdirectory "org" contains Org files to embed in
-presentations.  Please be warned that included resources, in
+presentations, in particular file "org/config.org", which also adds
+style files for the accessibility plugin and the TOC-progress that are
+used with oer-reveal by default.
+Please be warned that included resources, in
 particular CSS files, may change in incompatible ways.  You may
 want to work with your own copies.
 
