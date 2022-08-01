@@ -10,6 +10,13 @@ where version numbers starting with version 1.0.0 adhere to
 
 
 ** [Unreleased]
+** [4.6.0] - 2022-08-01
+*** Added
+    - Function ~oer-reveal-latex-link-filter~
+      - Activated in ~oer-reveal--setup-env~
+*** Fixed
+    - Respect fragments when exporting local links to HTML
+
 ** [4.5.0] - 2022-06-13
 *** Added
     - URL parameter ~audio-speed~
