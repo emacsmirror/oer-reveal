@@ -1001,20 +1001,23 @@ Org links."
 (defun oer-reveal--path-export (path desc backend hyper)
   "Export hyperlink for PATH with DESC to BACKEND.
 For HTML export: If PATH ends with \".org\", replace that extension with
-\".html\"; otherwise, use PATH unchanged.
-For LaTeX export, replace extension with \".pdf\".
+\".html\", keeping a potential link fragment; otherwise, use PATH unchanged.
+For LaTeX export, replace extension \".org\" (potentially with fragment)
+with \".pdf\".
 For HTML backends, create hyperlink with format string HYPER."
   (let ((extension (file-name-extension path))
         (sans-extension (file-name-sans-extension path)))
     (cond
      ((eq backend 'html)
-      (let ((path (if (string= extension "org")
-                      (concat sans-extension ".html")
+      (let ((path (if (string-prefix-p "org" extension)
+                      (concat sans-extension ".html"
+                              (if (string-match "org::\\(#.+\\)" extension)
+                                  (match-string 1 extension)
+                                ""))
                     path)))
         (format hyper path (or desc path))))
      ((eq backend 'latex)
-      (let ((path (if (or (string= extension "html")
-                          (string= extension "org"))
+      (let ((path (if (string-prefix-p "org" extension)
                       (concat sans-extension ".pdf")
                     path)))
         (format "\\href{%s}{%s}" path (or desc path)))))))
