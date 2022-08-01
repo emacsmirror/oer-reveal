@@ -976,6 +976,14 @@ Org links."
         (oer-reveal--link-in-tab elem))))
   tree)
 
+(defun oer-reveal-latex-link-filter (href backend _)
+  "If BACKEND is LaTeX and HREF links to org file, replace with pdf version.
+Based on suggestion by Tim Cross, see URL
+`https://lists.gnu.org/archive/html/emacs-orgmode/2022-06/msg00368.html'.
+Added to `org-export-filter-link-functions' in `oer-reveal--setup-env'."
+  (when (org-export-derived-backend-p backend 'latex)
+    (replace-regexp-in-string "\\.org\\}" ".pdf}" href)))
+
 ;;; Allow colored text.
 ;; The FAQ at http://orgmode.org/worg/org-faq.html contains a recipe
 ;; based on the obsolete function (since Org 9.0) org-add-link-type.
@@ -2256,7 +2264,10 @@ function during Org export, which passes an argument)."
            (if oer-reveal-new-tab-url-regexp
                (cons #'oer-reveal-filter-parse-tree
                      org-export-filter-parse-tree-functions)
-             org-export-filter-parse-tree-functions)))
+             org-export-filter-parse-tree-functions))
+          (org-export-filter-link-functions
+           (cons #'oer-reveal-latex-link-filter
+                 org-export-filter-link-functions)))
       (funcall func)))
 
 (defun oer-reveal--master-buffer ()
