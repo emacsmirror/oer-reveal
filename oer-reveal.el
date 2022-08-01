@@ -934,7 +934,7 @@ By default, all HTTP(S) links open in new tabs.
 Set to nil if you do not want URLs to open in new tabs.
 Changes of URLs happen via `oer-reveal-filter-parse-tree',
 which is added to `org-export-filter-parse-tree-functions'
-in oer-reveal--setup-env.  Note that this applies to links in all
+in `oer-reveal--setup-env'.  Note that this applies to links in all
 backends derived from `html'."
   :group 'org-export-oer-reveal
   :type '(choice (const nil) regexp)
