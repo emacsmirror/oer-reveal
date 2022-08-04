@@ -976,13 +976,33 @@ Org links."
         (oer-reveal--link-in-tab elem))))
   tree)
 
+
+;;; Links that should be replaced as for HTML export.
+(defcustom oer-reveal-filter-latex-links t
+  "Replace hyperlinks for LaTeX export as with HTML export.
+With HTML export, hyperlinks to Org files are replaced to point to the
+generated HTML file (see `org-html-link-org-files-as-html').
+With LaTeX export, this does not happen by default.  With the default
+value of t for this variable, let local (non-remote) hyperlinks point
+to PDF output.
+Replacement happens by adding `oer-reveal-latex-link-filter' to
+`org-export-filter-link-functions' in `oer-reveal--setup-env'."
+  :group 'org-export-oer-reveal
+  :type 'boolean
+  :package-version '(oer-reveal . "4.7.0"))
+
 (defun oer-reveal-latex-link-filter (href backend _)
-  "If BACKEND is LaTeX and HREF links to org file, replace with pdf version.
+  "If BACKEND is LaTeX and HREF links to local org file, replace with pdf.
 Based on suggestion by Tim Cross, see URL
 `https://lists.gnu.org/archive/html/emacs-orgmode/2022-06/msg00368.html'.
-Added to `org-export-filter-link-functions' in `oer-reveal--setup-env'."
+Note that only non-remote links are affected by this, which allows to
+hyperlink to remote source files.
+Variable `oer-reveal-filter-latex-links' controls actication of this filter."
   (when (org-export-derived-backend-p backend 'latex)
-    (replace-regexp-in-string "\\.org\\}" ".pdf}" href)))
+    (when (string-match "\\href{\\([^}]+\\)}" href)
+      (let ((url (match-string 1 href)))
+        (when (not (org-re-reveal--remote-file-p url))
+          (replace-regexp-in-string "\\.org\\(::\\(#.+\\)\\)?\\}" ".pdf}" href))))))
 
 ;;; Allow colored text.
 ;; The FAQ at http://orgmode.org/worg/org-faq.html contains a recipe
@@ -2266,8 +2286,10 @@ function during Org export, which passes an argument)."
                      org-export-filter-parse-tree-functions)
              org-export-filter-parse-tree-functions))
           (org-export-filter-link-functions
-           (cons #'oer-reveal-latex-link-filter
-                 org-export-filter-link-functions)))
+           (if oer-reveal-filter-latex-links
+               (cons #'oer-reveal-latex-link-filter
+                     org-export-filter-link-functions)
+             org-export-filter-link-functions)))
       (funcall func)))
 
 (defun oer-reveal--master-buffer ()
