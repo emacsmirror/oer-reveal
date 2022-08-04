@@ -10,6 +10,16 @@ where version numbers starting with version 1.0.0 adhere to
 
 
 ** [Unreleased]
+** [4.7.0] - 2022-08-04
+*** Added
+    - Variable ~oer-reveal-filter-latex-links~ to control activation of
+      the filter introduced in version 4.6.0
+*** Fixed
+    - In ~oer-reveal-latex-link-filter~, only change non-remote links
+    - In ~oer-reveal--path-export~, only change non-remote links; also
+      replace HTML links to PDF links (as the former may be necessary
+      for links with backend-specific fragment identifiers)
+
 ** [4.6.0] - 2022-08-01
 *** Added
     - Function ~oer-reveal-latex-link-filter~
