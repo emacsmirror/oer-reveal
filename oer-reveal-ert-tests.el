@@ -1,6 +1,6 @@
 ;;; oer-reveal-ert-tests.el --- Tests for oer-reveal  -*- lexical-binding: t; -*-
 ;; SPDX-License-Identifier: GPL-3.0-or-later
-;; SPDX-FileCopyrightText: 2019-2021 Jens Lechtenbörger
+;; SPDX-FileCopyrightText: 2019-2022 Jens Lechtenbörger
 
 ;;; Commentary:
 ;; Run tests interactively or as follows (probably with adjusted paths)
@@ -9,6 +9,7 @@
 
 ;;; Code:
 (require 'oer-reveal)
+(require 'oer-reveal-publish)
 
 ;;; Test plugin functionality.
 (ert-deftest parse-external-plugins ()
@@ -501,6 +502,117 @@ variable, and communication channel under `info'."
                header-typeof
 	       (oer-reveal-license-to-fmt 'html now "test.html" t t t t)))))))
 
+
+;;; Test link types.
+(defun oer-reveal-ert-tests-export-to-pdf
+    (&optional async subtreep visible-only body-only ext-plist)
+  "Approximate PDF export with LaTeX export."
+  (oer-reveal--setup-env
+   (lambda ()
+     (org-latex-export-to-latex async subtreep visible-only body-only ext-plist))))
+
+(defun oer-reveal-ert-tests-export-to-html
+    (&optional async subtreep visible-only body-only ext-plist)
+  "Approximate HTML export."
+  (oer-reveal--setup-env
+   (lambda ()
+     (let ((org-ref-ref-html
+            "<a class='org-ref-reference' href=\"#%s\">[%s]</a>")
+           (oer-reveal-img-src "src")
+           (oer-reveal-license-font-factor 0.8))
+       (org-html-export-to-html async subtreep visible-only body-only ext-plist)))))
+
+(defun oer-reveal-ert-tests-do-export (orgsrc outputformat)
+  "Export ORGSRC as region to OUTPUTFORMAT."
+  (let* ((src (make-temp-file "test-" nil ".org"))
+         (outfile (concat (file-name-sans-extension src) "." outputformat))
+         (header (concat "#+TITLE: A test\n"
+                         "#+SPDX-FileCopyrightText: 2022 Jens Lechtenbörger <https://lechten.gitlab.io/#me>\n"
+                         "#+SPDX-License-Identifier: CC-BY-SA-4.0\n"
+                         "#+EXPORT_FILE_NAME: " outfile "\n"
+                         "\n")))
+    (with-temp-file src
+      (insert header))
+    (with-temp-buffer
+      (insert-file-contents src)
+      (set-mark (point-max))
+      (goto-char (point-max))
+      (insert orgsrc)
+      (cond ((string= outputformat "html")
+             (oer-reveal-ert-tests-export-to-html nil nil nil t))
+            ((string= outputformat "tex")
+             (oer-reveal-ert-tests-export-to-pdf nil nil nil t))
+            (t (error "Unknown format")))
+      (oer-reveal--file-as-string outfile))))
+
+(ert-deftest test-link-color ()
+  (let* ((data "[[color:red][text]]\n")
+         (expected-html "<p>\n<span style=\"color:red;\">text</span>\n</p>\n")
+         (expected-tex "{\\color{red}text}\n"))
+    (should (equal expected-html (oer-reveal-ert-tests-do-export data "html")))
+    (should (equal expected-tex (oer-reveal-ert-tests-do-export data "tex")))))
+
+(ert-deftest test-local-links-org1 ()
+  (let* ((data "[[local:./test.org][text]]\n")
+         (expected-html "<p>\n<a href=\"./test.html\">text</a>\n</p>\n")
+         (expected-tex "\\href{./test.pdf}{text}\n"))
+    (should (equal expected-html (oer-reveal-ert-tests-do-export data "html")))
+    (should (equal expected-tex (oer-reveal-ert-tests-do-export data "tex")))))
+
+(ert-deftest test-local-links-org2 ()
+  (let* ((data "[[local:./test.org::#target][text]]\n")
+         (expected-html "<p>\n<a href=\"./test.html#target\">text</a>\n</p>\n")
+         (expected-tex "\\href{./test.pdf}{text}\n"))
+    (should (equal expected-html (oer-reveal-ert-tests-do-export data "html")))
+    (should (equal expected-tex (oer-reveal-ert-tests-do-export data "tex")))))
+
+(ert-deftest test-local-links-html1 ()
+  (let* ((data "[[local:./test.html][text]]\n")
+         (expected-html "<p>\n<a href=\"./test.html\">text</a>\n</p>\n")
+         (expected-tex "\\href{./test.pdf}{text}\n"))
+    (should (equal expected-html (oer-reveal-ert-tests-do-export data "html")))
+    (should (equal expected-tex (oer-reveal-ert-tests-do-export data "tex")))))
+
+(ert-deftest test-local-links-html2 ()
+  (let* ((data "[[local:./test.html#target][text]]\n")
+         (expected-html "<p>\n<a href=\"./test.html#target\">text</a>\n</p>\n")
+         (expected-tex "\\href{./test.pdf}{text}\n"))
+    (should (equal expected-html (oer-reveal-ert-tests-do-export data "html")))
+    (should (equal expected-tex (oer-reveal-ert-tests-do-export data "tex")))))
+
+;; Test oer-reveal-filter-latex-links.
+(ert-deftest test-normal-links-org1 ()
+  (let* ((data "[[./test.org::#target][text]]\n")
+         (expected-html "<p>\n<a href=\"./test.html#target\">text</a>\n</p>\n")
+         (expected-tex "\\href{./test.org}{text}\n")
+         ;; Disable filtering of org links for LaTeX/PDF.
+         (oer-reveal-filter-latex-links nil))
+    (should (equal expected-html (oer-reveal-ert-tests-do-export data "html")))
+    (should (equal expected-tex (oer-reveal-ert-tests-do-export data "tex")))))
+
+(ert-deftest test-normal-links-org2 ()
+  (let* ((data "[[./test.org::#target][text]]\n")
+         (expected-html "<p>\n<a href=\"./test.html#target\">text</a>\n</p>\n")
+         (expected-tex "\\href{./test.pdf}{text}\n")
+         ;; Enable filtering of org links for LaTeX/PDF.
+         (oer-reveal-filter-latex-links t))
+    (should (equal expected-html (oer-reveal-ert-tests-do-export data "html")))
+    (should (equal expected-tex (oer-reveal-ert-tests-do-export data "tex")))))
+
+;; Remote links are kept unchanged.
+(ert-deftest test-local-links-html3 ()
+  (let* ((data "[[local:https://example.com/test.html#target][text]]\n")
+         (expected-html "<p>\n<a href=\"https://example.com/test.html#target\">text</a>\n</p>\n")
+         (expected-tex "\\href{https://example.com/test.html#target}{text}\n"))
+    (should (equal expected-html (oer-reveal-ert-tests-do-export data "html")))
+    (should (equal expected-tex (oer-reveal-ert-tests-do-export data "tex")))))
+
+(ert-deftest test-local-links-html4 ()
+  (let* ((data "[[local:https://example.com/test.org][text]]\n")
+         (expected-html "<p>\n<a href=\"https://example.com/test.org\">text</a>\n</p>\n")
+         (expected-tex "\\href{https://example.com/test.org}{text}\n"))
+    (should (equal expected-html (oer-reveal-ert-tests-do-export data "html")))
+    (should (equal expected-tex (oer-reveal-ert-tests-do-export data "tex")))))
 
 ;;; Test helper functions.
 (ert-deftest test-copy-dir-suffix ()
