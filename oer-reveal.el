@@ -1028,16 +1028,22 @@ Variable `oer-reveal-filter-latex-links' controls actication of this filter."
 
 (defun oer-reveal--path-export (path desc backend hyper)
   "Export hyperlink for PATH with DESC to BACKEND.
+Depending on the BACKEND, the file extension of PATH (a hyperlink) may be
+replaced by this funtion, but only for relative hyperlinks (remote
+hyperlinks are *not* changed).
+
 For HTML export: If PATH ends with \".org\", replace that extension with
 \".html\", keeping a potential link fragment; otherwise, use PATH unchanged.
-For LaTeX export, replace extension \".org\" (potentially with fragment)
-with \".pdf\".
+For LaTeX export, replace extensions \".org\" and \".html\" (and potentially
+following fragments) with \".pdf\".
+
 For HTML backends, create hyperlink with format string HYPER."
   (let ((extension (file-name-extension path))
         (sans-extension (file-name-sans-extension path)))
     (cond
      ((eq backend 'html)
-      (let ((path (if (string-prefix-p "org" extension)
+      (let ((path (if (and (not (org-re-reveal--remote-file-p path))
+                           (string-prefix-p "org" extension))
                       (concat sans-extension ".html"
                               (if (string-match "org::\\(#.+\\)" extension)
                                   (match-string 1 extension)
@@ -1045,18 +1051,26 @@ For HTML backends, create hyperlink with format string HYPER."
                     path)))
         (format hyper path (or desc path))))
      ((eq backend 'latex)
-      (let ((path (if (string-prefix-p "org" extension)
+      (let ((path (if (and (not (org-re-reveal--remote-file-p path))
+                           (or (string-prefix-p "html" extension)
+                               (string-prefix-p "org" extension)))
                       (concat sans-extension ".pdf")
                     path)))
         (format "\\href{%s}{%s}" path (or desc path)))))))
 
 ;;; Allow local links, to be exported without usual translation by Org.
 ;; Useful to preserve relative paths if files are included.
+;; For relative links, this replaces file extensions .org and .html
+;; (possibly followed by a fragment identifier) according to the backend
+;; with .html (with fragment) or .pdf (without fragment).
 (defun oer-reveal--local-path-export (path desc backend &optional _)
   "Export local PATH with DESC to BACKEND, without Org interference.
 This is meant for links in combination with INCLUDE statements where
 Org by default may insert unwanted path components.  Here, just
-the file extension in PATH may be changed.  See URL
+the file extension in PATH may be changed as documented for
+`oer-reveal--path-export'.
+
+See URL
 `https://gitlab.com/oer/cs/programming/-/blob/master/texts/Git-Workflow-Instructions.org'
 for examples."
   (oer-reveal--path-export path desc backend "<a href=\"%s\">%s</a>"))
