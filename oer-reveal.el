@@ -665,6 +665,7 @@ Note that this filename is exported into a subdirectory of
 (defcustom oer-reveal-dictionaries
   '(("en" . (("CC0-1.0" . "Creative Commons license CC0 1.0")
              ("CC-BY-SA-4.0" . "Creative Commons license CC BY-SA 4.0")
+             ("GPL-3.0-or-later" . "GNU General Public License, version 3.0 or later")
              (text . "Except where otherwise noted, the work “%t”, %c, is published under the %l.")
              (license . " and the ")
              (copyright . " and ")
@@ -678,6 +679,7 @@ Note that this filename is exported into a subdirectory of
              (pdffootnote . "This PDF document is an inferior version of an \\href{%s}{%s}; \\href{%s}{free/libre Org mode source repository}.")))
     ("de" . (("CC0-1.0" . "Creative-Commons-Lizenz CC0 1.0")
              ("CC-BY-SA-4.0" . "Creative-Commons-Lizenz CC BY-SA 4.0")
+             ("GPL-3.0-or-later" . "GNU General Public License, Version 3.0 oder später")
              (text . "Soweit nicht anders angegeben unterliegt das Werk „%t“, %c, der %l.")
              (copyright . " und ")
              (license . " und der ")
@@ -724,11 +726,12 @@ language at URL `https://gitlab.com/oer/org-re-reveal/issues/'."
                   (repeat (cons
                            (choice symbol string)
                            (string :tag "Translation")))))
-  :package-version '(oer-reveal . "3.3.0"))
+  :package-version '(oer-reveal . "4.8.0"))
 
 (defcustom oer-reveal-licenses
   '(("CC-BY-SA-4.0" . "https://creativecommons.org/licenses/by-sa/4.0/")
-    ("CC0-1.0" . "https://creativecommons.org/publicdomain/zero/1.0/"))
+    ("CC0-1.0" . "https://creativecommons.org/publicdomain/zero/1.0/")
+    ("GPL-3.0-or-later" . "https://www.gnu.org/licenses/gpl-3.0-standalone.html"))
   "License information as list of pairs:
 First, the SPDX identifier for the license; second, a URI for the license.
 If you add a license here, you also need to add its identifier to
@@ -737,7 +740,7 @@ If you add a license here, you also need to add its identifier to
   :type '(repeat (cons
                   (string :tag "SPDX identifier")
                   (string :tag "License URI")))
-  :package-version '(oer-reveal . "2.0.0"))
+  :package-version '(oer-reveal . "4.8.0"))
 
 (defconst oer-reveal--copyright-regexp
   "^\\([-0-9, ]+\\)\\([^<]+\\)\\([<]\\([^>]+\\)[>]\\)?$"
