@@ -10,6 +10,10 @@ where version numbers starting with version 1.0.0 adhere to
 
 
 ** [Unreleased]
+** [4.8.0] - 2022-10-05
+*** Added
+    - GPL-3.0-or-later to ~oer-reveal-licenses~ and ~oer-reveal-dictionaries~
+
 ** [4.7.0] - 2022-08-04
 *** Added
     - Variable ~oer-reveal-filter-latex-links~ to control activation of
