@@ -25,8 +25,9 @@
 ;;
 ;; If file "index.org" is present in the current directory (e.g., to
 ;; collect links to generated reveal.js presentations), it is added to
-;; `org-publish-project-alist' for export to HTML (with the standard
-;; HTML export back-end).
+;; `org-publish-project-alist' for export with
+;; `oer-reveal-publish-index-publishing-functions' (with the standard
+;; HTML export back-end by default).
 ;; If existing, file "index.css" and directories among "audio",
 ;; "figures", "quizzes" are added to `org-publish-project-alist'
 ;; for export as attachment (copy).  A sample quiz on the usage of
@@ -79,6 +80,19 @@ To avoid PDF output, use `oer-reveal-publish-to-reveal'."
   :group 'org-export-oer-reveal
   :type '(repeat function)
   :package-version '(oer-reveal . "2.0.1"))
+
+(defcustom oer-reveal-publish-index-publishing-functions
+  '(oer-reveal-publish-to-html)
+  "Functions to publish index.org source file.
+By default, with `oer-reveal-publish-to-html', publish index file
+with the default HTML web page (and not as reveal.js presentation).
+This is useful for an HTML course page that links to individual
+reveal.js presentations.
+If your index.org is a presentation, use
+`oer-reveal-publish-to-reveal-and-pdf'."
+  :group 'org-export-oer-reveal
+  :type '(repeat function)
+  :package-version '(oer-reveal . "4.9.0"))
 
 (defcustom oer-reveal-publish-descriptive-links nil
   "Value to assign to `org-descriptive-links'."
@@ -365,7 +379,8 @@ For each plugin in `oer-reveal-plugins', add what to publish."
 
 (defun oer-reveal-publish-optional-projects ()
   "Compute list of optional projects for `org-publish-project-alist'.
-These are \"index.org\" to be published with `oer-reveal-publish-to-html'
+These are \"index.org\" to be published with
+`oer-reveal-publish-index-publishing-functions'
 as well as \"index.css\" and the directories \"audio\", \"figures\",
 \"quizzes\" to be published with `org-publish-attachment'.
 This also includes the multiplex plugin if its folder is present."
@@ -375,7 +390,7 @@ This also includes the multiplex plugin if its folder is present."
 		  :base-directory "."
 		  :include '("index.org")
 		  :exclude ".*"
-		  :publishing-function '(oer-reveal-publish-to-html)
+		  :publishing-function oer-reveal-publish-index-publishing-functions
 		  :publishing-directory "./public")
             result))
     (when (file-exists-p "index.css")
