@@ -84,10 +84,10 @@ To avoid PDF output, use `oer-reveal-publish-to-reveal'."
 (defcustom oer-reveal-publish-index-publishing-functions
   '(oer-reveal-publish-to-html)
   "Functions to publish index.org source file.
-By default, with `oer-reveal-publish-to-html', publish index file
-with the default HTML web page (and not as reveal.js presentation).
-This is useful for an HTML course page that links to individual
-reveal.js presentations.
+By default, with `oer-reveal-publish-to-html', publish index file with
+the default HTML backend as web page (and not as reveal.js presentation).
+This is useful for an HTML course page that links to individual reveal.js
+presentations.
 If your index.org is a presentation, use
 `oer-reveal-publish-to-reveal-and-pdf'."
   :group 'org-export-oer-reveal
