@@ -385,6 +385,16 @@ as well as \"index.css\" and the directories \"audio\", \"figures\",
 \"quizzes\" to be published with `org-publish-attachment'.
 This also includes the multiplex plugin if its folder is present."
   (let (result)
+    ;; Figures for must come first here, as projects are processed
+    ;; in reverse order, and index.org might add figures for copying.
+    (when (file-accessible-directory-p "figures")
+      (push (list "figures"
+		  :base-directory (concat "figures" oer-reveal-copy-dir-suffix)
+		  :base-extension (regexp-opt '("png" "jpg" "ico" "svg" "gif"))
+		  :publishing-directory "./public/figures"
+		  :publishing-function 'org-publish-attachment
+		  :recursive t)
+            result))
     (when (file-exists-p "index.org")
       (push (list "index"
 		  :base-directory "."
@@ -407,14 +417,6 @@ This also includes the multiplex plugin if its folder is present."
 		  :base-extension (regexp-opt '("ogg" "mp3"))
 		  :publishing-directory "./public/audio"
 		  :publishing-function 'org-publish-attachment)
-            result))
-    (when (file-accessible-directory-p "figures")
-      (push (list "figures"
-		  :base-directory (concat "figures" oer-reveal-copy-dir-suffix)
-		  :base-extension (regexp-opt '("png" "jpg" "ico" "svg" "gif"))
-		  :publishing-directory "./public/figures"
-		  :publishing-function 'org-publish-attachment
-		  :recursive t)
             result))
     (when (file-accessible-directory-p (expand-file-name
 				        "multiplex"
