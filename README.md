@@ -112,9 +112,7 @@ function `oer-reveal-publish-all` of file
 Note that subdirectory "title-slide" contains some variants for
 title slides of presentations, and subdirectory "css" contains
 sample CSS.  Subdirectory "org" contains Org files to embed in
-presentations, in particular file "org/config.org", which also adds
-style files for the accessibility plugin and the TOC-progress that are
-used with oer-reveal by default.
+presentations, in particular file "org/config.org".
 Please be warned that included resources, in
 particular CSS files, may change in incompatible ways.  You may
 want to work with your own copies.

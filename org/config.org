@@ -28,29 +28,13 @@
 #+REVEAL_PLUGINS: (notes search zoom)
 
 # The following variables are non-standard.
-# Do not display TOC-progress on title slide.
-#+REVEAL_TITLE_SLIDE_STATE: no-toc-progress
-# Do not display TOC-progress on TOC slide.
-#+REVEAL_TOC_SLIDE_STATE: no-toc-progress
-# Do not include TOC slide in TOC-progress.
-#+REVEAL_TOC_SLIDE_CLASS: no-toc-progress
 # Use different heading for TOC.
 #+REVEAL_TOC_SLIDE_TITLE: Agenda
 
-#+REVEAL_EXTRA_CSS: ./reveal.js/plugin/accessibility/helper.css
-#+REVEAL_EXTRA_CSS: ./reveal.js/plugin/toc-progress/toc-progress.css
-#+REVEAL_EXTRA_CSS: ./reveal.js/dist/theme/toc-style.css
 #+REVEAL_EXTRA_CSS: ./reveal.js/dist/theme/fonts/source-sans-pro/source-sans-pro.css
 
 # Allow to selectively hide links.
 #+REVEAL_EXTRA_SCRIPTS: ("./reveal.js/dist/theme/hidelinks.js")
-
-# The following creates an empty footer, for which the css style defines
-# a height that agrees with the TOC-progress footer’s height.
-# In this way, the footer’s height is taken into account by reveal.js’s
-# size calculations.
-#+REVEAL_SLIDE_FOOTER: <br>
-#+OPTIONS: reveal_toc_footer:t
 
 # Set a default bib file.
 #+MACRO: bibliographyfile bibliography:references.bib
