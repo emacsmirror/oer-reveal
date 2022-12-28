@@ -10,6 +10,11 @@ where version numbers starting with version 1.0.0 adhere to
 
 
 ** [Unreleased]
+** [4.10.0] - 2022-12-28
+*** Added
+    - Add CSS resources to ~oer-reveal-plugin-config~ (in favor of
+      settings in [[file:org/config.org]]; addresses issue #4)
+
 ** [4.9.1] - 2022-11-21
 *** Fixed
     - Make sure to publish figures last (to also include those needed
