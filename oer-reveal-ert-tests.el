@@ -290,7 +290,8 @@
                      "<div about=\"./figures/doesnotexist.png\" typeof=\"schema:ImageObject schema:LearningResource dcmitype:StillImage\" class=\"figure fragment appear\" data-fragment-index=\"1\"><p><img data-src=\"./figures/doesnotexist.png\" alt=\"Figure\" style=\"max-height:50vh\" /></p><p property=\"schema:caption\">A caption</p><p style=\"max-width:50vh\">&ldquo;<span property=\"dcterms:title\">Figure</span>&rdquo; by <a rel=\"cc:attributionURL dcterms:creator\" href=\"https://gitlab.com/lechten\" property=\"cc:attributionName\">Jens Lechtenbörger</a> under <a rel=\"license\" href=\"https://creativecommons.org/publicdomain/zero/1.0/\">CC0 1.0</a>; from <a rel=\"dcterms:source\" href=\"https://example.org/\">Sample source</a></p></div>")))
     (delete-file meta)))
 
-;;; Following function copied from org-mode/testing/lisp/test-ox.el.
+;;; Following function from org-mode/testing/lisp/test-ox.el extended
+;;; to use parameter oer-reveal as backend.
 ;; Copyright (C) 2012-2016, 2019  Nicolas Goaziou
 (defmacro org-test-with-parsed-data (data &rest body)
   "Execute body with parsed data available.
@@ -302,8 +303,8 @@ variable, and communication channel under `info'."
      (org-export--delete-comment-trees)
      (let* ((tree (org-element-parse-buffer))
 	    (info (org-combine-plists
-		   (org-export--get-export-attributes)
-		   (org-export-get-environment))))
+		   (org-export--get-export-attributes 'oer-reveal)
+		   (org-export-get-environment 'oer-reveal))))
        (org-export--prune-tree tree info)
        (org-export--remove-uninterpreted-data tree info)
        (let ((info (org-combine-plists
@@ -860,4 +861,25 @@ variable, and communication channel under `info'."
     (should (equal (oer-reveal--concat-props 't1 't2 p3 "\n") "test1\ntest2"))
     (should (equal (oer-reveal--concat-props 't2 't1 p3) "test2test1"))
     (should (equal (oer-reveal--concat-props 't2 't1 p3 "\n") "test2\ntest1"))))
+
+(ert-deftest test-css-config ()
+  (let ((header "#+TITLE: A test\n#+SPDX-FileCopyrightText: 2022 Jens Lechtenbörger <https://lechten.gitlab.io/#me>\n#+SPDX-License-Identifier: CC-BY-SA-4.0\n")
+        (org-re-reveal-root "/"))
+    (let ((oer-reveal-plugins '("reveal-a11y")))
+      (should
+       (equal "/plugin/accessibility/helper.css"
+	      (org-test-with-parsed-data
+                  header
+	        (oer-reveal--css-config info)))))
+    (let ((oer-reveal-plugins '("Reveal.js-TOC-Progress")))
+      (should
+       (equal "/plugin/toc-progress/toc-progress.css\n/dist/theme/toc-style.css"
+	      (org-test-with-parsed-data
+                  header
+	        (oer-reveal--css-config info)))))
+    (should
+     (equal "/plugin/toc-progress/toc-progress.css\n/dist/theme/toc-style.css\n/plugin/accessibility/helper.css"
+	    (org-test-with-parsed-data
+                header
+	      (oer-reveal--css-config info))))))
 ;;; oer-reveal-ert-tests.el ends here
