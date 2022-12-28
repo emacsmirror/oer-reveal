@@ -233,7 +233,13 @@ If you add plugins to this list, you need to provide suitable
 initialization code in `oer-reveal-plugin-config', for
 plugins for reveal.js 4 and later also in `oer-reveal-plugin-4-config'.
 If you remove plugins here, you also should remove corresponding
-lines from `oer-reveal-plugin-4-config'."
+lines from `oer-reveal-plugin-4-config' (if existing).
+
+Note that as of version 4.10.0 of oer-reveal, CSS files can be configured
+via `oer-reveal-plugin-config'.  E.g., the plugins Reveal.js-TOC-Progress
+and reveal-a11y require the use of CSS files.
+Also, function `oer-reveal-template' may change settings to enable plugins
+appropriately."
   :group 'org-export-oer-reveal
   :type '(repeat string)
   :package-version '(oer-reveal . "3.8.0"))
@@ -404,22 +410,26 @@ For reveal.js 4, the third argument sets the viewport."
   :package-version '(oer-reveal . "3.0.0"))
 
 (defcustom oer-reveal-plugin-config
-  '(("reveal.js-plugins"
-     ()
-     (:oer-reveal-audio-slideshow-config :oer-reveal-anything-config))
-    ("Reveal.js-TOC-Progress" (:oer-reveal-toc-progress-dependency) ())
-    ("reveal.js-jump-plugin" (:oer-reveal-jump-dependency) ())
-    ("reveal.js-quiz" (:oer-reveal-quiz-dependency) ())
+  '(("reveal.js-plugins" ()
+     (:oer-reveal-audio-slideshow-config :oer-reveal-anything-config) ())
+    ("Reveal.js-TOC-Progress" (:oer-reveal-toc-progress-dependency) ()
+     ("%splugin/toc-progress/toc-progress.css"
+      "%sdist/theme/toc-style.css"))
+    ("reveal.js-jump-plugin" (:oer-reveal-jump-dependency) () ())
+    ("reveal.js-quiz" (:oer-reveal-quiz-dependency) () ())
     ("reveal.js-coursemod"
-     (:oer-reveal-coursemod-dependency) (:oer-reveal-coursemod-config))
-    ("reveal-a11y" (:oer-reveal-a11y-dependency) ()))
+     (:oer-reveal-coursemod-dependency) (:oer-reveal-coursemod-config) ())
+    ("reveal-a11y" (:oer-reveal-a11y-dependency) ()
+     ("%splugin/accessibility/helper.css")))
   "Initialization for reveal.js plugins in `oer-reveal-plugins'.
-This is a list of triples.  Each triple consists of
+This is a list of quadruples, each of which consists of
 - the plugin name, which must be its directory name,
 - a list of symbols or strings with JavaScript dependencies; for reveal.js 4
   plugins, configuration needs to be provided with
   `oer-reveal-plugin-4-config' and this list should be empty,
-- a possibly empty list of symbols or strings with configuration settings.
+- a possibly empty list of symbols or strings with configuration settings,
+- a possibly empty list of names of CSS files to be used with the plugin,
+  each starting with %s placeholder for root directory of reveal.js.
 The symbols should occur among the options-alist of the backend `oer-reveal'
 so that its value can be obtained with `plist-get' during export."
   :group 'org-export-oer-reveal
@@ -431,8 +441,9 @@ so that its value can be obtained with `plist-get' during export."
                     (string :tag "JavaScript dependency as string")))
            (repeat (choice
                     (symbol :tag "JavaScript config among options-alist")
-                    (string :tag "JavaScript config as string")))))
-  :package-version '(oer-reveal . "3.8.0"))
+                    (string :tag "JavaScript config as string")))
+           (repeat (string :tag "CSS file name"))))
+  :package-version '(oer-reveal . "4.10.0"))
 
 (defcustom oer-reveal-plugin-4-config
   "audioslideshow RevealAudioSlideshow plugin/audio-slideshow/plugin.js
@@ -2502,6 +2513,27 @@ Add contents of `oer-reveal-navigation-mode' if non-nil."
                             :oer-reveal-navigation-mode
                             info ",\n"))
 
+(defun oer-reveal--css-config (info)
+  "Extend `:reveal-extra-css' based on INFO.
+Add CSS files in `oer-reveal-plugin-config'."
+  (let ((root-path (file-name-as-directory (plist-get info :reveal-root)))
+        (extra-css (plist-get info :reveal-extra-css))
+        (plugins (org-re-reveal--read-list
+                  (plist-get info :oer-reveal-plugins))))
+    (concat (if (< 0 (length extra-css))
+                (concat extra-css "\n")
+              "")
+            (string-join
+             (cl-mapcar
+              (lambda (path)
+                (format path root-path))
+              (apply #'append
+                     (cl-mapcar
+                      (lambda (plugin)
+                        (nth 3 (assoc plugin oer-reveal-plugin-config)))
+                      plugins)))
+             "\n"))))
+
 (defun oer-reveal-template (contents info)
   "Return complete document string after HTML conversion.
 CONTENTS is the transcoded contents string.
@@ -2517,9 +2549,23 @@ Setup plugin and export configuration, then call `org-re-reveal-template'."
                                    (plist-get info :oer-reveal-rdf-prefixes)
                                    " "
                                    (oer-reveal--rdf-typeof info))))
+   (when (member "Reveal.js-TOC-Progress" oer-reveal-plugins)
+     ;; Neither display TOC-progress on title slide nor on TOC slide.
+     ;; Do not include TOC slide in TOC-progress.
+     (plist-put info :reveal-title-slide-state "no-toc-progress")
+     (plist-put info :reveal-toc-slide-state "no-toc-progress")
+     (plist-put info :reveal-toc-slide-class "no-toc-progress")
+     ;; The following creates an empty footer, for which the css style defines
+     ;; a height that agrees with the TOC-progress footer’s height.
+     ;; In this way, the footer’s height is taken into account by reveal.js’s
+     ;; size calculations.
+     (plist-put info :reveal-slide-footer "<br>")
+     (plist-put info :reveal-slide-toc-footer t))
+
     (plist-put info :reveal-external-plugins plugin-dependencies)
     (plist-put info :reveal-init-script plugin-config)
     (plist-put info :reveal-extra-options (oer-reveal--extra-options info))
+    (plist-put info :reveal-extra-css (oer-reveal--css-config info))
     (plist-put info :reveal-add-plugin add-plugins)
     (plist-put info :reveal-postscript (oer-reveal--postscript info))
     (org-re-reveal-template contents info)))
