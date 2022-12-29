@@ -154,7 +154,7 @@ If you change this, maybe you want to change
   :type 'string)
 
 (defcustom oer-reveal-publish-html-postamble
-  (lambda (ignored)
+  (lambda (_)
     (oer-reveal-license-to-fmt 'html t nil t t t t))
   "Value to assign to `org-html-postamble' before export.
 The default creates meta-data including license information

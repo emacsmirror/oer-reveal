@@ -2313,6 +2313,15 @@ function during Org export, which passes an argument)."
   (advice-remove #'org-html-link #'oer-reveal--rewrite-link))
 
 ;;; Export and publication functionality.
+(defvar oer-reveal-publish-html-container-element)
+(defvar oer-reveal-publish-html-divs)
+(defvar oer-reveal-publish-html-doctype)
+(defvar oer-reveal-publish-html-postamble)
+(defvar oer-reveal-publish-html-text-markup-alist)
+(defvar oer-reveal-publish-descriptive-links)
+(defvar oer-reveal-publish-figure-float)
+(defvar oer-reveal-publish-pdf-process)
+(defvar oer-reveal-publish-latex-packages)
 (defun oer-reveal--setup-env (func)
   "Setup environment for oer-reveal export, then execute FUNC with ARGS."
     (let ((table-html-th-rows 1)
