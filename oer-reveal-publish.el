@@ -254,7 +254,8 @@ links are created from GitLab repository URLs."
 (defun oer-reveal-publish-setq-defaults ()
   "Change Emacs environment.
 Load babel languages in `oer-reveal-publish-babel-languages',
-add `oer-reveal-publish-alternate-type-function' to
+add `oer-reveal-publish-alternate-type-function'
+and `oer-reveal-setup-plugins' to
 `org-export-before-processing-hook'.
 Also fix internal slide references by assignment to
 `org-re-reveal--href-fragment-prefix', see its doc string.  Note that
@@ -266,6 +267,8 @@ during publication needs the proper value."
   (when oer-reveal-publish-alternate-type-function
     (add-hook 'org-export-before-processing-hook
               oer-reveal-publish-alternate-type-function))
+  (add-hook 'org-export-before-processing-hook
+            #'oer-reveal-setup-plugins)
   (setq org-re-reveal--href-fragment-prefix org-re-reveal--slide-id-prefix))
 
 (defun oer-reveal-publish-klipse-projects ()
