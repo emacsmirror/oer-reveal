@@ -456,6 +456,26 @@ This should be a multi-line string, each line with the format of
   :type 'string
   :package-version '(oer-reveal . "3.8.0"))
 
+(defcustom oer-reveal-toc-progress-setup
+  "
+# Do not display TOC-progress on title slide.
+#+REVEAL_TITLE_SLIDE_STATE: no-toc-progress
+# Do not display TOC-progress on TOC slide.
+#+REVEAL_TOC_SLIDE_STATE: no-toc-progress
+# Do not include TOC slide in TOC-progress.
+#+REVEAL_TOC_SLIDE_CLASS: no-toc-progress
+
+# The following creates an empty footer, for which the css style defines
+# a height that agrees with the TOC-progress footer’s height.
+# In this way, the footer’s height is taken into account by reveal.js’s
+# size calculations.
+#+REVEAL_SLIDE_FOOTER: <br>
+#+OPTIONS: reveal_toc_footer:t"
+  "Org source code to setup TOC progress plugin."
+  :group 'org-export-oer-reveal
+  :type 'string
+  :package-version '(oer-reveal . "4.10.1"))
+
 (defcustom oer-reveal-default-figure-title "Figure"
   "Default title for figures whose metadata lacks a title.
 Also used in display of short licenses."
@@ -2553,19 +2573,6 @@ Setup plugin and export configuration, then call `org-re-reveal-template'."
                                    (plist-get info :oer-reveal-rdf-prefixes)
                                    " "
                                    (oer-reveal--rdf-typeof info))))
-   (when (member "Reveal.js-TOC-Progress" oer-reveal-plugins)
-     ;; Neither display TOC-progress on title slide nor on TOC slide.
-     ;; Do not include TOC slide in TOC-progress.
-     (plist-put info :reveal-title-slide-state "no-toc-progress")
-     (plist-put info :reveal-toc-slide-state "no-toc-progress")
-     (plist-put info :reveal-toc-slide-class "no-toc-progress")
-     ;; The following creates an empty footer, for which the css style defines
-     ;; a height that agrees with the TOC-progress footer’s height.
-     ;; In this way, the footer’s height is taken into account by reveal.js’s
-     ;; size calculations.
-     (plist-put info :reveal-slide-footer "<br>")
-     (plist-put info :reveal-slide-toc-footer t))
-
     (plist-put info :reveal-external-plugins plugin-dependencies)
     (plist-put info :reveal-init-script plugin-config)
     (plist-put info :reveal-extra-options (oer-reveal--extra-options info))
@@ -2573,6 +2580,17 @@ Setup plugin and export configuration, then call `org-re-reveal-template'."
     (plist-put info :reveal-add-plugin add-plugins)
     (plist-put info :reveal-postscript (oer-reveal--postscript info))
     (org-re-reveal-template contents info)))
+
+(defun oer-reveal-setup-plugins (backend)
+  "Add Org source code depending on plugin configuration for BACKEND.
+Currently, this changes the footer configuration for the TOC progress plugin."
+  (when (eq backend 'oer-reveal)
+    (let* ((info (oer-reveal--get-info))
+           (plugins (org-re-reveal--read-list (plist-get info :oer-reveal-plugins))))
+      (when (member "Reveal.js-TOC-Progress" plugins)
+        (goto-char (point-max))
+        (insert oer-reveal-toc-progress-setup)))))
+
 
 (provide 'oer-reveal)
 ;;; oer-reveal.el ends here
