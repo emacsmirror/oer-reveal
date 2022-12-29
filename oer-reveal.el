@@ -75,7 +75,7 @@ means to remove KEY from ALIST if the new value is `eql' to DEFAULT."
 
 (defun oer-reveal-define-backend ()
   "Define the back-end for export as reveal.js presentation.
-Derive from 're-reveal to add further options and keywords."
+Derive from `re-reveal' to add further options and keywords."
   (org-export-define-derived-backend 'oer-reveal 're-reveal
 
     :menu-entry
@@ -401,8 +401,8 @@ for available options."
             ", 'body'")
           "); toc_progress.create(); } }")
   "Dependency to initialize TOC-Progress plugin.
-If there are lots of subsections, 'scroll'ing can be enabled or the font
-size can be 'reduce'd.  Go for the latter with first argument.
+If there are lots of subsections, scrolling can be enabled or the font
+size can be reduced.  Go for the latter with first argument.
 Second arguement sets background color.
 For reveal.js 4, the third argument sets the viewport."
   :group 'org-export-oer-reveal
