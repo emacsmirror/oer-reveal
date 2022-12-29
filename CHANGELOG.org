@@ -10,6 +10,10 @@ where version numbers starting with version 1.0.0 adhere to
 
 
 ** [Unreleased]
+** [4.10.2] - 2022-12-29
+*** Fixed
+    - Remove superfluous parenthesis
+
 ** [4.10.1] - 2022-12-29
 *** Fixed
     - Plugin setup did not work in ~oer-reveal-template~
