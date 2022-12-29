@@ -18,6 +18,8 @@ where version numbers starting with version 1.0.0 adhere to
 *** Fixed
     - Plugin setup did not work in ~oer-reveal-template~
       - Use new function ~oer-reveal-setup-plugins~ as export hook
+      - Use new variable ~oer-reveal-toc-progress-setup~ for Org
+        source code that sets up TOC progress plugin
 
 ** [4.10.0] - 2022-12-28
 *** Added
