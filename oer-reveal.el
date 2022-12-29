@@ -2137,7 +2137,7 @@ identifier in `oer-reveal-dictionaries'."
    (let* ((info (oer-reveal--get-info))
           (lang (or (plist-get info :language) "en")))
      ;; Keep relevant prefix of languages such as de, de-de, or de_DE.
-     (downcase (car (split-string lang "[-_]"))))))
+     (downcase (car (split-string lang "[-_]")))))
 
 (defun oer-reveal--rdf-typeof (info &optional text-p)
   "Return RDFa typeof attribute as string or nil from INFO.
