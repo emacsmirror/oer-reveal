@@ -2105,12 +2105,16 @@ identifier in `oer-reveal-dictionaries'."
            (format oer-reveal-created-template created timestamp))
           (t (format "\n\n%s: %s" created timestamp)))))
 
+(defun oer-reveal--get-info ()
+  "Return info environment."
+  (org-export-with-buffer-copy
+   ;; The environment might depend on included files.
+   (org-export-expand-include-keyword)
+   (org-export-get-environment 'oer-reveal)))
+
 (defun oer-reveal--language ()
   "Return two-letter language identifier of source document."
-  (org-export-with-buffer-copy
-   ;; The language might be set in an included file.
-   (org-export-expand-include-keyword)
-   (let* ((info (org-export-get-environment 'oer-reveal))
+   (let* ((info (oer-reveal--get-info))
           (lang (or (plist-get info :language) "en")))
      ;; Keep relevant prefix of languages such as de, de-de, or de_DE.
      (downcase (car (split-string lang "[-_]"))))))
