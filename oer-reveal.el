@@ -2407,7 +2407,7 @@ to `oer-reveal-export-to-html'."
 ;;;###autoload
 (defun oer-reveal-publish-to-reveal
     (plist filename pub-dir)
-  "Publish an Org file to HTML.
+  "Publish an Org file to HTML (reveal.js presentation).
 FILENAME is the filename of the Org file to be published.  PLIST
 is the property list for the given project.  PUB-DIR is the
 publishing directory.
@@ -2419,7 +2419,7 @@ Return output file name."
 ;;;###autoload
 (defun oer-reveal-publish-to-reveal-and-pdf
     (plist filename pub-dir)
-  "Publish an Org file to HTML.
+  "Publish an Org file to HTML (reveal.js presentation) and to PDF.
 FILENAME is the filename of the Org file to be published.  PLIST
 is the property list for the given project.  PUB-DIR is the
 publishing directory.
