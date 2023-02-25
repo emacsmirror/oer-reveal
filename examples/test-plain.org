@@ -1,6 +1,12 @@
 # Local IspellDict: en
 # SPDX-License-Identifier: GPL-3.0-or-later
-# SPDX-FileCopyrightText: 2019 Jens Lechtenbörger
+# SPDX-FileCopyrightText: 2019,2023 Jens Lechtenbörger
+
+# By default, PDF export via LaTeX translates notes using the environment
+# “notes”, which needs to be defined.  That happens in ../org/config.org,
+# which is not included in this plain presentation.
+#+LATEX_HEADER: \newenvironment{notes}{\par\footnotesize}{\par}
+#+LATEX_HEADER: \newenvironment{NOTES}{\par\footnotesize}{\par}
 
 #+Title: Default (almost) presentation
 #+Author: Jens Lechtenbörger
