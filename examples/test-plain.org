@@ -29,8 +29,8 @@
   - If you want to
   #+end_notes
 
-** More settings
-   - Avoid TOC progress footer on title and TOC slides?
-   - Exclude title slide and TOC from TOC progress footer?
-
-   Use settings in [[https://gitlab.com/oer/oer-reveal/blob/master/org/config.org][org/config.org]]
+** More settings and features
+   - Use settings in [[https://gitlab.com/oer/oer-reveal/blob/master/org/config.org][org/config.org]]
+   - See [[https://oer.gitlab.io/emacs-reveal-howto/][howto of emacs-reveal]]
+     ([[https://gitlab.com/oer/emacs-reveal-howto/-/blob/master/howto.org][Org source file]])
+     to get an idea how the author of oer-reveal really uses it
