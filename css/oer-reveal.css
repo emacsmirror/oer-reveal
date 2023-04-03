@@ -1,6 +1,6 @@
 /**
  * SPDX-FileCopyrightText: 2014-2016 Hakim El Hattab
- * SPDX-FileCopyrightText: 2017-2021 Jens Lechtenbörger
+ * SPDX-FileCopyrightText: 2017-2021,2023 Jens Lechtenbörger
  *
  * SPDX-License-Identifier: LicenseRef-MIT-HEH-JL
  *
@@ -402,11 +402,14 @@ div.ribbon-legalese a {
 .reveal em {
   font-style: italic; }
 
+/* Ensure default padding for indented lists.
+   https://developer.mozilla.org/en-US/docs/Learn/CSS/Styling_text/Styling_lists */
 .reveal ol,
 .reveal dl,
 .reveal ul {
   text-align: left;
-  margin: 0; }
+  margin: 0;
+  padding-left: 40px; }
 
 .reveal ol {
   list-style-type: decimal; }
