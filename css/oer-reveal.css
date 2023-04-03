@@ -410,6 +410,8 @@ div.ribbon-legalese a {
   text-align: left;
   margin: 0;
   padding-left: 40px; }
+.coursemod__course-view ul, ol {
+  padding-left: 40px; }
 
 .reveal ol {
   list-style-type: decimal; }
