@@ -10,6 +10,12 @@ where version numbers starting with version 1.0.0 adhere to
 
 
 ** [Unreleased]
+** [4.10.5] - 2023-04-03
+*** Fixed
+    - In [[file:css/oer-reveal.css::.coursemod__course-view ul, ol {]],
+      add default padding-left for lists in the coursemod view
+      (similarly to general change in version 4.10.4)
+
 ** [4.10.4] - 2023-04-03
 *** Fixed
     - In [[file:css/oer-reveal.css::.reveal ol,]], add default
