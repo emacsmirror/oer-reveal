@@ -10,6 +10,11 @@ where version numbers starting with version 1.0.0 adhere to
 
 
 ** [Unreleased]
+** [4.11.0] - 2023-09-12
+*** Changed
+    - Update oer-reveal-submodules-version to 2.6.0 with reveal.js
+      4.6.0
+
 ** [4.10.5] - 2023-04-03
 *** Fixed
     - In [[file:css/oer-reveal.css::.coursemod__course-view ul, ol {]],
