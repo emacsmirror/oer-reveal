@@ -562,8 +562,8 @@ not attempt to update the submodules, e.g., in Docker containers."
 (defcustom oer-reveal-submodules-dir
   (file-name-as-directory
    (concat (file-name-as-directory user-emacs-directory)
-	  (file-name-sans-extension
-	   (file-name-nondirectory oer-reveal-submodules-url))))
+	   (file-name-sans-extension
+	    (file-name-nondirectory oer-reveal-submodules-url))))
   "Directory with submodules of oer-reveal.
 Submodules include reveal.js and its plugins.
 If this directory does not exist, installation is offered.
