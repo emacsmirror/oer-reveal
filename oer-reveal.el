@@ -548,14 +548,14 @@ contained in this directory.")
 (defconst oer-reveal-submodules-url
   "https://gitlab.com/oer/emacs-reveal-submodules.git"
   "Git URL for submodules of reveal.js and plugins.")
-(defcustom oer-reveal-submodules-version "2.4.1"
+(defcustom oer-reveal-submodules-version "2.6.0"
   "Version of submodules to check out.
 This can be a string, indicating a git version tag, or nil.
 If nil, `oer-reveal-submodules-ok-p' always returns t, and oer-reveal does
 not attempt to update the submodules, e.g., in Docker containers."
   :group 'org-export-oer-reveal
   :type '(choice (const nil) string)
-  :package-version '(oer-reveal . "2.5.0"))
+  :package-version '(oer-reveal . "4.11.0"))
 
 (defconst oer-reveal-buffer "*oer-reveal git output*"
   "Name of buffer holding Git output.")
