@@ -205,7 +205,7 @@ Set to nil to omit such tags (and, please, open an issue to let me know why
 this is a bad setting)."
   :group 'org-export-oer-reveal
   :type 'boolean
-  :package-version '(org-re-reveal . "3.13.0"))
+  :package-version '(oer-reveal . "4.4.0"))
 
 (defcustom oer-reveal-navigation-mode
   "navigationMode: window.location.search.match( /default-navigation/gi ) ? 'default' : 'linear'"
