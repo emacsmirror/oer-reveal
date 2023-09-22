@@ -65,7 +65,8 @@ div.quizArea, div.quizResults {
  * OTHER
  *********************************************/
 .reveal .course-title {
-  margin: 80px 0px 10px 0px; }
+  margin: 50px 0px 10px 0px;
+  }
 
 .reveal .course-subtitle p {
   font-size: .6em;
@@ -74,7 +75,7 @@ div.quizArea, div.quizResults {
 
 .reveal .course-context p {
   line-height: 1.2;
-  margin: 50px 0;
+  margin: 40px 0px 30px 0px;
   }
 
 .reveal .course-group {
