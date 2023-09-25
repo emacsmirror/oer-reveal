@@ -10,6 +10,12 @@ where version numbers starting with version 1.0.0 adhere to
 
 
 ** [Unreleased]
+** [4.12.0] - 2023-09-25
+*** Added
+    - Variable ~oer-reveal-tdm-reservation~ with reservation of rights
+      related to text and data mining (TDM).  Value overrides
+      ~org-re-reveal-tdm-reservation~; see there for documentation.
+
 ** [4.11.0] - 2023-09-12
 *** Changed
     - Update oer-reveal-submodules-version to 2.6.0 with reveal.js
