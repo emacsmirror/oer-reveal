@@ -216,6 +216,15 @@ to revert to default mode of reveal.js."
   :type '(choice (const nil) string)
   :package-version '(oer-reveal . "3.21.0"))
 
+(defcustom oer-reveal-tdm-reservation "https://oer.gitlab.io/tdm/policy.json"
+  "Value to asssign to `org-re-reveal-tdm-reservation' in `oer-reveal--setup-env'.
+If non-nil, add meta elements that restrict usage of the exported HTML file
+for Text and Data Mining (TDM) purposes, see `org-re-reveal-tdm-reservation'
+for details."
+  :group 'org-export-oer-reveal
+  :type '(choice (const nil) string)
+  :package-version '(oer-reveal . "4.12.0"))
+
 (defcustom oer-reveal-warning-delay t
   "Control whether to pause after display of warnings.
 You may want to set this to nil in batch mode."
@@ -2335,6 +2344,7 @@ function during Org export, which passes an argument)."
           (org-html-text-markup-alist oer-reveal-publish-html-text-markup-alist)
           (org-descriptive-links oer-reveal-publish-descriptive-links)
           (org-re-reveal-mobile-app oer-reveal-mobile-app)
+          (org-re-reveal-tdm-reservation oer-reveal-tdm-reservation)
           (org-re-reveal-revealjs-version oer-reveal-revealjs-version)
 	  (oer-reveal-latex-figure-float oer-reveal-publish-figure-float)
 	  (org-latex-pdf-process oer-reveal-publish-pdf-process)
