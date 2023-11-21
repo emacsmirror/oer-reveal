@@ -1,6 +1,6 @@
 # -*- eval: (visual-line-mode) -*-
 
-# SPDX-FileCopyrightText: 2017-2022 Jens Lechtenbörger
+# SPDX-FileCopyrightText: 2017-2023 Jens Lechtenbörger
 # SPDX-License-Identifier: CC-BY-SA-4.0
 
 # Neither generate table of contents nor section numbers
@@ -72,6 +72,7 @@
 #+LATEX_HEADER: \newenvironment{rightcol70}{\begin{minipage}{.69\textwidth}}{\end{minipage}}
 #+LATEX_HEADER: \usepackage{textcomp} % For € in Unicode
 #+LATEX_HEADER: \usepackage{newunicodechar}
+#+LATEX_HEADER: \newunicodechar{≠}{$\neq$}
 #+LATEX_HEADER: \newunicodechar{≈}{$\approx$}
 #+LATEX_HEADER: \newunicodechar{⋮}{\vdots}
 #+LATEX_HEADER: \newunicodechar{→}{$\to$}
