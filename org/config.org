@@ -73,6 +73,8 @@
 #+LATEX_HEADER: \usepackage{textcomp} % For € in Unicode
 #+LATEX_HEADER: \usepackage{newunicodechar}
 #+LATEX_HEADER: \newunicodechar{≠}{$\neq$}
+#+LATEX_HEADER: \newunicodechar{≤}{$\leq$}
+#+LATEX_HEADER: \newunicodechar{≥}{$\geq$}
 #+LATEX_HEADER: \newunicodechar{≈}{$\approx$}
 #+LATEX_HEADER: \newunicodechar{⋮}{\vdots}
 #+LATEX_HEADER: \newunicodechar{→}{$\to$}
