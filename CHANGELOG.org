@@ -10,6 +10,12 @@ where version numbers starting with version 1.0.0 adhere to
 
 
 ** [Unreleased]
+** [4.13.0] - 2023-11-23
+*** Added
+    - File [[file:title-slide/course-mlde-qr.html]]
+*** Changed
+    - Exchanged 🛈 for ⓘ in [[file:css/oer-reveal.css]]
+
 ** [4.12.1] - 2023-11-22
 *** Fixed
     - Add neq, geq, leq to [[file:org/config.org::+LATEX_HEADER: \newunicodechar{≠}{$\neq$}]]

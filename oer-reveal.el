@@ -7,7 +7,7 @@
 
 ;; Author: Jens Lechtenbörger
 ;; URL: https://gitlab.com/oer/oer-reveal
-;; Version: 4.12.1
+;; Version: 4.13.0
 ;; Package-Requires: ((emacs "24.4") (org-re-reveal "3.22.0"))
 ;; Keywords: hypermedia, tools, slideshow, presentation, OER
 
