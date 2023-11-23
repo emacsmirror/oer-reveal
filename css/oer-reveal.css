@@ -613,7 +613,7 @@ div.ribbon-legalese a {
   margin: 0;
   padding-right: 0;
   background: none;
-  content: " 🛈"; }
+  content: " ⓘ"; }
 .reveal a[href].beyondlink:not(.hiddenlink):after {
   margin: 0;
   padding-right: 0;
