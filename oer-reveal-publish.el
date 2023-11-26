@@ -2,7 +2,7 @@
 ;; -*- Mode: Emacs-Lisp -*-
 ;; -*- coding: utf-8 -*-
 
-;; SPDX-FileCopyrightText: 2017-2022 Jens Lechtenbörger
+;; SPDX-FileCopyrightText: 2017-2023 Jens Lechtenbörger
 ;; SPDX-License-Identifier: GPL-3.0-or-later
 
 ;;; License: GPLv3
@@ -324,6 +324,16 @@ For each plugin in `oer-reveal-plugins', add what to publish."
 				   oer-reveal-submodules-dir)
 		  :base-extension 'any
 		  :publishing-directory "./public/reveal.js/plugin/coursemod"
+		  :publishing-function 'org-publish-attachment
+		  :recursive t)
+            result))
+    (when (member "reveal.js-customcontrols" oer-reveal-plugins)
+      (push (list "reveal.js-customcontrols"
+		  :base-directory (expand-file-name
+				   "reveal.js-plugins/customcontrols"
+				   oer-reveal-submodules-dir)
+		  :base-extension 'any
+		  :publishing-directory "./public/reveal.js/plugin/customcontrols"
 		  :publishing-function 'org-publish-attachment
 		  :recursive t)
             result))
