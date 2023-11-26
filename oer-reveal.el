@@ -585,7 +585,7 @@ contained in this directory.")
 (defconst oer-reveal-submodules-url
   "https://gitlab.com/oer/emacs-reveal-submodules.git"
   "Git URL for submodules of reveal.js and plugins.")
-(defcustom oer-reveal-submodules-version "2.6.0"
+(defcustom oer-reveal-submodules-version "2.7.0"
   "Version of submodules to check out.
 This can be a string, indicating a git version tag, or nil.
 If nil, `oer-reveal-submodules-ok-p' always returns t, and oer-reveal does
@@ -915,7 +915,7 @@ Output of Git goes to buffer `oer-reveal-buffer'."
 		     oer-reveal-buffer)))
 	(insert "Performing git pull and checkout in: ")
 	(call-process "pwd" nil t t)
-	(call-process "git" nil t t "checkout" "master")
+	(call-process "git" nil t t "checkout" "main")
 	(call-process "git" nil t t "pull")
 	(call-process "git" nil t t "checkout" oer-reveal-submodules-version)
 	(insert "...done\n\nPerforming submodule install...\n")
