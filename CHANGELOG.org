@@ -10,6 +10,12 @@ where version numbers starting with version 1.0.0 adhere to
 
 
 ** [Unreleased]
+** [4.14.0] - 2023-11-26
+*** Added
+    - Variable [[file:oer-reveal.el::(defcustom oer-reveal-customcontrols-config]]
+      to support
+      [[https://github.com/rajgoel/reveal.js-plugins/tree/master/customcontrols][custom controls plugin]]
+
 ** [4.13.0] - 2023-11-23
 *** Added
     - File [[file:title-slide/course-mlde-qr.html]]
