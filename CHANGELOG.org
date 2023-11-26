@@ -10,6 +10,11 @@ where version numbers starting with version 1.0.0 adhere to
 
 
 ** [Unreleased]
+** [4.15.0] - 2023-11-26
+*** Changed
+    - Update oer-reveal-submodules-version to 2.7.0 with
+      reveal.js-plugins 4.2.5
+
 ** [4.14.2] - 2023-11-26
 *** Fixed
     - Publish Font Awesome figures for custom controls plugin
