@@ -222,8 +222,8 @@ body {
 
 /* Center by default.
  * Right padding is to make space for the rotated license text
- * (if present). */
-.reveal .imgcontainer, .reveal figure, .reveal div.figure, .reveal svg {
+ * (if present), but not for buttons. */
+.reveal .imgcontainer, .reveal figure, .reveal div.figure, .reveal :not(button) svg {
   position: relative;
   padding-right: 4vw;
   text-align: center; }
@@ -677,3 +677,23 @@ div.ribbon-legalese a {
   -webkit-transition: width 800ms cubic-bezier(0.26, 0.86, 0.44, 0.985);
   -moz-transition: width 800ms cubic-bezier(0.26, 0.86, 0.44, 0.985);
   transition: width 800ms cubic-bezier(0.26, 0.86, 0.44, 0.985); }
+
+/*********************************************
+ * Changes for Custom Controls plugin:
+ * - Position at top instead of bottom
+ * - Make show/hide button always visible
+ * - Set height of (embedded) icons to 1em
+ *********************************************/
+#customcontrols:not(#dummy) {
+  bottom: auto;
+  left: 15px;
+  top: 5px; }
+
+#customcontrols:not(#dummy) > ul {
+  bottom: auto;
+  top: 5px; }
+
+#customcontrols:not(#dummy) > button {
+  display: inline; }
+
+#customcontrols button img { height: 1em; }
