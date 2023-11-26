@@ -107,6 +107,8 @@ Derive from `re-reveal' to add further options and keywords."
                                         oer-reveal-coursemod-dependency t)
       (:oer-reveal-coursemod-config "OER_REVEAL_COURSEMOD_CONFIG" nil
                                     oer-reveal-coursemod-config t)
+      (:oer-reveal-customcontrols-config "OER_REVEAL_CUSTOMCONTROLS_CONFIG" nil
+                                    oer-reveal-customcontrols-config t)
       (:oer-reveal-navigation-mode "OER_REVEAL_NAVIGATION_MODE" nil
                                     oer-reveal-navigation-mode t)
       (:oer-reveal-jump-dependency "OER_REVEAL_JUMP_DEPENDENCY" nil
@@ -234,7 +236,8 @@ You may want to set this to nil in batch mode."
 
 (defcustom oer-reveal-plugins
   '("reveal.js-plugins" "Reveal.js-TOC-Progress" "reveal.js-jump-plugin"
-    "reveal.js-quiz" "reveal.js-coursemod" "reveal-a11y")
+    "reveal.js-quiz" "reveal.js-coursemod" "reveal-a11y"
+    "reveal.js-customcontrols")
   "List of `plugin' components to publish.
 Each element here is supposed to be the directory name of the plugin.
 If you remove a plugin from this list, it will no longer be published.
@@ -251,7 +254,7 @@ Also, function `oer-reveal-template' may change settings to enable plugins
 appropriately."
   :group 'org-export-oer-reveal
   :type '(repeat string)
-  :package-version '(oer-reveal . "3.8.0"))
+  :package-version '(oer-reveal . "4.14.0"))
 
 (defcustom oer-reveal-audio-slideshow-dependency
   "{ src: '%splugin/audio-slideshow/audio-slideshow.js', condition: function( ) { return !!document.body.classList && !Reveal.isSpeakerNotes(); } }"
@@ -274,7 +277,7 @@ appropriately."
 - Display audio controls at bottom left (to avoid overlap)."
   :group 'org-export-oer-reveal
   :type 'string
-  :package-version '(oer-reveal . "3.21.0"))
+  :package-version '(oer-reveal . "4.14.0"))
 
 (defcustom oer-reveal-anything-dependency
   "{ src: '%splugin/anything/anything.js' }"
@@ -386,6 +389,28 @@ Set to nil if you do not want this."
   :type 'string
   :package-version '(oer-reveal . "1.2.0"))
 
+(defcustom oer-reveal-customcontrols-config
+  (concat
+   "customcontrols: { "
+   "collapseIcon: '<img src=\"figures/fontawesome/solid/chevron-left.svg\" />"
+   "', expandIcon: '<img src=\"figures/fontawesome/solid/chevron-right.svg\" />"
+   "', controls: [ { icon: '<img src=\"figures/fontawesome/solid/expand.svg\" />"
+   "', title: 'Enter fullscreen (F)', action: 'Reveal.triggerKey(70);' }, "
+   "{ icon: '<img src=\"figures/fontawesome/solid/comment.svg\" />"
+   "', title: 'Toggle notes', action: 'Reveal.configure({showNotes: !Reveal.getConfig().showNotes});' }, "
+   "{ icon: '<img src=\"figures/fontawesome/solid/search.svg\" />"
+   "', title: 'Search; with (repeated) enter/return', action: 'Reveal.getPlugins().search.open();' }, "
+   "{ icon: '<img src=\"figures/fontawesome/solid/keyboard.svg\" />"
+   "', title: 'Keyboard shortcuts (?)', action: 'Reveal.toggleHelp();' } ] }")
+  "Configuration for custom controls plugin.
+Note that the plugin by default uses Font Awesome icons, inserted via
+a huge library, by default from a remote location.
+In contrast, SVG icons are embedded directly here (which improves privacy
+and latency)."
+  :group 'org-export-oer-reveal
+  :type 'string
+  :package-version '(oer-reveal . "4.14.0"))
+
 (defcustom oer-reveal-jump-dependency
   "{ src: '%splugin/jump/jump.js', async: true }"
   "Dependency to initialize jump plugin."
@@ -428,13 +453,15 @@ For reveal.js 4, the third argument sets the viewport."
     ("reveal.js-quiz" (:oer-reveal-quiz-dependency) () ())
     ("reveal.js-coursemod"
      (:oer-reveal-coursemod-dependency) (:oer-reveal-coursemod-config) ())
+    ("reveal.js-customcontrols" ()
+     (:oer-reveal-customcontrols-config) ("%splugin/customcontrols/style.css"))
     ("reveal-a11y" (:oer-reveal-a11y-dependency) ()
      ("%splugin/accessibility/helper.css")))
   "Initialization for reveal.js plugins in `oer-reveal-plugins'.
 This is a list of quadruples, each of which consists of
 - the plugin name, which must be its directory name,
 - a list of symbols or strings with JavaScript dependencies; for reveal.js 4
-  plugins, configuration needs to be provided with
+  plugins, the JavaScript file needs to be provided with
   `oer-reveal-plugin-4-config' and this list should be empty,
 - a possibly empty list of symbols or strings with configuration settings,
 - a possibly empty list of names of CSS files to be used with the plugin,
@@ -456,7 +483,8 @@ so that its value can be obtained with `plist-get' during export."
 
 (defcustom oer-reveal-plugin-4-config
   "audioslideshow RevealAudioSlideshow plugin/audio-slideshow/plugin.js
-anything RevealAnything plugin/anything/plugin.js"
+anything RevealAnything plugin/anything/plugin.js
+customcontrols RevealCustomControls plugin/customcontrols/plugin.js"
   "Initialization for reveal.js 4 plugins.
 This should be a multi-line string, each line with the format of
 `REVEAL_ADD_PLUGIN'.  If you want to pass initialization options to
