@@ -262,7 +262,7 @@ appropriately."
 (defcustom oer-reveal-audio-slideshow-config
   "audioStartAtFragment: true,
   audio: {
-    advance: -1, autoplay: window.location.search.match( /audio-autoplay/gi ), defaultDuration: 0, defaultAudios: false, defaultAudioRate: window.location.search.match( /audio-speed/gi )? parseFloat((new URL(window.location.href)).searchParams.get('audio-speed')) : 1.0, playerOpacity: 0.8, playerStyle: 'position: fixed; bottom: 9.5vh; left: 0%; width: 30%; height:30px; z-index: 33;' }"
+    advance: -1, autoplay: window.location.search.match( /audio-autoplay/gi ), defaultDuration: 0, defaultAudios: false, defaultAudioRate: window.location.search.match( /audio-speed/gi )? parseFloat((new URL(window.location.href)).searchParams.get('audio-speed')) : 1.0, playerOpacity: 0.8, playerStyle: 'position: fixed; bottom: 9.5vh; left: 0%; width: 30%; height:30px; z-index: 33;', suffix: '.ogg' }"
   "Configuration for audio-slideshow plugin:
 - Do not advance after end of audio.
 - Do not start playing audio automatically, but allow URL parameter
