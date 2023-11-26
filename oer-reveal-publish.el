@@ -336,13 +336,6 @@ For each plugin in `oer-reveal-plugins', add what to publish."
 		  :publishing-directory "./public/reveal.js/plugin/customcontrols"
 		  :publishing-function 'org-publish-attachment
 		  :recursive t)
-            result)
-      (push (list "customcontrols-icons"
-		  :base-directory "figures/fontawesome"
-		  :base-extension (regexp-opt '("png" "jpg" "ico" "svg" "gif"))
-		  :publishing-directory "./public/figures/fontawesome"
-		  :publishing-function 'org-publish-attachment
-		  :recursive t)
             result))
     (when (member "reveal.js-jump-plugin" oer-reveal-plugins)
       (push (list "reveal.js-jump-plugin"

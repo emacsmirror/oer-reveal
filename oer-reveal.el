@@ -392,15 +392,15 @@ Set to nil if you do not want this."
 (defcustom oer-reveal-customcontrols-config
   (concat
    "customcontrols: { "
-   "collapseIcon: '<img src=\"figures/fontawesome/solid/chevron-left.svg\" />"
-   "', expandIcon: '<img src=\"figures/fontawesome/solid/chevron-right.svg\" />"
-   "', controls: [ { icon: '<img src=\"figures/fontawesome/solid/expand.svg\" />"
+   "collapseIcon: '<img src=\"reveal.js/dist/theme/chevron-left.svg\" />"
+   "', expandIcon: '<img src=\"reveal.js/dist/theme/chevron-right.svg\" />"
+   "', controls: [ { icon: '<img src=\"reveal.js/dist/theme/expand.svg\" />"
    "', title: 'Enter fullscreen (F)', action: 'Reveal.triggerKey(70);' }, "
-   "{ icon: '<img src=\"figures/fontawesome/solid/comment.svg\" />"
+   "{ icon: '<img src=\"reveal.js/dist/theme/comment.svg\" />"
    "', title: 'Toggle notes', action: 'Reveal.configure({showNotes: !Reveal.getConfig().showNotes});' }, "
-   "{ icon: '<img src=\"figures/fontawesome/solid/search.svg\" />"
+   "{ icon: '<img src=\"reveal.js/dist/theme/search.svg\" />"
    "', title: 'Search; with (repeated) enter/return', action: 'Reveal.getPlugins().search.open();' }, "
-   "{ icon: '<img src=\"figures/fontawesome/solid/keyboard.svg\" />"
+   "{ icon: '<img src=\"reveal.js/dist/theme/keyboard.svg\" />"
    "', title: 'Keyboard shortcuts (?)', action: 'Reveal.toggleHelp();' } ] }")
   "Configuration for custom controls plugin.
 Note that the plugin by default uses Font Awesome icons, inserted via
