@@ -405,8 +405,9 @@ Set to nil if you do not want this."
   "Configuration for custom controls plugin.
 Note that the plugin by default uses Font Awesome icons, inserted via
 a huge library, by default from a remote location.
-In contrast, SVG icons are embedded directly here (which improves privacy
-and latency)."
+In contrast, SVG icons (contained in subdirectory css) are embedded
+directly here (which improves privacy and latency).  Styling is applied
+towards the bottom of css/oer-reveal.css."
   :group 'org-export-oer-reveal
   :type 'string
   :package-version '(oer-reveal . "4.14.0"))
