@@ -10,6 +10,10 @@ where version numbers starting with version 1.0.0 adhere to
 
 
 ** [Unreleased]
+** [4.17.0] - 2023-11-28
+*** Changed
+    - Move custom controls to bottom, align with TOC progress footer
+
 ** [4.16.0] - 2023-11-26
 *** Changed
     - Add icons for custom control for self-contained project
