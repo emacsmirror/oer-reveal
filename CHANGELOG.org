@@ -10,6 +10,11 @@ where version numbers starting with version 1.0.0 adhere to
 
 
 ** [Unreleased]
+** [4.18.0] - 2023-11-28
+*** Added
+    - Variable ~oer-reveal-viewport~ to specify viewport meta tag for
+      user-scalability
+
 ** [4.17.0] - 2023-11-28
 *** Changed
     - Move custom controls to bottom, align with TOC progress footer
