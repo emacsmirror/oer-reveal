@@ -680,20 +680,27 @@ div.ribbon-legalese a {
 
 /*********************************************
  * Changes for Custom Controls plugin:
- * - Position at top instead of bottom
+ * - Position and size with relative units
  * - Make show/hide button always visible
- * - Set height of (embedded) icons to 1em
+ * - Set height of (embedded) icons to 3vh/1em
+ * - Positioning and sizing aligns reasonably
+     well with TOC progress footer
  *********************************************/
 #customcontrols:not(#dummy) {
-  bottom: auto;
-  left: 15px;
-  top: 5px; }
+  left: 10px;
+  bottom: 1vh; }
 
 #customcontrols:not(#dummy) > ul {
-  bottom: auto;
-  top: 5px; }
+  left: 40px;
+  bottom: 1vh; }
+
+#customcontrols:not(#dummy) ul > li {
+  margin: 0px 1px;
+  padding: 0px 1px; }
 
 #customcontrols:not(#dummy) > button {
   display: inline; }
 
-#customcontrols button img { height: 1em; }
+#customcontrols button img {
+  max-height: 1em;
+  height: 3vh; }
