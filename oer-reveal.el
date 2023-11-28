@@ -227,6 +227,17 @@ for details."
   :type '(choice (const nil) string)
   :package-version '(oer-reveal . "4.12.0"))
 
+(defcustom oer-reveal-viewport
+  "width=device-width, initial-scale=1.0, minimum-scale=0.1, maximum-scale=10.0, user-scalable=yes"
+  "Value to asssign to `org-re-reveal-viewport' in `oer-reveal--setup-env'.
+If non-nil, add viewport meta tag with this value to the exported HTML file,
+see `org-re-reveal-viewport'.
+Set to nil to omit such a tag (and, please, open an issue to let me know why
+this is a bad setting)."
+  :group 'org-export-oer-reveal
+  :type '(choice (const nil) string)
+  :package-version '(oer-reveal . "4.18.0"))
+
 (defcustom oer-reveal-warning-delay t
   "Control whether to pause after display of warnings.
 You may want to set this to nil in batch mode."
@@ -2375,6 +2386,7 @@ function during Org export, which passes an argument)."
           (org-re-reveal-mobile-app oer-reveal-mobile-app)
           (org-re-reveal-tdm-reservation oer-reveal-tdm-reservation)
           (org-re-reveal-revealjs-version oer-reveal-revealjs-version)
+          (org-re-reveal-viewport oer-reveal-viewport)
 	  (oer-reveal-latex-figure-float oer-reveal-publish-figure-float)
 	  (org-latex-pdf-process oer-reveal-publish-pdf-process)
 	  (org-latex-default-packages-alist
