@@ -2,7 +2,7 @@
 ;; -*- Mode: Emacs-Lisp -*-
 ;; -*- coding: utf-8 -*-
 
-;; SPDX-FileCopyrightText: 2017-2023 Jens Lechtenbörger
+;; SPDX-FileCopyrightText: 2017-2024 Jens Lechtenbörger
 ;; SPDX-License-Identifier: GPL-3.0-or-later
 
 ;; Author: Jens Lechtenbörger
@@ -1316,7 +1316,11 @@ Optional BACKEND is the export backend, `re-reveal' by default."
                (url (cond
                      ((equal type "org")
                       ;; Absolute link to source repository.
-                      (concat source-repo "/blob/master/" filename))
+                      (concat source-repo "/blob/"
+                              (string-trim
+                               (shell-command-to-string
+                                "git branch --show-current"))
+                              "/" filename))
                      ((equal type "pdf")
                       ;; Relative link to PDF in same directory.
                       (file-name-nondirectory filename))
