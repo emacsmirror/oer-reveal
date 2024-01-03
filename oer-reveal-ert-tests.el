@@ -1,6 +1,6 @@
 ;;; oer-reveal-ert-tests.el --- Tests for oer-reveal  -*- lexical-binding: t; -*-
 ;; SPDX-License-Identifier: GPL-3.0-or-later
-;; SPDX-FileCopyrightText: 2019-2022 Jens Lechtenbörger
+;; SPDX-FileCopyrightText: 2019-2022,2024 Jens Lechtenbörger
 
 ;;; Commentary:
 ;; Run tests interactively or as follows (probably with adjusted paths)
@@ -878,7 +878,7 @@ variable, and communication channel under `info'."
                   header
 	        (oer-reveal--css-config info)))))
     (should
-     (equal "/plugin/toc-progress/toc-progress.css\n/dist/theme/toc-style.css\n/plugin/accessibility/helper.css"
+     (equal "/plugin/toc-progress/toc-progress.css\n/dist/theme/toc-style.css\n/plugin/accessibility/helper.css\n/plugin/customcontrols/style.css"
 	    (org-test-with-parsed-data
                 header
 	      (oer-reveal--css-config info))))))
