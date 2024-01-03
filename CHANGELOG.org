@@ -1,6 +1,6 @@
 # Local IspellDict: en
 # SPDX-License-Identifier: GPL-3.0-or-later
-# SPDX-FileCopyrightText: 2019-2023 Jens Lechtenbörger
+# SPDX-FileCopyrightText: 2019-2024 Jens Lechtenbörger
 
 * Changelog
 This file is based on
@@ -10,6 +10,10 @@ where version numbers starting with version 1.0.0 adhere to
 
 
 ** [Unreleased]
+** [4.18.1] - 2024-01-01
+*** Fixed
+    - Avoid hardcoded branch in source URL
+
 ** [4.18.0] - 2023-11-28
 *** Added
     - Variable ~oer-reveal-viewport~ to specify viewport meta tag for
