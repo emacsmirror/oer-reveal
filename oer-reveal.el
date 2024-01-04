@@ -1273,7 +1273,33 @@ Return nil if URL does not look like the URL of a GitLab repository."
       (file-name-sans-extension
        (file-relative-name filename root)))))
 
-(defun oer-reveal--alternate-link-title
+(defun oer-reveal--parse-git-branch ()
+  "Return branch of current project.
+In a detached state, e.g., in a GitLab CI/CD pipeline,
+return branch in 2nd line of \"git branch -a\"."
+  (let ((current (string-trim
+                  (shell-command-to-string
+                   "git branch --show-current"))))
+    (if (< 0 (length current))
+        current
+      (let* ((branches (split-string
+                        (shell-command-to-string
+                         "LANG=C git branch -a")
+                        "[\n]" t "[ \f\t\n\r\v]+"))
+             (branch
+              (when (and (<= 2 (length branches))
+                         (string-match-p " detached " (car branches)))
+                (cond ((string-match "\\([^/]+\\)$" (cadr branches))
+                       ;; A branch name not containing "/".
+                       (match-string 1 (cadr branches)))
+                      ((string-match "/\\([^/]+\\)$" (cadr branches))
+                       ;; A branch name with "/"; part after final "/".
+                       (match-string 1 (cadr branches)))))))
+        (if branch
+            branch
+          (error "[oer-reveal] Branch not found: %s" branches))))))
+
+  (defun oer-reveal--alternate-link-title
     (base-title language doctype backend)
   "Create title attribute for alternate link.
 Generate title from BASE-TITLE for LANGUAGE, and DOCTYPE.
@@ -1317,9 +1343,7 @@ Optional BACKEND is the export backend, `re-reveal' by default."
                      ((equal type "org")
                       ;; Absolute link to source repository.
                       (concat source-repo "/blob/"
-                              (string-trim
-                               (shell-command-to-string
-                                "git branch --show-current"))
+                              (oer-reveal--parse-git-branch)
                               "/" filename))
                      ((equal type "pdf")
                       ;; Relative link to PDF in same directory.
