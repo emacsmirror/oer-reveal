@@ -1649,13 +1649,13 @@ BACKEND must be `org' or `html'."
 		       "%s [[%s][%s]]"
 		     (concat "%s " oer-reveal--creator-html-template))
 		   copyright attributionurl attributionname))
-	(attributionname
-	 (format (if (eq backend 'org)
-		     "%s %s"
-		   (concat "%s " oer-reveal--attribution-html-template))
+	  (attributionname
+	   (format (if (eq backend 'org)
+		       "%s %s"
+		     (concat "%s " oer-reveal--attribution-html-template))
 		   copyright attributionname))
-	((string= copyright oer-reveal--default-copyright) "")
-	(t copyright))))
+	  ((string= copyright oer-reveal--default-copyright) "")
+	  (t copyright))))
 
 (defconst oer-reveal--copy-regexp
   "\\([./\\]*/\\)?\\([^/\\]+\\)\\([/\\]\\)\\(.*\\)"
