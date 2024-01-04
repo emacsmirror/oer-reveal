@@ -867,7 +867,7 @@ Output of Git goes to buffer `oer-reveal-buffer'."
   (let ((parent (file-name-directory
 		 (directory-file-name oer-reveal-submodules-dir))))
     (unless (file-writable-p parent)
-      (error "Directory to install submodules not writable: %s" parent))
+      (error "[oer-reveal] Directory to install submodules not writable: %s" parent))
     (save-excursion
       (pop-to-buffer (get-buffer-create oer-reveal-buffer) nil t)
       (let ((default-directory parent)
@@ -881,7 +881,7 @@ Output of Git goes to buffer `oer-reveal-buffer'."
 	(call-process "git" nil t t "clone" oer-reveal-submodules-url)
 	(insert "...done\n\n")))
     (unless (file-readable-p oer-reveal-submodules-dir)
-      (error "Cloning of submodules failed.  Directory not readable: %s"
+      (error "[oer-reveal] Cloning of submodules failed.  Directory not readable: %s"
 	     oer-reveal-submodules-dir))))
 
 (defun oer-reveal-git-version-string (&optional dir)
@@ -914,7 +914,7 @@ existence of file \"reveal.js\"."
 Do not update if `oer-reveal-submodules-ok-p' returns t.
 Output of Git goes to buffer `oer-reveal-buffer'."
   (unless (file-writable-p oer-reveal-submodules-dir)
-    (error "Directory of submodules not writable: %s"
+    (error "[oer-reveal] Directory of submodules not writable: %s"
 	   oer-reveal-submodules-dir))
   (when (not (oer-reveal-submodules-ok-p))
     (save-excursion
@@ -935,7 +935,7 @@ Output of Git goes to buffer `oer-reveal-buffer'."
 	(call-process "git" nil t t "submodule" "update" "--init" "--recursive")
 	(insert "...done\n\n"))))
   (unless (oer-reveal-submodules-ok-p)
-    (error "Submodule update failed")))
+    (error "[oer-reveal] Submodule update failed")))
 
 (defun oer-reveal-install-submodules ()
   "Install reveal.js and plugins as submodules.
@@ -1324,7 +1324,7 @@ Optional BACKEND is the export backend, `re-reveal' by default."
                      ((equal type "pdf")
                       ;; Relative link to PDF in same directory.
                       (file-name-nondirectory filename))
-                     (t (error "Unknown alternate type: `%s'" type)))))
+                     (t (error "[oer-reveal] Unknown alternate type: `%s'" type)))))
           (format oer-reveal-alternate-type-html
                   mime-type url title-attr)))
       types "")
@@ -2089,7 +2089,7 @@ creators if necessary."
                                         "%s")))
                 (template (cond ((eq fmt 'html) html-template)
                                 ((eq fmt 'pdf) pdf-template)
-                                (t (error "Format `%s' not supported" fmt)))))
+                                (t (error "[oer-reveal] Format `%s' not supported" fmt)))))
            (if uri
                (format template years uri name)
              (message "If you used a URL in the SPDX copyright header, an attributionURL could be generated.")
@@ -2106,7 +2106,7 @@ of a list of years and a URI (or nil)."
   (let ((result (make-hash-table :test 'equal)))
     (dolist (line lines result)
       (unless (string-match oer-reveal--copyright-regexp line)
-        (error "Copyright line not matched: %s" line))
+        (error "[oer-reveal] Copyright line not matched: %s" line))
       (let* ((years (match-string 1 line))
              (name (match-string 2 line))
              ;; URI is optional, enclosed in <...>.
@@ -2164,7 +2164,7 @@ identifier in `oer-reveal-dictionaries'."
            (mapconcat (lambda (line)
                         (oer-reveal--convert-license line fmt language))
                       line-list connective))
-          (t (error "Unknown SPDX header type: `%s'" header)))))
+          (t (error "[oer-reveal] Unknown SPDX header type: `%s'" header)))))
 
 (defun oer-reveal--convert-title (title fmt)
   "Convert TITLE to FMT."
@@ -2417,7 +2417,7 @@ Use `oer-reveal-master' to determine what buffer to export."
       (let ((buffer (find-buffer-visiting oer-reveal-master)))
         (if buffer
             buffer
-          (error "You must load file of `oer-reveal-master': %s"
+          (error "[oer-reveal] You must load file of `oer-reveal-master': %s"
                  oer-reveal-master)))
     (current-buffer)))
 
