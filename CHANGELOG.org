@@ -10,6 +10,12 @@ where version numbers starting with version 1.0.0 adhere to
 
 
 ** [Unreleased]
+** [4.19.1] - 2024-01-04
+*** Fixed
+    - Guess branch in detached state (in GitLab CI/CD pipeline), to be
+      embedded in source URL
+      - Should fix empty branch of 4.18.1
+
 ** [4.19.0] - 2024-01-03
 *** Changed
     - Update oer-reveal-submodules-version to 2.8.0 with
