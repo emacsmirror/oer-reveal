@@ -1154,7 +1154,7 @@ the file extension in PATH may be changed as documented for
 `oer-reveal--path-export'.
 
 See URL
-`https://gitlab.com/oer/cs/programming/-/blob/master/texts/Git-Workflow-Instructions.org'
+`https://gitlab.com/oer/cs/programming/-/blob/main/texts/Git-Workflow-Instructions.org'
 for examples."
   (oer-reveal--path-export path desc backend "<a href=\"%s\">%s</a>"))
 
