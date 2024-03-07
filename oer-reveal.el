@@ -858,6 +858,12 @@ Sorts with `oer-reveal-sort-creators-p' by default."
   :type 'regexp
   :package-version '(oer-reveal . "2.9.0"))
 
+(defcustom oer-reveal-spdx-search-bound 1200
+  "Bound for search of SPDX header with `search-forward-regexp'."
+  :group 'org-export-oer-reveal
+  :type 'regexp
+  :package-version '(oer-reveal . "4.20.0"))
+
 
 ;;; Functions to install and update submodules.
 (defun oer-reveal-clone-submodules ()
@@ -2334,7 +2340,9 @@ Use `oer-reveal-spdx-author' to restrict search."
         (save-restriction
           (widen)
           (goto-char (point-min))
-          (while (search-forward-regexp oer-reveal-spdx-copyright-regexp 800 t)
+          (while (search-forward-regexp
+                  oer-reveal-spdx-copyright-regexp
+                  oer-reveal-spdx-search-bound t)
             (push (match-string 0) matches)))))
     (if matches
         (delete nil
