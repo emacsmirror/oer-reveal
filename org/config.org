@@ -1,6 +1,6 @@
 # -*- eval: (visual-line-mode) -*-
 
-# SPDX-FileCopyrightText: 2017-2023 Jens Lechtenbörger
+# SPDX-FileCopyrightText: 2017-2024 Jens Lechtenbörger
 # SPDX-License-Identifier: CC-BY-SA-4.0
 
 # Neither generate table of contents nor section numbers
@@ -137,7 +137,7 @@
 # oer-reveal--export-attribution-helper), and a list of space
 # separated additional attributes to assign to the figure’s div
 # element.
-# Note the above unit "rv" for an image’s max-height, added in version
+# Note the above unit "rh" for an image’s max-height, added in version
 # 3.10.0 of oer-reveal.  Previously, "vh" was recommended here, but
 # that does not work properly with scaling of reveal.js when the
 # screen’s resolution is larger than the slide height with reveal.js
