@@ -10,6 +10,11 @@ where version numbers starting with version 1.0.0 adhere to
 
 
 ** [Unreleased]
+** [4.20.0] - 2024-03-07
+*** Added
+    - Variable ~oer-reveal-spdx-search-bound~ to replace previously
+      hard-coded constant when searching for SPDX headers
+
 ** [4.19.1] - 2024-01-04
 *** Fixed
     - Guess branch in detached state (in GitLab CI/CD pipeline), to be
