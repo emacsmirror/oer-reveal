@@ -10,6 +10,12 @@ where version numbers starting with version 1.0.0 adhere to
 
 
 ** [Unreleased]
+** [4.21.0] - 2024-03-14
+*** Added
+    - Add optional argument ~shortlicense~ to macro ~revealgrid~
+    - Use height of image as width of (rotated) license text if
+      ~identify~ (part of imagemagick) is installed
+
 ** [4.20.0] - 2024-03-07
 *** Added
     - Variable ~oer-reveal-spdx-search-bound~ to replace previously
