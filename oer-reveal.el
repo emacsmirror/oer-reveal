@@ -1934,13 +1934,15 @@ also after an incompatible change with Org 9.2."
 
 (defun oer-reveal--export-image-grid-helper
     (grid-id grid-images height no-columns no-rows template-areas
-             &optional fragment)
+             &optional fragment shortlicense)
   "Create HTML to display grid with id GRID-ID of GRID-IMAGES.
 The grid has a HEIGHT (percentage of viewport height without unit),
 NO-COLUMNS columns, NO-ROWS rows; positioning is specified by TEMPLATE-AREAS.
 If optional FRAGMENT is the symbol `grid', add \"fragment\" as class to the
 div element containing the grid.  If it is t, add \"fragment\" as class to
-each individual image in the grid."
+each individual image in the grid.
+Optional SHORTLICENSE specifies how to display license information,
+see `oer-reveal--export-attribution-helper'."
   (let* ((images (read (oer-reveal--file-as-string grid-images)))
 	 (no-images (length images))
 	 (numbered (cl-mapcar #'cons (number-sequence 1 no-images) images))
@@ -1956,7 +1958,7 @@ each individual image in the grid."
 	    (mapconcat (lambda (pair)
 			 (oer-reveal--export-grid-image
 			  grid-id row-height image-heights
-			  (car pair) (cdr pair) fragment))
+			  (car pair) (cdr pair) fragment shortlicense))
 		       numbered " ")
 	    "</div><p>@@"
 	    "\n"
@@ -2018,12 +2020,14 @@ return it's name."
 	  (puthash cell (+ 1 (gethash cell result 0)) result))))))
 
 (defun oer-reveal--export-grid-image
-    (grid-id row-height image-heights no image &optional fragment)
+    (grid-id row-height image-heights no image
+             &optional fragment shortlicense)
   "Create HTML for IMAGE number NO in GRID-ID.
 The height of the row is ROW-HEIGHT, heights of images are given by
-IMAGE-HEIGHTS.  If optional FRAGMENT is t, add \"fragment\"
-as class attribute.
-Call `oer-reveal--attribution-strings' with proper metadata."
+IMAGE-HEIGHTS.
+If optional FRAGMENT is t, add \"fragment\" as class attribute.
+Pass proper metadata, including optional SHORTLICENSE, to
+`oer-reveal--attribution-strings'."
   (let ((area (format "ga%d" no))
         (frag-class (if (and fragment (booleanp fragment)) " fragment" "")))
     (car (oer-reveal--attribution-strings
@@ -2033,7 +2037,8 @@ Call `oer-reveal--attribution-strings' with proper metadata."
 	  (concat "figure grid-img "
 		  (format oer-reveal--css-grid-img-class-template
 			  grid-id no)
-                  frag-class)))))
+                  frag-class)
+          shortlicense))))
 
 ;;; Functionality to display language-specific license information
 ;;; in HTML with RDFa and in PDF.

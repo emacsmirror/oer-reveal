@@ -178,7 +178,7 @@
 #+MACRO: reveallicense (eval (oer-reveal-export-attribution $1 nil $2 $3 $4 $5 $6))
 
 # Finally, revealgrid creates an image grid.
-# Its six or seven arguments are as follows:
+# Its six to eight arguments are as follows:
 # 1. Unique grid number (e.g., starting from one)
 # 2. File with names of images to position on the grid
 # 3. Height of the grid as percentage of the height of the slide
@@ -189,6 +189,7 @@
 #    https://developer.mozilla.org/en-US/docs/Web/CSS/grid-template-areas
 #    With this macro, the grid areas *must* be named ga1, ga2, ...
 # 7. Optional indicator whether the grid as a whole (value grid) or individual
-#    grid images (value t) should be fragmented (appear one after the other).
+#    grid images (value t) should be fragmented (appear one after the other)
+# 8. Optional license spefication (see argument 5 of revealimg above)
 # This macro uses oer-reveal-export-image-grid in oer-reveal.el.
-#+MACRO: revealgrid (eval (oer-reveal-export-image-grid $1 $2 $3 $4 $5 $6 $7))
+#+MACRO: revealgrid (eval (oer-reveal-export-image-grid $1 $2 $3 $4 $5 $6 $7 $8))
