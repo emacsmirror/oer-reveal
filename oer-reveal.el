@@ -1831,9 +1831,15 @@ As side effect, copy figure as described for `oer-reveal-copy-dir-suffix'."
 		      (format " style=\"max-height:%s\"" maxheight)
 		    ""))
          (maxwidth (oer-reveal--license-width maxheight))
-	 (h-license (if maxwidth
-			(format " style=\"max-width:%s\"" maxwidth)
-		      ""))
+         (height (when (executable-find "identify")
+                   (shell-command-to-string
+                    (format "identify -format '%%h' \"%s\"" filename))))
+	 (h-license (concat " style=\""
+                            (when height
+                              (format "width:%spx;" height))
+                            (when maxwidth
+			      (format "max-width:%s" maxwidth))
+		            "\""))
 	 (license (if licensetext
 		      (if licenseurl
 			  (format " under [[%s][%s]];" licenseurl licensetext)
