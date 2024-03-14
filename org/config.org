@@ -121,22 +121,24 @@
 #
 # First, revealimg() for horizontally centered images, caption
 # underneath, license text rotated to the right.
-# Macro revealimg() expects up to six arguments, a filename for a
-# file with meta-data about an image and up to five optional
-# arguments: a caption, the maximum height of image in HTML, e.g.,
-# 50rh, a list of CSS classes (space separated, containing "figure"),
-# an attribute specifying whether
-# - a long (default/nil),
-# - a short (t; in this case `oer-reveal--short-license-template' is
-#   used, which by default just produces "Figure under <license>",
-#   where "Figure" is hyperlinked to its source and "<license>" should
-#   typically be a  permissive license that does not require further
-#   attribution such as CC0 or Public Domain), or
-# - no license (none)
-# should be used (arguments are documented for function
-# oer-reveal--export-attribution-helper), and a list of space
-# separated additional attributes to assign to the figure’s div
-# element.
+# Macro revealimg() expects up to six arguments:
+# 1. Filename for a file with meta-data about an image
+# In addition, up to five optional arguments:
+# 2. Caption
+# 3. Maximum height of image in HTML, e.g., 50rh
+# 4. List of CSS classes (space separated, containing "figure")
+# 5. Specification whether
+#    - a long (default/nil),
+#    - a short (t; in this case `oer-reveal--short-license-template' is
+#      used, which by default just produces "Figure under <license>",
+#      where "Figure" is hyperlinked to its source and "<license>" should
+#      typically be a  permissive license that does not require further
+#      attribution such as CC0 or Public Domain), or
+#    - no license (none)
+#    should be used (arguments are documented for function
+#    oer-reveal--export-attribution-helper)
+# 6. List of space separated additional attributes to assign to the
+#    figure’s div element.
 # Note the above unit "rh" for an image’s max-height, added in version
 # 3.10.0 of oer-reveal.  Previously, "vh" was recommended here, but
 # that does not work properly with scaling of reveal.js when the

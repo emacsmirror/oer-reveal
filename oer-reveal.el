@@ -1709,7 +1709,8 @@ and (back-) slashes in group 1.")
 (defun oer-reveal--license-width (maxheight)
   "Compute `max-width' for license given MAXHEIGHT.
 If MAXHEIGHT is a string ending in \"ex\", return corresponding string
-where the number is divided by `oer-reveal-license-font-factor'."
+where the number is divided by `oer-reveal-license-font-factor'.
+Otherwise, return unchanged MAXHEIGHT."
   (if (and (stringp maxheight)
            (string-suffix-p "ex" maxheight))
       (format "%.2fex"
@@ -1736,7 +1737,8 @@ Given the slides' height, return number of pixels of this percentage
 If MAXHEIGHT is a string ending in \"rh\", treat it as percentage
 value for the slides' height with reveal.js and return height with
 unit `px'.  E.g., with the default height of 700, a unit of `10rh'
-results in `70px'."
+results in `70px'.
+Otherwise, return unchanged MAXHEIGHT."
   (if (and (stringp maxheight)
            (string-suffix-p "rh" maxheight))
       (oer-reveal--perc-height-to-pixels (substring maxheight 0 -2))
