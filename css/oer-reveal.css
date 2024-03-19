@@ -377,8 +377,8 @@ div.ribbon-legalese a {
   max-width: 90%;
   max-height: 25ex; }
 
-/* center videos */
-.reveal video {
+/* center iframes and videos */
+.reveal iframe, video {
   display: block;
   margin: 1ex auto; }
 
