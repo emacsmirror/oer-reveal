@@ -21,6 +21,11 @@ html.print-pdf div.quizArea { box-shadow: none; font-size: 18px; }
 html.print-pdf li.question div.questionCount { display: none; }
 html.print-pdf li.question a.checkAnswer { display: none; }
 
+/* Hide some GUI elements. */
+html.print-pdf .reveal aside.notes { background: none; }
+html.print-pdf #customcontrols { display: none; }
+html.print-pdf div.audio-controls { display: none; }
+
 /*********************************************
  * GLOBAL STYLES
  *********************************************/
