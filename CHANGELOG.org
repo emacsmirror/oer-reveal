@@ -10,6 +10,17 @@ where version numbers starting with version 1.0.0 adhere to
 
 
 ** [Unreleased]
+** [4.24.0] - 2024-04-04
+*** Added
+    - Support for ~math~ plugin with local MathJax installation
+      - Update ~oer-reveal-submodules-version~ to 2.9.0
+      - Lines for "mathjax" in ~oer-reveal-plugin-config~ and
+        ~oer-reveal-plugin-4-config~
+      - New variable (and keyword)
+        [[file:oer-reveal.el::(defcustom oer-reveal-mathjax-config][oer-reveal-mathjax-config]]
+*** Changed
+    - Improved hints for custom controls in [[file:org/reveal.js-hints.org]]
+
 ** [4.23.0] - 2024-04-02
 *** Added
     - CSS rules to hide GUI elements in PDF view
