@@ -108,7 +108,9 @@ Derive from `re-reveal' to add further options and keywords."
       (:oer-reveal-coursemod-config "OER_REVEAL_COURSEMOD_CONFIG" nil
                                     oer-reveal-coursemod-config t)
       (:oer-reveal-customcontrols-config "OER_REVEAL_CUSTOMCONTROLS_CONFIG" nil
-                                    oer-reveal-customcontrols-config t)
+                                         oer-reveal-customcontrols-config t)
+      (:oer-reveal-mathjax-config "OER_REVEAL_MATHJAX_CONFIG" nil
+                                  oer-reveal-mathjax-config t)
       (:oer-reveal-navigation-mode "OER_REVEAL_NAVIGATION_MODE" nil
                                     oer-reveal-navigation-mode t)
       (:oer-reveal-jump-dependency "OER_REVEAL_JUMP_DEPENDENCY" nil
@@ -423,6 +425,18 @@ towards the bottom of css/oer-reveal.css."
   :type 'string
   :package-version '(oer-reveal . "4.14.0"))
 
+(defcustom oer-reveal-mathjax-config
+  "mathjax2: {
+       mathjax: 'MathJax/MathJax.js',
+       config: 'TeX-AMS_HTML-full'
+       tex2jax: { imageFont: null} }"
+  "Configuration for math plugin with local MathJax.
+Note that in `oer-reveal-publish-plugin-projects' image fonts and
+unpacked resources are not published."
+  :group 'org-export-oer-reveal
+  :type 'string
+  :package-version '(oer-reveal . "4.24.0"))
+
 (defcustom oer-reveal-jump-dependency
   "{ src: '%splugin/jump/jump.js', async: true }"
   "Dependency to initialize jump plugin."
@@ -468,7 +482,8 @@ For reveal.js 4, the third argument sets the viewport."
     ("reveal.js-customcontrols" ()
      (:oer-reveal-customcontrols-config) ("%splugin/customcontrols/style.css"))
     ("reveal-a11y" (:oer-reveal-a11y-dependency) ()
-     ("%splugin/accessibility/helper.css")))
+     ("%splugin/accessibility/helper.css"))
+    ("mathjax" () (:oer-reveal-mathjax-config) ()))
   "Initialization for reveal.js plugins in `oer-reveal-plugins'.
 This is a list of quadruples, each of which consists of
 - the plugin name, which must be its directory name,
@@ -496,7 +511,8 @@ so that its value can be obtained with `plist-get' during export."
 (defcustom oer-reveal-plugin-4-config
   "audioslideshow RevealAudioSlideshow plugin/audio-slideshow/plugin.js
 anything RevealAnything plugin/anything/plugin.js
-customcontrols RevealCustomControls plugin/customcontrols/plugin.js"
+customcontrols RevealCustomControls plugin/customcontrols/plugin.js
+mathjax RevealMath.MathJax2 plugin/math/math.js"
   "Initialization for reveal.js 4 plugins.
 This should be a multi-line string, each line with the format of
 `REVEAL_ADD_PLUGIN'.  If you want to pass initialization options to
@@ -597,7 +613,7 @@ contained in this directory.")
 (defconst oer-reveal-submodules-url
   "https://gitlab.com/oer/emacs-reveal-submodules.git"
   "Git URL for submodules of reveal.js and plugins.")
-(defcustom oer-reveal-submodules-version "2.8.0"
+(defcustom oer-reveal-submodules-version "2.9.0"
   "Version of submodules to check out.
 This can be a string, indicating a git version tag, or nil.
 If nil, `oer-reveal-submodules-ok-p' always returns t, and oer-reveal does

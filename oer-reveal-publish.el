@@ -2,7 +2,7 @@
 ;; -*- Mode: Emacs-Lisp -*-
 ;; -*- coding: utf-8 -*-
 
-;; SPDX-FileCopyrightText: 2017-2023 Jens Lechtenbörger
+;; SPDX-FileCopyrightText: 2017-2024 Jens Lechtenbörger
 ;; SPDX-License-Identifier: GPL-3.0-or-later
 
 ;;; License: GPLv3
@@ -388,6 +388,17 @@ For each plugin in `oer-reveal-plugins', add what to publish."
             result))
     (when (member "klipse-libs" oer-reveal-plugins)
       (nconc result (oer-reveal-publish-klipse-projects)))
+    (when (member "mathjax" oer-reveal-plugins)
+      (push (list "mathjax"
+		  :base-directory (expand-file-name
+				   "MathJax"
+				   oer-reveal-submodules-dir)
+		  :base-extension 'any
+                  :exclude "\\(^docs/\\|^unpacked/\\|/TeX/png/\\)"
+		  :publishing-directory "./public/MathJax"
+		  :publishing-function 'org-publish-attachment
+		  :recursive t)
+            result))
     result))
 
 (defun oer-reveal-publish-optional-projects ()
