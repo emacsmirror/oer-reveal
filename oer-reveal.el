@@ -253,7 +253,8 @@ You may want to set this to nil in batch mode."
     "reveal.js-customcontrols")
   "List of `plugin' components to publish.
 Each element here is supposed to be the directory name of the plugin.
-If you remove a plugin from this list, it will no longer be published.
+If you remove a plugin from this list, it will no longer be published,
+unless it is contained in `oer-reveal-plugin-4-config'.
 If you add plugins to this list, you need to provide suitable
 initialization code in `oer-reveal-plugin-config', for
 plugins for reveal.js 4 and later also in `oer-reveal-plugin-4-config'.
@@ -506,13 +507,12 @@ so that its value can be obtained with `plist-get' during export."
                     (symbol :tag "JavaScript config among options-alist")
                     (string :tag "JavaScript config as string")))
            (repeat (string :tag "CSS file name"))))
-  :package-version '(oer-reveal . "4.10.0"))
+  :package-version '(oer-reveal . "4.24.0"))
 
 (defcustom oer-reveal-plugin-4-config
   "audioslideshow RevealAudioSlideshow plugin/audio-slideshow/plugin.js
 anything RevealAnything plugin/anything/plugin.js
-customcontrols RevealCustomControls plugin/customcontrols/plugin.js
-mathjax RevealMath.MathJax2 plugin/math/math.js"
+customcontrols RevealCustomControls plugin/customcontrols/plugin.js"
   "Initialization for reveal.js 4 plugins.
 This should be a multi-line string, each line with the format of
 `REVEAL_ADD_PLUGIN'.  If you want to pass initialization options to
