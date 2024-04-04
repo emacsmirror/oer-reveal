@@ -265,7 +265,14 @@ Note that as of version 4.10.0 of oer-reveal, CSS files can be configured
 via `oer-reveal-plugin-config'.  E.g., the plugins Reveal.js-TOC-Progress
 and reveal-a11y require the use of CSS files.
 Also, function `oer-reveal-template' may change settings to enable plugins
-appropriately."
+appropriately.
+
+As of version 4.24.0, support for a local MathJax installation is available:
+Activate the math plugin of reveal.js by adding the string \"mathjax\" to
+this variable and the following line to `oer-reveal-plugin-4-config':
+mathjax RevealMath.MathJax2 plugin/math/math.js
+
+See also `oer-reveal-mathjax-config'."
   :group 'org-export-oer-reveal
   :type '(repeat string)
   :package-version '(oer-reveal . "4.14.0"))
