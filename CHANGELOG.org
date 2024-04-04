@@ -10,6 +10,12 @@ where version numbers starting with version 1.0.0 adhere to
 
 
 ** [Unreleased]
+** [4.24.1] - 2024-04-04
+*** Fixed
+    - Do not activate ~math~ plugin with MathJax by default
+      - Revert change of 4.24.0 to ~oer-reveal-plugin-4-config~
+      - Document necessary configuration in ~oer-reveal-plugins~
+
 ** [4.24.0] - 2024-04-04
 *** Added
     - Support for ~math~ plugin with local MathJax installation
