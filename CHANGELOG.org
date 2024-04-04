@@ -10,6 +10,10 @@ where version numbers starting with version 1.0.0 adhere to
 
 
 ** [Unreleased]
+** [4.24.2] - 2024-04-04
+*** Fixed
+    - Add missing comma in ~oer-reveal-mathjax-config~
+
 ** [4.24.1] - 2024-04-04
 *** Fixed
     - Do not activate ~math~ plugin with MathJax by default
