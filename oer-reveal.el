@@ -437,13 +437,13 @@ towards the bottom of css/oer-reveal.css."
   "mathjax2: {
        mathjax: 'MathJax/MathJax.js',
        config: 'TeX-AMS_HTML-full',
-       tex2jax: { imageFont: null } }"
+       \"HTML-CSS\": { imageFont: null } }"
   "Configuration for math plugin with local MathJax.
 Note that in `oer-reveal-publish-plugin-projects' image fonts and
 unpacked resources are not published."
   :group 'org-export-oer-reveal
   :type 'string
-  :package-version '(oer-reveal . "4.24.2"))
+  :package-version '(oer-reveal . "4.24.3"))
 
 (defcustom oer-reveal-jump-dependency
   "{ src: '%splugin/jump/jump.js', async: true }"
