@@ -79,6 +79,7 @@
 #+LATEX_HEADER: \newunicodechar{⋮}{\vdots}
 #+LATEX_HEADER: \newunicodechar{→}{$\to$}
 #+LATEX_HEADER: \newunicodechar{ }{~}
+#+LATEX_HEADER: \newunicodechar{μ}{$\mu$}
 #+LATEX_HEADER: \usepackage{xcolor}
 #+LATEX_HEADER: \definecolor{darkred}{rgb}{0.3, 0.0, 0.0}
 #+LATEX_HEADER: \definecolor{darkgreen}{rgb}{0.0, 0.3, 0.1}
