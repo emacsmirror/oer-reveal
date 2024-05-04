@@ -1854,7 +1854,8 @@ As side effect, copy figure as described for `oer-reveal-copy-dir-suffix'."
 		      (format " style=\"max-height:%s\"" maxheight)
 		    ""))
          (maxwidth (oer-reveal--license-width maxheight))
-         (height (when (executable-find "identify")
+         (height (when (and (executable-find "identify")
+                            (not (oer-reveal-http-url-p filename)))
                    (shell-command-to-string
                     (format "identify -quiet -format '%%h' \"%s\"" filename))))
 	 (h-license (concat " style=\""
