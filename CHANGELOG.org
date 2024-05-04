@@ -10,6 +10,10 @@ where version numbers starting with version 1.0.0 adhere to
 
 
 ** [Unreleased]
+** [4.24.5] - 2024-05-04
+*** Fixed
+    - Do not run ~identify~ on remote images
+
 ** [4.24.4] - 2024-05-02
 *** Fixed
     - Suppress warning messages on ~identify~ executable
