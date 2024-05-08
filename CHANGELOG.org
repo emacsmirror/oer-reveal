@@ -10,6 +10,10 @@ where version numbers starting with version 1.0.0 adhere to
 
 
 ** [Unreleased]
+** [4.24.6] - 2024-05-08
+*** Fixed
+    - Check exit code of ~identify~
+
 ** [4.24.5] - 2024-05-04
 *** Fixed
     - Do not run ~identify~ on remote images
