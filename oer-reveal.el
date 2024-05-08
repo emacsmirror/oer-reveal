@@ -1781,6 +1781,24 @@ the empty string."
       filename
     (concat (file-name-directory metaname) filename)))
 
+(defun oer-reveal--identify-height (filename)
+  "Use `identify', if installed, to return height of figure FILENAME."
+  (when (and (executable-find "identify")
+             (not (oer-reveal-http-url-p filename)))
+    (with-temp-buffer
+      (let* ((retval (call-process
+                      "identify" nil (current-buffer) nil
+                      "-quiet" "-format" "'%h'"
+                      (shell-quote-argument filename)))
+             (output (buffer-string)))
+        (if (eq 0 retval)
+            output
+          (display-warning
+           'org-export-oer-reveal
+           (format "identify failed on %s: %s" filename output)
+           :warning)
+          nil)))))
+
 (defun oer-reveal--attribution-strings
     (metadata &optional caption maxheight divclasses shortlicense
     embed-svg extra-attrs)
@@ -1854,10 +1872,7 @@ As side effect, copy figure as described for `oer-reveal-copy-dir-suffix'."
 		      (format " style=\"max-height:%s\"" maxheight)
 		    ""))
          (maxwidth (oer-reveal--license-width maxheight))
-         (height (when (and (executable-find "identify")
-                            (not (oer-reveal-http-url-p filename)))
-                   (shell-command-to-string
-                    (format "identify -quiet -format '%%h' \"%s\"" filename))))
+         (height (oer-reveal--identify-height filename))
 	 (h-license (concat " style=\""
                             (when height
                               (format "width:%spx;" height))
