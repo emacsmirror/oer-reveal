@@ -1788,8 +1788,7 @@ the empty string."
     (with-temp-buffer
       (let* ((retval (call-process
                       "identify" nil (current-buffer) nil
-                      "-quiet" "-format" "'%h'"
-                      (shell-quote-argument filename)))
+                      "-quiet" "-format" "'%h'" filename))
              (output (buffer-string)))
         (if (eq 0 retval)
             output
