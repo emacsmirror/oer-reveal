@@ -10,6 +10,10 @@ where version numbers starting with version 1.0.0 adhere to
 
 
 ** [Unreleased]
+** [4.24.7] - 2024-05-13
+*** Fixed
+    - Do not quote argument for ~call-process~
+
 ** [4.24.6] - 2024-05-08
 *** Fixed
     - Check exit code of ~identify~
