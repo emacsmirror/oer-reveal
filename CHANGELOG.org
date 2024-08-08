@@ -10,6 +10,13 @@ where version numbers starting with version 1.0.0 adhere to
 
 
 ** [Unreleased]
+** [4.25.0] - 2024-08-08
+*** Changed
+    - Require org-re-reveal 3.32.0 for %s replacement
+    - Allow and use %s placeholders for plugin configuration;
+      use %s placeholders in [[file:org/config.org]];
+      addresses issue #6
+
 ** [4.24.7] - 2024-05-13
 *** Fixed
     - Do not quote argument for ~call-process~
