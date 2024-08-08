@@ -31,10 +31,10 @@
 # Use different heading for TOC.
 #+REVEAL_TOC_SLIDE_TITLE: Agenda
 
-#+REVEAL_EXTRA_CSS: ./reveal.js/dist/theme/fonts/source-sans-pro/source-sans-pro.css
+#+REVEAL_EXTRA_CSS: %sdist/theme/fonts/source-sans-pro/source-sans-pro.css
 
 # Allow to selectively hide links.
-#+REVEAL_EXTRA_SCRIPTS: ("./reveal.js/dist/theme/hidelinks.js")
+#+REVEAL_EXTRA_SCRIPTS: ("%sdist/theme/hidelinks.js")
 
 # Set a default bib file.
 #+MACRO: bibliographyfile bibliography:references.bib
