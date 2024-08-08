@@ -2627,7 +2627,9 @@ Otherwise, return value of property THING in plist INFO."
 (defun oer-reveal--plugin-config (info)
   "Build initialization string for reveal.js plugins based on INFO."
   (let* ((init-script (plist-get info :reveal-init-script))
-         (root-path (file-name-as-directory (plist-get info :reveal-root)))
+         (root-path (file-name-as-directory
+                     ;; Guarantee string for root-path in test cases.
+                     (or (plist-get info :reveal-root) "./reveal.js")))
          (plugins (org-re-reveal--read-list
                    (plist-get info :oer-reveal-plugins)))
          (config (apply #'append
