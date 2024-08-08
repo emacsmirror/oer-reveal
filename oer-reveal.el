@@ -413,15 +413,15 @@ Set to nil if you do not want this."
 (defcustom oer-reveal-customcontrols-config
   (concat
    "customcontrols: { "
-   "collapseIcon: '<img src=\"reveal.js/dist/theme/chevron-left.svg\" />"
-   "', expandIcon: '<img src=\"reveal.js/dist/theme/chevron-right.svg\" />"
-   "', controls: [ { icon: '<img src=\"reveal.js/dist/theme/expand.svg\" />"
+   "collapseIcon: '<img src=\"%sdist/theme/chevron-left.svg\" />"
+   "', expandIcon: '<img src=\"%sdist/theme/chevron-right.svg\" />"
+   "', controls: [ { icon: '<img src=\"%sdist/theme/expand.svg\" />"
    "', title: 'Enter fullscreen (F)', action: 'Reveal.triggerKey(70);' }, "
-   "{ icon: '<img src=\"reveal.js/dist/theme/comment.svg\" />"
+   "{ icon: '<img src=\"%sdist/theme/comment.svg\" />"
    "', title: 'Toggle notes', action: 'Reveal.configure({showNotes: !Reveal.getConfig().showNotes});' }, "
-   "{ icon: '<img src=\"reveal.js/dist/theme/search.svg\" />"
+   "{ icon: '<img src=\"%sdist/theme/search.svg\" />"
    "', title: 'Search; with (repeated) enter/return', action: 'Reveal.getPlugins().search.open();' }, "
-   "{ icon: '<img src=\"reveal.js/dist/theme/keyboard.svg\" />"
+   "{ icon: '<img src=\"%sdist/theme/keyboard.svg\" />"
    "', title: 'Keyboard shortcuts (?)', action: 'Reveal.toggleHelp();' } ] }")
   "Configuration for custom controls plugin.
 Note that the plugin by default uses Font Awesome icons, inserted via
@@ -431,7 +431,7 @@ directly here (which improves privacy and latency).  Styling is applied
 towards the bottom of css/oer-reveal.css."
   :group 'org-export-oer-reveal
   :type 'string
-  :package-version '(oer-reveal . "4.14.0"))
+  :package-version '(oer-reveal . "4.25.0"))
 
 (defcustom oer-reveal-mathjax-config
   "mathjax2: {
@@ -499,8 +499,10 @@ This is a list of quadruples, each of which consists of
   plugins, the JavaScript file needs to be provided with
   `oer-reveal-plugin-4-config' and this list should be empty,
 - a possibly empty list of symbols or strings with configuration settings,
+  where occurrences of src=\"%s are replaced with the root directory of
+  reveal.js,
 - a possibly empty list of names of CSS files to be used with the plugin,
-  each starting with %s placeholder for root directory of reveal.js.
+  each starting with %s placeholder for the root directory of reveal.js.
 The symbols should occur among the options-alist of the backend `oer-reveal'
 so that its value can be obtained with `plist-get' during export."
   :group 'org-export-oer-reveal
