@@ -2625,6 +2625,7 @@ Otherwise, return value of property THING in plist INFO."
 (defun oer-reveal--plugin-config (info)
   "Build initialization string for reveal.js plugins based on INFO."
   (let* ((init-script (plist-get info :reveal-init-script))
+         (root-path (file-name-as-directory (plist-get info :reveal-root)))
          (plugins (org-re-reveal--read-list
                    (plist-get info :oer-reveal-plugins)))
          (config (apply #'append
@@ -2638,7 +2639,9 @@ Otherwise, return value of property THING in plist INFO."
     (when config-parts
       (mapconcat (lambda (part)
                    (format oer-reveal-plugin-config-fmt
-                           (oer-reveal--string-or-value part info)))
+                           (replace-regexp-in-string
+                            "src=\"%s" (concat "src=\"" root-path)
+                            (oer-reveal--string-or-value part info))))
                  config-parts ""))))
 
 (defun oer-reveal--plugin-dependencies (info)
