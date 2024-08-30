@@ -10,6 +10,10 @@ where version numbers starting with version 1.0.0 adhere to
 
 
 ** [Unreleased]
+** [4.26.0] - 2024-08-30
+*** Changed
+    - Update ~oer-reveal-submodules-version~ to 2.10.0
+
 ** [4.25.0] - 2024-08-08
 *** Changed
     - Require org-re-reveal 3.32.0 for %s replacement
