@@ -167,6 +167,13 @@ browsing that file, subtree export to file."
                (character :tag "Key for subtree export to file"))
   :set #'oer-reveal-define-menu)
 
+(defcustom oer-reveal-debug-cache nil
+  "If non-nil, generate debug information about Org's publish cache.
+If a string, use as `pub-dir' to lookup names in cache."
+  :group 'org-export-oer-reveal
+  :type '(choice boolean string)
+  :package-version '(oer-reveal . "4.27.0"))
+
 ;; The following variable with its doc string is derived from AUCTeX's
 ;; TeX-master.
 (defcustom oer-reveal-master t
@@ -2544,6 +2551,27 @@ to `oer-reveal-export-to-html'."
     (widen)
     ret))
 
+(defun oer-reveal--debug-cache (filename &optional pub-dir)
+  "Print debug information for FILENAME and PUB-DIR in Org publish cache.
+If PUB-DIR is not a string, use default value of \"./public/\"."
+  (let ((mtime (org-publish-cache-mtime-of-src filename))
+        (pub-dir (if (stringp pub-dir)
+                     pub-dir
+                   "./public/")))
+    (message "[oer-reveal] Source %s, pub-dir %s, mtime is %s."
+             filename pub-dir
+             (format-time-string "%Y-%m-%d %H:%M:%S" mtime))
+    (dolist (func '("org-re-reveal-publish-to-reveal"
+                    "oer-reveal-publish-to-reveal"
+                    "oer-reveal-publish-to-reveal-and-pdf"))
+      (let* ((key (org-publish-timestamp-filename
+                   filename pub-dir func))
+	     (ctime (org-publish-cache-get key))
+             (cstr (if ctime
+                       (format-time-string "%Y-%m-%d %H:%M:%S" ctime)
+                     "not present")))
+        (message "[oer-reveal] Cached for %s under %s: %s" func key cstr)))))
+
 ;;;###autoload
 (defun oer-reveal-publish-to-reveal (plist filename pub-dir)
   "Publish an Org file to HTML (reveal.js presentation).
@@ -2551,6 +2579,8 @@ FILENAME is the filename of the Org file to be published.  PLIST
 is the property list for the given project.  PUB-DIR is the
 publishing directory.
 Return output file name."
+  (when oer-reveal-debug-cache
+    (oer-reveal--debug-cache filename oer-reveal-debug-cache))
   (oer-reveal--setup-env
    (lambda ()
      (org-re-reveal-publish-to-reveal plist filename pub-dir 'oer-reveal))))
@@ -2562,6 +2592,8 @@ FILENAME is the filename of the Org file to be published.  PLIST
 is the property list for the given project.  PUB-DIR is the
 publishing directory.
 Return output file name."
+  (when oer-reveal-debug-cache
+    (oer-reveal--debug-cache filename oer-reveal-debug-cache))
   (oer-reveal--setup-env
    (lambda ()
      (let ((oer-reveal-with-alternate-types '("org" "pdf")))
