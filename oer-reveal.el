@@ -167,6 +167,17 @@ browsing that file, subtree export to file."
                (character :tag "Key for subtree export to file"))
   :set #'oer-reveal-define-menu)
 
+(defcustom oer-reveal-skip-theindex t
+  "Do not try to create a reveal.js presentation for the index.
+The author publishes index pages with standard HTML export as web
+pages, not as reveal.js presentations.
+
+Change to nil, if you also want to publish the file \"theindex.org\"
+as reveal.js presentation."
+  :group 'org-export-oer-reveal
+  :type 'boolean
+  :package-version '(org-re-reveal . "4.27.0"))
+
 (defcustom oer-reveal-debug-cache nil
   "If non-nil, generate debug information about Org's publish cache.
 If a string, use as `pub-dir' to lookup names in cache."
@@ -2591,14 +2602,19 @@ Return output file name."
 FILENAME is the filename of the Org file to be published.  PLIST
 is the property list for the given project.  PUB-DIR is the
 publishing directory.
-Return output file name."
-  (when oer-reveal-debug-cache
-    (oer-reveal--debug-cache filename oer-reveal-debug-cache))
-  (oer-reveal--setup-env
-   (lambda ()
-     (let ((oer-reveal-with-alternate-types '("org" "pdf")))
-       (org-re-reveal-publish-to-reveal plist filename pub-dir 'oer-reveal)
-       (org-latex-publish-to-pdf plist filename pub-dir)))))
+Return output file name or nil."
+  (if (and oer-reveal-skip-theindex
+           (equal "theindex.org" (file-name-nondirectory filename)))
+      (progn
+        (message "Skipping theindex.org (see `oer-reveal-skip-theindex').")
+        nil)
+    (when oer-reveal-debug-cache
+      (oer-reveal--debug-cache filename oer-reveal-debug-cache))
+    (oer-reveal--setup-env
+     (lambda ()
+       (let ((oer-reveal-with-alternate-types '("org" "pdf")))
+         (org-re-reveal-publish-to-reveal plist filename pub-dir 'oer-reveal)
+         (org-latex-publish-to-pdf plist filename pub-dir))))))
 
 ;;;###autoload
 (defun oer-reveal-publish-to-reveal-client (plist filename pub-dir)
