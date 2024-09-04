@@ -2545,8 +2545,7 @@ to `oer-reveal-export-to-html'."
     ret))
 
 ;;;###autoload
-(defun oer-reveal-publish-to-reveal
-    (plist filename pub-dir)
+(defun oer-reveal-publish-to-reveal (plist filename pub-dir)
   "Publish an Org file to HTML (reveal.js presentation).
 FILENAME is the filename of the Org file to be published.  PLIST
 is the property list for the given project.  PUB-DIR is the
@@ -2557,8 +2556,7 @@ Return output file name."
      (org-re-reveal-publish-to-reveal plist filename pub-dir 'oer-reveal))))
 
 ;;;###autoload
-(defun oer-reveal-publish-to-reveal-and-pdf
-    (plist filename pub-dir)
+(defun oer-reveal-publish-to-reveal-and-pdf (plist filename pub-dir)
   "Publish an Org file to HTML (reveal.js presentation) and to PDF.
 FILENAME is the filename of the Org file to be published.  PLIST
 is the property list for the given project.  PUB-DIR is the
@@ -2571,8 +2569,7 @@ Return output file name."
        (org-latex-publish-to-pdf plist filename pub-dir)))))
 
 ;;;###autoload
-(defun oer-reveal-publish-to-reveal-client
-    (plist filename pub-dir)
+(defun oer-reveal-publish-to-reveal-client (plist filename pub-dir)
   "Publish an Org file to HTML as multiplex client.
 FILENAME is the filename of the Org file to be published.  PLIST
 is the property list for the given project.  PUB-DIR is the
@@ -2584,8 +2581,7 @@ Return output file name."
    (lambda ()
      (org-re-reveal-publish-to-reveal-client plist filename pub-dir 'oer-reveal))))
 
-(defun oer-reveal-publish-to-html
-    (plist filename pub-dir)
+(defun oer-reveal-publish-to-html (plist filename pub-dir)
   "Call `org-html-publish-to-html' with PLIST, FILENAME, PUB-DIR.
 Before that,
 - reset `org-ref-ref-html' to its default value,
@@ -2607,8 +2603,7 @@ Before that, adjust settings for oer-reveal."
    (lambda ()
      (org-latex-publish-to-pdf plist filename pub-dir))))
 
-(defun oer-reveal-publish-to-html-and-pdf
-    (plist filename pub-dir)
+(defun oer-reveal-publish-to-html-and-pdf (plist filename pub-dir)
   "Publish HTML and PDF with PLIST, FILENAME, PUB-DIR.
 Set up `oer-reveal-with-alternate-types' to produce source and PDF
 links in HTML and source and HTML links in PDF."
