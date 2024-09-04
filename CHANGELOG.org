@@ -10,6 +10,16 @@ where version numbers starting with version 1.0.0 adhere to
 
 
 ** [Unreleased]
+** [4.27.0] - 2024-09-04
+*** Added
+    - Customizable variable
+      [[file:oer-reveal.el::(defcustom oer-reveal-debug-cache nil][~oer-reveal-debug-cache~]]
+      - Used in ~oer-reveal-publish-to-reveal~ and in
+        ~oer-reveal-publish-to-reveal-and-pdf~
+    - Customizable variable
+      [[file:oer-reveal.el::(defcustom oer-reveal-skip-theindex t][~oer-reveal-skip-theindex~]]
+      to avoid publication of theindex.org with default settings.
+
 ** [4.26.0] - 2024-08-30
 *** Changed
     - Update ~oer-reveal-submodules-version~ to 2.10.0
