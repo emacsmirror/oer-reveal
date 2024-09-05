@@ -10,6 +10,10 @@ where version numbers starting with version 1.0.0 adhere to
 
 
 ** [Unreleased]
+** [4.27.1] - 2024-09-05
+*** Fixed
+    - Fix oer-reveal-add-alternate-types
+
 ** [4.27.0] - 2024-09-04
 *** Added
     - Customizable variable
