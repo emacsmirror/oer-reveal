@@ -141,15 +141,21 @@
                   '("org" "pdf") "git" "example.org/" "presentation")
                  "#+HTML_HEAD: <link rel=\"alternate\" type=\"text/org\" href=\"git/blob/main/presentation.org\" title=\"Org mode source code of this OER HTML presentation with reveal.js\"/>
 #+HTML_HEAD: <link rel=\"alternate\" type=\"application/pdf\" href=\"presentation.pdf\" title=\"PDF version of this OER HTML presentation with reveal.js\"/>
-#+TITLE: @@latex:\\footnote{This PDF document is an inferior version of an \\href{example.org/presentation.html}{OER HTML presentation with reveal.js}; \\href{git}{free/libre Org mode source repository}.}@@
 "))
 
   ;; Different wording for HTML documents.
   (should (equal (oer-reveal-add-alternate-types
                   '("org" "pdf") "git" "example.org/" "presentation" 'html)
-                 "#+HTML_HEAD: <link rel=\"alternate\" type=\"text/org\" href=\"git/blob/main/presentation.org\" title=\"Org mode source code of this OER HTML page\"/>
-#+HTML_HEAD: <link rel=\"alternate\" type=\"application/pdf\" href=\"presentation.pdf\" title=\"PDF version of this OER HTML page\"/>
-#+TITLE: @@latex:\\footnote{This PDF document is an inferior version of an \\href{example.org/presentation.html}{OER HTML page}; \\href{git}{free/libre Org mode source repository}.}@@
+                 "#+HTML_HEAD: <link rel=\"alternate\" type=\"text/org\" href=\"git/blob/main/presentation.org\" title=\"Org mode source code of this OER in HTML format\"/>
+#+HTML_HEAD: <link rel=\"alternate\" type=\"application/pdf\" href=\"presentation.pdf\" title=\"PDF version of this OER in HTML format\"/>
+"))
+
+  ;; Footnote for PDF documents.
+  (should (equal (oer-reveal-add-alternate-types
+                  '("org" "pdf") "git" "example.org/" "presentation" 'latex)
+                 "#+HTML_HEAD: <link rel=\"alternate\" type=\"text/org\" href=\"git/blob/main/presentation.org\" title=\"Org mode source code of this OER in HTML format\"/>
+#+HTML_HEAD: <link rel=\"alternate\" type=\"application/pdf\" href=\"presentation.pdf\" title=\"PDF version of this OER in HTML format\"/>
+#+TITLE: @@latex:\\footnote{This PDF document is an inferior version of an \\href{example.org/presentation.html}{OER in HTML format}; \\href{git}{free/libre Org mode source repository}.}@@
 "))
 
   ;; Links without title attribute.
@@ -164,7 +170,11 @@
     (should (equal (oer-reveal-add-alternate-types
                     '("pdf") "git" "example.org/" "foo/presentation")
                    "#+HTML_HEAD: <link rel=\"alternate\" type=\"application/pdf\" href=\"presentation.pdf\"/>
-#+TITLE: @@latex:\\footnote{This PDF document is an inferior version of an \\href{example.org/foo/presentation.html}{OER HTML presentation with reveal.js}; \\href{git}{free/libre Org mode source repository}.}@@
+"))
+    (should (equal (oer-reveal-add-alternate-types
+                    '("pdf") "git" "example.org/" "foo/presentation" 'latex)
+                   "#+HTML_HEAD: <link rel=\"alternate\" type=\"application/pdf\" href=\"presentation.pdf\"/>
+#+TITLE: @@latex:\\footnote{This PDF document is an inferior version of an \\href{example.org/foo/presentation.html}{OER in HTML format}; \\href{git}{free/libre Org mode source repository}.}@@
 "))))
 
 ;;; Test license attribution

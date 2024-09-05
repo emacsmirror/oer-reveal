@@ -795,7 +795,7 @@ Note that this filename is exported into a subdirectory of
              (by . "by")
              (created . "Created")
              (legalese . "<div class=\"legalese\"><p><a href=\"/imprint.html\">Imprint</a> | <a href=\"/privacy.html\">Privacy Policy</a></p></div>")
-             (htmldoc . "OER HTML page")
+             (htmldoc . "OER in HTML format")
              (revealjsdoc . "OER HTML presentation with reveal.js")
              (sourceversion . "Org mode source code of this %s")
              (pdfversion . "PDF version of this %s")
@@ -809,7 +809,7 @@ Note that this filename is exported into a subdirectory of
              (by . "von")
              (created . "Erzeugt")
              (legalese . "<div class=\"legalese\"><p><a href=\"/imprint.html\">Impressum</a> | <a href=\"/privacy-de.html\">Datenschutz</a></p></div>")
-             (htmldoc . "OER-HTML-Seite")
+             (htmldoc . "OER im HTML-Format")
              (revealjsdoc . "OER-HTML-Präsentation mit Reveal.js")
              (sourceversion . "Org-Mode-Quelltext dieser %s")
              (pdfversion . "PDF-Version dieser %s")
@@ -1367,11 +1367,14 @@ Supported string values for TYPES are defined in
 First, create HTML link elements in \"HTML_HEAD\" lines for each type
 in TYPES.  For \"org\", create a link to the Org file under SOURCE-REPO.
 For other types, including \"pdf\", create a link with relative path.
-Second, add a LaTeX footnote to the title with href links to the source
-file in SOURCE-REPO and to the HTML file under HTML-URL.
+Second, for LaTeX export, add a footnote to the title with href links to
+the source file in SOURCE-REPO and to the HTML file under HTML-URL.
 BASENAME is the relative source filename without file extension in
 SOURCE-REPO.
-Optional BACKEND is the export backend, `re-reveal' by default."
+Optional BACKEND is the export backend, `re-reveal' by default.
+Note that the HTML header lines are generated for every BACKEND,
+although they are only useful for `html' and `re-reveal' export;
+they do not hurt for `latex' export, though."
   (let* ((language (oer-reveal--language))
          (backend (or backend 're-reveal))
          (doctype (if (org-export-derived-backend-p backend 're-reveal)
@@ -1397,11 +1400,13 @@ Optional BACKEND is the export backend, `re-reveal' by default."
                      ((equal type "pdf")
                       ;; Relative link to PDF in same directory.
                       (file-name-nondirectory filename))
-                     (t (error "[oer-reveal] Unknown alternate type: `%s'" type)))))
+                     (t (error
+                         "[oer-reveal] Unknown alternate type: `%s'" type)))))
           (format oer-reveal-alternate-type-html
                   mime-type url title-attr)))
       types "")
-     (if (member "pdf" types)
+     (if (and (member "pdf" types)
+              (org-export-derived-backend-p backend 'latex))
          (let* ((targeturl
                  (concat (if (string-suffix-p "/" html-url)
                              html-url
