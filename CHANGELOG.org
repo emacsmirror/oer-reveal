@@ -10,6 +10,10 @@ where version numbers starting with version 1.0.0 adhere to
 
 
 ** [Unreleased]
+** [4.28.1] - 2024-12-18
+*** Fixed
+    - Add icon for autoadvance
+
 ** [4.28.0] - 2024-12-18
 *** Added
     - New button to toggle autoadvance in ~oer-reveal-customcontrols-config~
