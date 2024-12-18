@@ -441,8 +441,8 @@ Set to nil if you do not want this."
    "', title: 'Search; with (repeated) enter/return', action: 'Reveal.getPlugins().search.toggle();' }, "
    "{ icon: '<img src=\"%sdist/theme/keyboard.svg\" />"
    "', title: 'Keyboard shortcuts (?)', action: 'Reveal.toggleHelp();' }, "
-   "{ icon: '<img src=\"%sdist/theme/recycle.svg\" />"
-   "', title: 'Toggle autoadvance (^)', action: 'let state = Reveal.getPlugins().RevealAudioSlideshow.toggleAutoAdvance(); let button = document.getElementById(\"toggleAutoAdvance\"); if (state) button.style.opacity=1.0; else button.style.opacity=0.3;' } ] }")
+   "{ icon: '<img id=\"toggleAutoAdvance\" src=\"%sdist/theme/recycle.svg\" />"
+   "', title: 'Toggle autoadvance (^)', action: 'let state = Reveal.getPlugins().RevealAudioSlideshow.toggleAutoAdvance(); let button = document.getElementById(\\'toggleAutoAdvance\\'); if (state) button.style.opacity=1.0; else button.style.opacity=0.3;' } ] }")
   "Configuration for custom controls plugin.
 Note that the plugin by default uses Font Awesome icons, inserted via
 a huge library, by default from a remote location.
