@@ -10,6 +10,16 @@ where version numbers starting with version 1.0.0 adhere to
 
 
 ** [Unreleased]
+** [4.28.0] - 2024-12-18
+*** Added
+    - New button to toggle autoadvance in ~oer-reveal-customcontrols-config~
+      (requires fork of reveal.js-plugins, open PR #183)
+*** Changed
+    - Update ~oer-reveal-submodules-version~ to 2.11.0
+    - Update ~oer-reveal-customcontrols-config~
+      - Use ~toggle()~ for search (requires reveal.js as of
+        2024-09-30, merged PR #3685)
+
 ** [4.27.1] - 2024-09-05
 *** Fixed
     - Fix oer-reveal-add-alternate-types
