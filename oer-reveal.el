@@ -1257,7 +1257,7 @@ a class to indicate that topics are revisited later."
   "Register Org link TYPE with FOLLOW-FUNC and EXPORT-FUNC."
   (if (fboundp #'org-link-set-parameters)
       (org-link-set-parameters type :follow follow-func :export export-func)
-    (with-suppressed-warnings ((obsolete org-add-link-type))
+    (with-no-warnings
       (org-add-link-type type follow-func export-func))))
 
 (oer-reveal-register-link "color"

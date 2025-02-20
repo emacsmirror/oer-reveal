@@ -253,9 +253,9 @@ links are created from GitLab repository URLs."
 (defun oer-reveal--add-processing-hook (func)
   "Add FUNC to `org-export-before-processing-hook'.
 Or to `org-export-before-processing-functions' if it exists."
-  (if (boundp org-export-before-processing-functions)
+  (if (boundp 'org-export-before-processing-functions)
         (add-hook 'org-export-before-processing-functions func)
-    (with-suppressed-warnings ((obsolete org-export-before-processing-hook))
+    (with-no-warnings
       (add-hook 'org-export-before-processing-hook func))))
 
 ;;;###autoload
