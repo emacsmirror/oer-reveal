@@ -2,7 +2,7 @@
 ;; -*- Mode: Emacs-Lisp -*-
 ;; -*- coding: utf-8 -*-
 
-;; SPDX-FileCopyrightText: 2017-2024 Jens Lechtenbörger
+;; SPDX-FileCopyrightText: 2017-2025 Jens Lechtenbörger
 ;; SPDX-License-Identifier: GPL-3.0-or-later
 
 ;;; License: GPLv3
@@ -95,7 +95,7 @@ If your index.org is a presentation, use
   :package-version '(oer-reveal . "4.9.0"))
 
 (defcustom oer-reveal-publish-descriptive-links nil
-  "Value to assign to `org-descriptive-links'."
+  "Value to assign to `org-descriptive-links' (`org-link-descriptive')."
   :group 'org-export-oer-reveal
   :type 'boolean
   :package-version '(oer-reveal . "1.6.0"))
@@ -250,6 +250,14 @@ links are created from GitLab repository URLs."
   :package-version '(oer-reveal . "2.0.0"))
 
 (require 'table)
+(defun oer-reveal--add-processing-hook (func)
+  "Add FUNC to `org-export-before-processing-hook'.
+Or to `org-export-before-processing-functions' if it exists."
+  (if (boundp org-export-before-processing-functions)
+        (add-hook 'org-export-before-processing-functions func)
+    (with-suppressed-warnings ((obsolete org-export-before-processing-hook))
+      (add-hook 'org-export-before-processing-hook func))))
+
 ;;;###autoload
 (defun oer-reveal-publish-setq-defaults ()
   "Change Emacs environment.
@@ -265,10 +273,9 @@ during publication needs the proper value."
   (org-babel-do-load-languages
    'org-babel-load-languages oer-reveal-publish-babel-languages)
   (when oer-reveal-publish-alternate-type-function
-    (add-hook 'org-export-before-processing-hook
-              oer-reveal-publish-alternate-type-function))
-  (add-hook 'org-export-before-processing-hook
-            #'oer-reveal-setup-plugins)
+    (oer-reveal--add-processing-hook
+     oer-reveal-publish-alternate-type-function))
+  (oer-reveal--add-processing-hook #'oer-reveal-setup-plugins)
   (setq org-re-reveal--href-fragment-prefix org-re-reveal--slide-id-prefix))
 
 (defun oer-reveal-publish-klipse-projects ()

@@ -2,7 +2,7 @@
 ;; -*- Mode: Emacs-Lisp -*-
 ;; -*- coding: utf-8 -*-
 
-;; SPDX-FileCopyrightText: 2017-2024 Jens Lechtenbörger
+;; SPDX-FileCopyrightText: 2017-2025 Jens Lechtenbörger
 ;; SPDX-License-Identifier: GPL-3.0-or-later
 
 ;; Author: Jens Lechtenbörger
@@ -1257,7 +1257,8 @@ a class to indicate that topics are revisited later."
   "Register Org link TYPE with FOLLOW-FUNC and EXPORT-FUNC."
   (if (fboundp #'org-link-set-parameters)
       (org-link-set-parameters type :follow follow-func :export export-func)
-    (org-add-link-type type follow-func export-func)))
+    (with-suppressed-warnings ((obsolete org-add-link-type))
+      (org-add-link-type type follow-func export-func))))
 
 (oer-reveal-register-link "color"
                           #'oer-reveal--color-link-follow
@@ -2487,36 +2488,38 @@ function during Org export, which passes an argument)."
 (defvar oer-reveal-publish-latex-packages)
 (defun oer-reveal--setup-env (func)
   "Setup environment for oer-reveal export, then execute FUNC with ARGS."
-    (let ((table-html-th-rows 1)
-	  (table-html-table-attribute "class=\"emacs-table\"")
-          (org-entities-user '(("textbackslash" "\\textbackslash{}" nil "\\" "\\" "\\" "\\")))
-          (org-html-table-default-attributes nil)
-          (org-html-container-element oer-reveal-publish-html-container-element)
-          (org-html-divs oer-reveal-publish-html-divs)
-	  (org-html-doctype oer-reveal-publish-html-doctype)
-	  (org-html-postamble oer-reveal-publish-html-postamble)
-          (org-html-text-markup-alist oer-reveal-publish-html-text-markup-alist)
-          (org-descriptive-links oer-reveal-publish-descriptive-links)
-          (org-re-reveal-mobile-app oer-reveal-mobile-app)
-          (org-re-reveal-tdm-reservation oer-reveal-tdm-reservation)
-          (org-re-reveal-revealjs-version oer-reveal-revealjs-version)
-          (org-re-reveal-viewport oer-reveal-viewport)
-	  (oer-reveal-latex-figure-float oer-reveal-publish-figure-float)
-	  (org-latex-pdf-process oer-reveal-publish-pdf-process)
-	  (org-latex-default-packages-alist
-	   (append oer-reveal-publish-latex-packages
-		   org-latex-default-packages-alist))
-          (org-export-filter-parse-tree-functions
-           (if oer-reveal-new-tab-url-regexp
-               (cons #'oer-reveal-filter-parse-tree
-                     org-export-filter-parse-tree-functions)
-             org-export-filter-parse-tree-functions))
-          (org-export-filter-link-functions
-           (if oer-reveal-filter-latex-links
-               (cons #'oer-reveal-latex-link-filter
-                     org-export-filter-link-functions)
-             org-export-filter-link-functions)))
-      (funcall func)))
+    (with-suppressed-warnings ((obsolete org-descriptive-links))
+      (let ((table-html-th-rows 1)
+	    (table-html-table-attribute "class=\"emacs-table\"")
+            (org-entities-user '(("textbackslash" "\\textbackslash{}" nil "\\" "\\" "\\" "\\")))
+            (org-html-table-default-attributes nil)
+            (org-html-container-element oer-reveal-publish-html-container-element)
+            (org-html-divs oer-reveal-publish-html-divs)
+	    (org-html-doctype oer-reveal-publish-html-doctype)
+	    (org-html-postamble oer-reveal-publish-html-postamble)
+            (org-html-text-markup-alist oer-reveal-publish-html-text-markup-alist)
+            (org-descriptive-links oer-reveal-publish-descriptive-links)
+            (org-link-descriptive oer-reveal-publish-descriptive-links)
+            (org-re-reveal-mobile-app oer-reveal-mobile-app)
+            (org-re-reveal-tdm-reservation oer-reveal-tdm-reservation)
+            (org-re-reveal-revealjs-version oer-reveal-revealjs-version)
+            (org-re-reveal-viewport oer-reveal-viewport)
+	    (oer-reveal-latex-figure-float oer-reveal-publish-figure-float)
+	    (org-latex-pdf-process oer-reveal-publish-pdf-process)
+	    (org-latex-default-packages-alist
+	     (append oer-reveal-publish-latex-packages
+		     org-latex-default-packages-alist))
+            (org-export-filter-parse-tree-functions
+             (if oer-reveal-new-tab-url-regexp
+                 (cons #'oer-reveal-filter-parse-tree
+                       org-export-filter-parse-tree-functions)
+               org-export-filter-parse-tree-functions))
+            (org-export-filter-link-functions
+             (if oer-reveal-filter-latex-links
+                 (cons #'oer-reveal-latex-link-filter
+                       org-export-filter-link-functions)
+               org-export-filter-link-functions)))
+        (funcall func))))
 
 (defun oer-reveal--master-buffer ()
   "Return master buffer for export of current buffer.
@@ -2636,6 +2639,7 @@ Return output file name."
    (lambda ()
      (org-re-reveal-publish-to-reveal-client plist filename pub-dir 'oer-reveal))))
 
+(defvar org-ref-ref-html) ; Silence byte compiler
 (defun oer-reveal-publish-to-html (plist filename pub-dir)
   "Call `org-html-publish-to-html' with PLIST, FILENAME, PUB-DIR.
 Before that,
