@@ -10,6 +10,10 @@ where version numbers starting with version 1.0.0 adhere to
 
 
 ** [Unreleased]
+** [4.28.4] - 2025-02-20
+*** Fixed
+    - Fix compat check of 4.28.3
+
 ** [4.28.3] - 2025-02-20
 *** Fixed
     - Avoid byte compiler warnings
