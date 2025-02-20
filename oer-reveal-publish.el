@@ -241,7 +241,7 @@ Oer-reveal also includes other packages in file org/config.org."
 
 (defcustom oer-reveal-publish-alternate-type-function
   #'oer-reveal-insert-alternate-types
-  "If non-nil, function to add to org-export-before-processing-hook.
+  "If non-nil, function to add to `org-export-before-processing-hook'.
 By default, add alternate type link elements to exported HTML (and
 reveal.js) documents and hyperlinks to PDF documents.  Alternate type
 links are created from GitLab repository URLs."
