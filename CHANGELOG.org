@@ -1,6 +1,6 @@
 # Local IspellDict: en
 # SPDX-License-Identifier: GPL-3.0-or-later
-# SPDX-FileCopyrightText: 2019-2024 Jens Lechtenbörger
+# SPDX-FileCopyrightText: 2019-2025 Jens Lechtenbörger
 
 * Changelog
 This file is based on
@@ -10,6 +10,10 @@ where version numbers starting with version 1.0.0 adhere to
 
 
 ** [Unreleased]
+** [4.28.3] - 2025-02-20
+*** Fixed
+    - Avoid byte compiler warnings
+
 ** [4.28.2] - 2024-12-18
 *** Fixed
     - Add id to button for autoadvance, fix string escaping
