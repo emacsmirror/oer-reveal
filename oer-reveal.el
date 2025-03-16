@@ -209,7 +209,8 @@ in the Emacs manual) to set this variable permanently for each file."
 
 (defcustom oer-reveal-revealjs-version "4"
   "Version of reveal.js.
-See `org-re-reveal-revealjs-version' for possible values.
+See `org-re-reveal-revealjs-version' for possible values.  (In
+particular, a value of 4 is also correct for reveal.js 5.x.)
 If non-nil, this value takes precedence over
 `org-re-reveal-revealjs-version' during export.
 
