@@ -8,7 +8,7 @@
 ;; Author: Jens Lechtenbörger
 ;; URL: https://gitlab.com/oer/oer-reveal
 ;; Version: 4.29.0
-;; Package-Requires: ((emacs "24.4") (org-re-reveal "3.32.0"))
+;; Package-Requires: ((emacs "24.4") (org-re-reveal "3.35.0"))
 ;; Keywords: hypermedia, tools, slideshow, presentation, OER
 
 ;; Emacs 24.4 adds advice-add and advice-remove, which are used below.
@@ -2552,13 +2552,15 @@ to `org-re-reveal-export-to-html'."
 (defun oer-reveal-export-to-html-and-browse
     (&optional async subtreep visible-only body-only ext-plist)
   "Export current buffer to a reveal.js and browse HTML file.
-Optional ASYNC, SUBTREEP, VISIBLE-ONLY, BODY-ONLY, EXT-PLIST are passed
-to `oer-reveal-export-to-html'."
+Pass optional ASYNC, SUBTREEP, VISIBLE-ONLY, BODY-ONLY, EXT-PLIST
+to `oer-reveal-export-to-html'.
+Respect `org-re-reveal-browse-to-id', i.e., with the default value t,
+if section at point has a CUSTOM_ID, browse to its slide after export.
+Customize to nil if you do not like this."
   (interactive)
-  (browse-url-of-file
-   (expand-file-name
-    (oer-reveal-export-to-html
-     async subtreep visible-only body-only ext-plist))))
+  (org-re-reveal-browse
+   (oer-reveal-export-to-html
+    async subtreep visible-only body-only ext-plist)))
 
 (defun oer-reveal-export-current-subtree
     (&optional async subtreep visible-only body-only ext-plist)
