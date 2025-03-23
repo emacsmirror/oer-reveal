@@ -2538,7 +2538,7 @@ Use `oer-reveal-master' to determine what buffer to export."
 (defun oer-reveal-export-to-html
     (&optional async subtreep visible-only body-only ext-plist)
   "Export current buffer to a reveal.js HTML file.
-Optional ASYNC, SUBTREEP, VISIBLE-ONLY, BODY-ONLY, EXT-PLIST are passed
+Passes optional ASYNC, SUBTREEP, VISIBLE-ONLY, BODY-ONLY, EXT-PLIST
 to `org-re-reveal-export-to-html'."
   (interactive)
   (oer-reveal--setup-env
@@ -2565,7 +2565,7 @@ Customize to nil if you do not like this."
 (defun oer-reveal-export-current-subtree
     (&optional async subtreep visible-only body-only ext-plist)
   "Export current subtree to a reveal.js HTML file.
-Optional ASYNC, SUBTREEP, VISIBLE-ONLY, BODY-ONLY, EXT-PLIST are passed
+Passes optional ASYNC, SUBTREEP, VISIBLE-ONLY, BODY-ONLY, EXT-PLIST
 to `oer-reveal-export-to-html'."
   (interactive)
   (org-narrow-to-subtree)
