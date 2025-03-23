@@ -10,6 +10,15 @@ where version numbers starting with version 1.0.0 adhere to
 
 
 ** [Unreleased]
+** [4.30.0] - 2025-03-23
+*** Changed
+    - Respect ~org-re-reveal-browse-to-id~ in
+      ~oer-reveal-export-to-html-and-browse~.
+      - With the default value ~t~, if section at point has a
+        ~CUSTOM_ID~, browse to its slide after export with
+        ~oer-reveal-export-to-html-and-browse~.
+      - Set to ~nil~ if you do not like this.
+
 ** [4.29.0] - 2025-03-19
 *** Changed
     - Update ~oer-reveal-submodules-version~ to 2.12.0;
