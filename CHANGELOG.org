@@ -10,6 +10,10 @@ where version numbers starting with version 1.0.0 adhere to
 
 
 ** [Unreleased]
+** [4.30.1] - 2025-03-24
+*** Fixed
+    - Mention auto-advance custom control in usage hints.
+
 ** [4.30.0] - 2025-03-23
 *** Changed
     - Respect ~org-re-reveal-browse-to-id~ in
