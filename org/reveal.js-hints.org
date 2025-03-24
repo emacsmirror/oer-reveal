@@ -1,6 +1,6 @@
 # Local IspellDict: en
 
-#+SPDX-FileCopyrightText: 2018-2022,2024 Jens Lechtenbörger
+#+SPDX-FileCopyrightText: 2018-2022,2024-2025 Jens Lechtenbörger
 #+SPDX-License-Identifier: CC-BY-SA-4.0
 
 # This file is not meant to be exported to HTML directly but to be
@@ -13,14 +13,16 @@ and make use of the HTML presentation framework
 [[https://revealjs.com/][reveal.js]].
 
 - Icons, keys, navigation
-  - Newer presentations (starting end of 2023) contain icons (“custom
+  - Starting end of 2023, presentations may contain icons (“custom
     controls”) at lower left with direct access of selected
-    presentation features
+    presentation features; on mouse-over, a brief hint is available
+    - Starting in 2024, with icon to toggle video-like mode where
+      presentations with audio advance automatically
   - In general, “n” and “p” move to next and previous slide; mouse
     wheel works as well
   - Type slide’s number followed by Enter to jump to that slide
   - Browser history (may need /two/ attempts to work)
-  - Zoom with Ctrl-Mouse or Alt-Mouse
+  - Zoom with Ctrl-Mouse-click or Alt-Mouse-click
   - Search with Ctrl-Shift-F (press “enter” for subsequent search hits)
   - Since August 2021, presentations use the ~linear~
     [[https://revealjs.com/vertical-slides/#navigation-mode][navigation mode]]
@@ -59,13 +61,15 @@ and make use of the HTML presentation framework
     - To toggle audio, type “a” (or “+” for older presentations)
   - Audio controls are shown at bottom left (use right-click for
     more functionality such as speed control)
-  - Newer presentations (starting 2024) add URL parameters
-    - ~audio-autoplay~ either to turn autoplay on or
-      ~audio-autoplay=false~ to turn it off
+  - Starting in 2024, URL parameters are available
     - ~audio-speed~, e.g., ~audio-speed=2.0~ for double speed
-    - ~audio-advance~ to control whether to go to next slide when
-      audio ends; use ~audio-advance=-1~ to turn this off,
-      ~audio-advance=1000~ to advance after 1000 ms
+    - Also, nowadays maybe less important thanks to the custom
+      control icon for auto-advance mentioned above:
+      - ~audio-autoplay~ either to turn autoplay on or
+        ~audio-autoplay=false~ to turn it off
+      - ~audio-advance~ to control whether to go to next slide when
+        audio ends; use ~audio-advance=-1~ to turn this off,
+        ~audio-advance=1000~ to advance after 1000 ms
     - E.g., this URL does not advance and plays at higher speed:
       https://oer.gitlab.io/oer-courses/it-systems/03-Boolean-Logic-I.html?audio-advance=-1&audio-speed=1.5
 - Notes
