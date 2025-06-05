@@ -1,6 +1,6 @@
 # Local IspellDict: en
 
-# SPDX-FileCopyrightText: 2018-2019 Jens Lechtenbörger
+# SPDX-FileCopyrightText: 2018-2019,2025 Jens Lechtenbörger
 # SPDX-License-Identifier: CC-BY-SA-4.0
 
 # This file is not meant to be exported to HTML directly but to be
@@ -27,7 +27,7 @@ are translated into [[https://revealjs.com/][reveal.js]] HTML
 presentations, which can be viewed on (almost) any device with a Web
 browser.  In times of dragnet surveillance and surreptitious as well as
 blatant data brokerage I recommend the Firefox variant
-[[https://www.torproject.org/projects/torbrowser.html][Tor Browser]]
+[[https://www.torproject.org/download/][Tor Browser]]
 as tool for digital self-defense
 ([[https://blogs.fsfe.org/jens.lechtenboerger/2015/06/09/three-steps-towards-more-privacy-on-the-net/][here in English]]
 and [[https://www.informationelle-selbstbestimmung-im-internet.de/][here in German]]);
