@@ -10,6 +10,10 @@ where version numbers starting with version 1.0.0 adhere to
 
 
 ** [Unreleased]
+** [4.30.6] - 2025-06-06
+*** Fixed
+    - Hiding of multiple fragments in SVG animations works again
+
 ** [4.30.5] - 2025-06-05
 *** Fixed
     - Embed icon directly
