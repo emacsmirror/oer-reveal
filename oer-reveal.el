@@ -328,7 +328,7 @@ See also `oer-reveal-mathjax-config'."
 
 (defcustom oer-reveal-anything-config
   (format "anything: [
-        // Following initialization code for class animate from anything-demo.html.
+        // Following initialization code for class animate derived from anything-demo.html.
         // Copyright (c) 2016 Asvin Goel, under The MIT License (MIT).
 	{className: \"animate\",  initialize: (function(container, options){
 		Reveal.addEventListener( 'fragmentshown', function( event ) {
@@ -337,11 +337,14 @@ See also `oer-reveal-mathjax-config'."
 			}
 		});
 		Reveal.addEventListener( 'fragmenthidden', function( event ) {
-			if (event.fragment.hasAttribute('data-reverse') ) {
-				var reverse = event.fragment.parentElement.querySelector('[id=\\\"' + event.fragment.getAttribute('data-reverse') + '\\\"]');
-				if ( reverse && typeof reverse.beginElement === \"function\" ) {
-					reverse.beginElement();
-				}
+			for (var i = 0; i < event.fragments.length; i++){
+			    var fragment = event.fragments[i];
+			    if (fragment.hasAttribute('data-reverse') ) {
+			        var reverse = fragment.parentElement.querySelector('[id=\\\"' + fragment.getAttribute('data-reverse') + '\\\"]');
+			        if ( reverse && typeof reverse.beginElement === \"function\" ) {
+				    reverse.beginElement();
+			        }
+			    }
 			}
 		});
 		if ( container.getAttribute(\"data-svg-src\") ) {
