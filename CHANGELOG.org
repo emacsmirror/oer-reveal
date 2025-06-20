@@ -10,6 +10,15 @@ where version numbers starting with version 1.0.0 adhere to
 
 
 ** [Unreleased]
+** [4.31.0] - 2025-06-20
+*** Added
+    - Export image grid to LaTeX, but without full CSS layout: Add
+      subfigures, whose size is derived from the number of columns,
+      which in turn is computed by dividing the number of figures by
+      the number of the grid’s rows
+*** Fixed
+    - Make minipages for two-column layout top-aligned in LaTeX export
+
 ** [4.30.6] - 2025-06-06
 *** Fixed
     - Hiding of multiple fragments in SVG animations works again
