@@ -193,4 +193,8 @@
 #    grid images (value t) should be fragmented (appear one after the other)
 # 8. Optional license spefication (see argument 5 of revealimg above)
 # This macro uses oer-reveal-export-image-grid in oer-reveal.el.
+# Note that LaTeX export uses subfigures without grid areas of CSS;
+# instead, the horizontal size is derived from the number of columns,
+# which in turn is computed by dividing the number of figures by the
+# number of the grid's rows.
 #+MACRO: revealgrid (eval (oer-reveal-export-image-grid $1 $2 $3 $4 $5 $6 $7 $8))

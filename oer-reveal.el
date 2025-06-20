@@ -589,6 +589,18 @@ with oer-reveal-publish based on `oer-reveal-publish-figure-float'."
   :group 'org-export-oer-reveal
   :type 'string)
 
+(defcustom oer-reveal-latex-image-grid-template "\\begin{figure}[%s]
+\\centering
+%s
+\\end{figure}
+"
+  "LaTeX figure to hold image grid with subfigures.
+See also the constants `oer-reveal--subfigure-latex-caption-template' and
+`oer-reveal--subfigure-latex-template'."
+  :group 'org-export-oer-reveal
+  :type 'string
+  :package-version '(oer-reveal . "4.31.0"))
+
 (defcustom oer-reveal-license-font-factor 0.35
   "Factor for size of font for license information.
 By default, oer-reveal.css uses `.35em' as font size for license
@@ -1581,6 +1593,8 @@ timestamp.")
 (defconst oer-reveal--figure-latex-caption-template "#+BEGIN_EXPORT latex\n\\begin{figure}[%s] \\centering\n  \\includegraphics[width=%s\\linewidth]{%s} \\caption{%s (%s)}\n  \\end{figure}\n#+END_EXPORT\n")
 (defconst oer-reveal--figure-latex-template "         #+BEGIN_EXPORT latex\n     \\begin{figure}[%s] \\centering\n       \\includegraphics[width=%s\\linewidth]{%s} \\caption{%s}\n     \\end{figure}\n         #+END_EXPORT\n")
 (defconst oer-reveal--figure-external-latex-template "         #+BEGIN_EXPORT latex\n     \\textbf{Warning!} External figure \\textbf{not} included: %s \\newline (See HTML presentation instead.)\n         #+END_EXPORT\n")
+(defconst oer-reveal--subfigure-latex-caption-template "\\begin{subfigure}{%s\\linewidth} \\centering\n  \\includegraphics[width=%s\\linewidth]{%s} \\caption{%s (%s)}\n  \\end{subfigure}")
+(defconst oer-reveal--subfigure-latex-template "\\begin{subfigure}{%s\\linewidth} \\centering\n       \\includegraphics[width=%s\\linewidth]{%s} \\caption{%s}\n     \\end{subfigure}")
 (defconst oer-reveal--figure-unsupported-latex-template "         #+BEGIN_EXPORT latex\n     \\textbf{Warning!} Figure omitted as %s format \\textbf{not} supported in \\LaTeX: “%s”\\newline (See HTML presentation instead.)\n         #+END_EXPORT\n")
 (defconst oer-reveal--unsupported-tex-figure-formats '("gif"))
 (defconst oer-reveal--default-copyright "by")
@@ -1614,7 +1628,8 @@ timestamp.")
   (string-match-p "^https?://" string))
 
 (defun oer-reveal--export-figure-latex
-    (filename texwidth texfilename texlicense &optional latexcaption)
+    (filename texwidth texfilename texlicense
+              &optional latexcaption subfigure-cols)
   "Generate LaTeX for figure at FILENAME.
 If FILENAME is a full HTTP(S) URL, use
 `oer-reveal--figure-external-latex-template' as placeholder.
@@ -1624,7 +1639,8 @@ If FILENAME has an unsupported extension (included in
 Otherwise, include graphics at TEXFILENAME of width TEXWIDTH
 with caption TEXLICENSE.  Optional LATEXCAPTION determines whether
 `oer-reveal--figure-latex-template' or
-`oer-reveal--figure-latex-caption-template' is used to generate LaTeX code."
+`oer-reveal--figure-latex-caption-template' is used to generate LaTeX code.
+If SUBFIGURE-COLS is non-nil, generate code for subfigure."
   (cond ((oer-reveal-http-url-p filename)
 	 (format oer-reveal--figure-external-latex-template texlicense))
 	((member (file-name-extension filename)
@@ -1632,12 +1648,20 @@ with caption TEXLICENSE.  Optional LATEXCAPTION determines whether
 	 (format oer-reveal--figure-unsupported-latex-template
 		 (file-name-extension filename) texlicense))
 	(latexcaption
-	 (format oer-reveal--figure-latex-caption-template
-		 oer-reveal-latex-figure-float
-		 texwidth texfilename latexcaption texlicense))
-	(t (format oer-reveal--figure-latex-template
+         (if subfigure-cols
+	     (format oer-reveal--subfigure-latex-caption-template
+		     (/ 1.0 subfigure-cols)
+		     (/ 0.9 subfigure-cols) texfilename latexcaption texlicense)
+           (format oer-reveal--figure-latex-caption-template
 		   oer-reveal-latex-figure-float
-		   texwidth texfilename texlicense))))
+		   texwidth texfilename latexcaption texlicense)))
+	(t (if subfigure-cols
+               (format oer-reveal--subfigure-latex-template
+		       (/ 1.0 subfigure-cols)
+		       (/ 0.9 subfigure-cols) texfilename texlicense)
+             (format oer-reveal--figure-latex-template
+		     oer-reveal-latex-figure-float
+		     texwidth texfilename texlicense)))))
 
 (defun oer-reveal--export-figure-html
     (filename dcmitype divclasses htmlcaption htmllicense imgalt h-image
@@ -1832,13 +1856,15 @@ the empty string."
 
 (defun oer-reveal--attribution-strings
     (metadata &optional caption maxheight divclasses shortlicense
-    embed-svg extra-attrs)
+    embed-svg extra-attrs subfigure-cols)
   "Helper function.
 See `oer-reveal-export-attribution' and
 `oer-reveal--export-attribution-helper' for description of arguments
 CAPTION, MAXHEIGHT, DIVCLASSES, SHORTLICENSE, EMBED-SVG, EXTRA-ATTRS.
 Return cons cell whose car is the HTML representation for METADATA
 and whose cdr is the LaTeX representation.
+If optional SUBFIGURE-COLS is non-nil, create LaTeX code for
+subfigure (in image grid).
 As side effect, copy figure as described for `oer-reveal-copy-dir-suffix'."
   (let* ((org-export-with-sub-superscripts nil)
 	 (alist (read (oer-reveal--file-as-string metadata)))
@@ -1971,7 +1997,8 @@ As side effect, copy figure as described for `oer-reveal-copy-dir-suffix'."
 	       filename dcmitype divclasses htmlcaption htmllicense
                imgalt h-image embed-svg extra-attrs)
 	      (oer-reveal--export-figure-latex
-	       filename texwidth texfilename texlicense latexcaption))
+	       filename texwidth texfilename texlicense latexcaption
+               subfigure-cols))
       (cons (oer-reveal--export-figure-html
 	     filename dcmitype divclasses htmlcaption
 	     htmllicense imgalt h-image embed-svg extra-attrs)
@@ -1982,7 +2009,8 @@ As side effect, copy figure as described for `oer-reveal-copy-dir-suffix'."
 	     ;; Only use latexcaption when shortlicense is t
 	     ;; (but not if it is none).
 	     (when (and shortlicense (booleanp shortlicense))
-	       latexcaption))))))
+	       latexcaption)
+             subfigure-cols)))))
 
 ;;; Function to create a grid of images with license information in HTML.
 ;; Function oer-reveal-export-image-grid is used in macro in org/config.org.
@@ -2001,6 +2029,18 @@ also after an incompatible change with Org 9.2."
       (apply #'oer-reveal--export-image-grid-helper
 	     (mapcar #'oer-reveal--read-from-string args))
     (apply #'oer-reveal--export-image-grid-helper args)))
+
+(defun oer-reveal--latex-image-grid-figures (numbered-images no-rows)
+  "Create LaTeX to display NUMBERED-IMAGES in NO-ROWS"
+  (let* ((no-cols (/ (length numbered-images) no-rows))
+         result)
+    (dolist (pair numbered-images result)
+      (setq result
+            (concat
+             result
+             (cdr (oer-reveal--attribution-strings
+                   (cdr pair) nil nil nil t nil nil no-cols)
+              ))))))
 
 (defun oer-reveal--export-image-grid-helper
     (grid-id grid-images height no-columns no-rows template-areas
@@ -2032,7 +2072,10 @@ see `oer-reveal--export-attribution-helper'."
 		       numbered " ")
 	    "</div><p>@@"
 	    "\n"
-	    "@@latex: Presentation contains image grid.  \\LaTeX{} export not supported.@@")))
+            (format oer-reveal-latex-image-grid-template
+                    oer-reveal-latex-figure-float
+                    (oer-reveal--latex-image-grid-figures numbered no-rows))
+	    )))
 
 (defun oer-reveal--generate-grid-img (grid-id no)
   "Create CSS class assigning grid-area NO to image NO in grid GRID-ID."
