@@ -1593,8 +1593,8 @@ timestamp.")
 (defconst oer-reveal--figure-latex-caption-template "#+BEGIN_EXPORT latex\n\\begin{figure}[%s] \\centering\n  \\includegraphics[width=%s\\linewidth]{%s} \\caption{%s (%s)}\n  \\end{figure}\n#+END_EXPORT\n")
 (defconst oer-reveal--figure-latex-template "         #+BEGIN_EXPORT latex\n     \\begin{figure}[%s] \\centering\n       \\includegraphics[width=%s\\linewidth]{%s} \\caption{%s}\n     \\end{figure}\n         #+END_EXPORT\n")
 (defconst oer-reveal--figure-external-latex-template "         #+BEGIN_EXPORT latex\n     \\textbf{Warning!} External figure \\textbf{not} included: %s \\newline (See HTML presentation instead.)\n         #+END_EXPORT\n")
-(defconst oer-reveal--subfigure-latex-caption-template "\\begin{subfigure}{%s\\linewidth} \\centering\n  \\includegraphics[width=%s\\linewidth]{%s} \\caption{%s (%s)}\n  \\end{subfigure}")
-(defconst oer-reveal--subfigure-latex-template "\\begin{subfigure}{%s\\linewidth} \\centering\n       \\includegraphics[width=%s\\linewidth]{%s} \\caption{%s}\n     \\end{subfigure}")
+(defconst oer-reveal--subfigure-latex-caption-template "   \\begin{subfigure}{%s\\linewidth} \\centering\n  \\includegraphics[width=0.95\\linewidth]{%s} \\caption{%s (%s)}\n  \\end{subfigure}\n")
+(defconst oer-reveal--subfigure-latex-template "   \\begin{subfigure}{%s\\linewidth} \\centering\n       \\includegraphics[width=0.95\\linewidth]{%s} \\caption{%s}\n     \\end{subfigure}\n")
 (defconst oer-reveal--figure-unsupported-latex-template "         #+BEGIN_EXPORT latex\n     \\textbf{Warning!} Figure omitted as %s format \\textbf{not} supported in \\LaTeX: “%s”\\newline (See HTML presentation instead.)\n         #+END_EXPORT\n")
 (defconst oer-reveal--unsupported-tex-figure-formats '("gif"))
 (defconst oer-reveal--default-copyright "by")
@@ -1650,14 +1650,12 @@ If SUBFIGURE-COLS is non-nil, generate code for subfigure."
 	(latexcaption
          (if subfigure-cols
 	     (format oer-reveal--subfigure-latex-caption-template
-		     (/ 1.0 subfigure-cols)
 		     (/ 0.9 subfigure-cols) texfilename latexcaption texlicense)
            (format oer-reveal--figure-latex-caption-template
 		   oer-reveal-latex-figure-float
 		   texwidth texfilename latexcaption texlicense)))
 	(t (if subfigure-cols
                (format oer-reveal--subfigure-latex-template
-		       (/ 1.0 subfigure-cols)
 		       (/ 0.9 subfigure-cols) texfilename texlicense)
              (format oer-reveal--figure-latex-template
 		     oer-reveal-latex-figure-float
@@ -2039,8 +2037,11 @@ also after an incompatible change with Org 9.2."
             (concat
              result
              (cdr (oer-reveal--attribution-strings
-                   (cdr pair) nil nil nil t nil nil no-cols)
-              ))))))
+                   (cdr pair) nil nil nil t nil nil no-cols))
+             (if (= 0 (mod (car pair) no-cols))
+                 "\n"
+               "\\hfill")
+             )))))
 
 (defun oer-reveal--export-image-grid-helper
     (grid-id grid-images height no-columns no-rows template-areas
