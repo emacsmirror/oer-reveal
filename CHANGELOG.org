@@ -10,6 +10,11 @@ where version numbers starting with version 1.0.0 adhere to
 
 
 ** [Unreleased]
+** [4.31.1] - 2025-06-21
+*** Fixed
+    - Using sizes for images grids of version 4.31.0 led to one long
+      line of subfigures in LaTeX export.  Break into multiple lines.
+
 ** [4.31.0] - 2025-06-20
 *** Added
     - Export image grid to LaTeX, but without full CSS layout: Add
