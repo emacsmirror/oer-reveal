@@ -211,6 +211,8 @@ syntax highlighting."
     ;; warnings for figures:
     ;; warning (ext4): destination with the same identifier
     ("" "float" nil)
+    ;; Load animate package to replace animated GIFs.
+    ("" "animate" nil)
     ;; Load subcaption package for image grids.
     ("" "subcaption" nil)
     ;; Load grffile with options space.

@@ -1597,6 +1597,7 @@ timestamp.")
 (defconst oer-reveal--figure-external-latex-template "         #+BEGIN_EXPORT latex\n     \\textbf{Warning!} External figure \\textbf{not} included: %s \\newline (See HTML presentation instead.)\n         #+END_EXPORT\n")
 (defconst oer-reveal--subfigure-latex-caption-template "   \\begin{subfigure}{%s\\linewidth} \\centering\n  \\includegraphics[width=0.95\\linewidth]{%s} \\caption{%s (%s)}\n  \\end{subfigure}\n")
 (defconst oer-reveal--subfigure-latex-template "   \\begin{subfigure}{%s\\linewidth} \\centering\n       \\includegraphics[width=0.95\\linewidth]{%s} \\caption{%s}\n     \\end{subfigure}\n")
+(defconst oer-reveal--animate-template "         #+BEGIN_EXPORT latex\n     \\animategraphics[loop,controls,width=%s\\linewidth]{%s}{%s}{%s}{%s}\n         #+END_EXPORT\n")
 (defconst oer-reveal--figure-unsupported-latex-template "         #+BEGIN_EXPORT latex\n     \\textbf{Warning!} Figure omitted as %s format \\textbf{not} supported in \\LaTeX: “%s”\\newline (See HTML presentation instead.)\n         #+END_EXPORT\n")
 (defconst oer-reveal--unsupported-tex-figure-formats '("gif"))
 (defconst oer-reveal--default-copyright "by")
@@ -1631,7 +1632,7 @@ timestamp.")
 
 (defun oer-reveal--export-figure-latex
     (filename texwidth texfilename texlicense
-              &optional latexcaption subfigure-cols)
+              &optional latexcaption subfigure-cols animate)
   "Generate LaTeX for figure at FILENAME.
 If FILENAME is a full HTTP(S) URL, use
 `oer-reveal--figure-external-latex-template' as placeholder.
@@ -1642,13 +1643,21 @@ Otherwise, include graphics at TEXFILENAME of width TEXWIDTH
 with caption TEXLICENSE.  Optional LATEXCAPTION determines whether
 `oer-reveal--figure-latex-template' or
 `oer-reveal--figure-latex-caption-template' is used to generate LaTeX code.
-If SUBFIGURE-COLS is non-nil, generate code for subfigure."
+If SUBFIGURE-COLS is non-nil, generate code for subfigure.
+If ANIMATE is non-nil, generate code to replace animated gif image."
   (cond ((oer-reveal-http-url-p filename)
 	 (format oer-reveal--figure-external-latex-template texlicense))
 	((member (file-name-extension filename)
 		 oer-reveal--unsupported-tex-figure-formats)
-	 (format oer-reveal--figure-unsupported-latex-template
-		 (file-name-extension filename) texlicense))
+         (if animate
+             (let ((basename (alist-get 'basename animate))
+                   (fps (alist-get 'fps animate))
+                   (first (alist-get 'first animate))
+                   (last (alist-get 'last animate)))
+               (format oer-reveal--animate-template
+                       texwidth fps basename first last))
+	   (format oer-reveal--figure-unsupported-latex-template
+		   (file-name-extension filename) texlicense)))
 	(latexcaption
          (if subfigure-cols
 	     (format oer-reveal--subfigure-latex-caption-template
@@ -1871,6 +1880,7 @@ As side effect, copy figure as described for `oer-reveal-copy-dir-suffix'."
 	 (filename (oer-reveal--figure-path
                     (alist-get 'filename alist) metadata))
          (dependencies (alist-get 'dependencies alist))
+         (animate (alist-get 'animate alist))
 	 (texfilename (file-name-sans-extension filename))
 	 (licenseurl (alist-get 'licenseurl alist))
 	 (licensetext (alist-get 'licensetext alist))
@@ -1998,7 +2008,7 @@ As side effect, copy figure as described for `oer-reveal-copy-dir-suffix'."
                imgalt h-image embed-svg extra-attrs)
 	      (oer-reveal--export-figure-latex
 	       filename texwidth texfilename texlicense latexcaption
-               subfigure-cols))
+               subfigure-cols animate))
       (cons (oer-reveal--export-figure-html
 	     filename dcmitype divclasses htmlcaption
 	     htmllicense imgalt h-image embed-svg extra-attrs)
@@ -2010,7 +2020,7 @@ As side effect, copy figure as described for `oer-reveal-copy-dir-suffix'."
 	     ;; (but not if it is none).
 	     (when (and shortlicense (booleanp shortlicense))
 	       latexcaption)
-             subfigure-cols)))))
+             subfigure-cols animate)))))
 
 ;;; Function to create a grid of images with license information in HTML.
 ;; Function oer-reveal-export-image-grid is used in macro in org/config.org.
