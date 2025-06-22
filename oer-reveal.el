@@ -589,10 +589,12 @@ with oer-reveal-publish based on `oer-reveal-publish-figure-float'."
   :group 'org-export-oer-reveal
   :type 'string)
 
-(defcustom oer-reveal-latex-image-grid-template "\\begin{figure}[%s]
+(defcustom oer-reveal-latex-image-grid-template "#+BEGIN_EXPORT latex
+\\begin{figure}[%s]
 \\centering
 %s
 \\end{figure}
+#+END_EXPORT
 "
   "LaTeX figure to hold image grid with subfigures.
 See also the constants `oer-reveal--subfigure-latex-caption-template' and
