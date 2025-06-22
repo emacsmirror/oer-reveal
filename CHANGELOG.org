@@ -10,6 +10,11 @@ where version numbers starting with version 1.0.0 adhere to
 
 
 ** [Unreleased]
+** [4.32.0] - 2025-06-22
+*** Added
+    - For LaTeX export, use package animate to replace animated GIF
+      with single images
+
 ** [4.31.2] - 2025-06-22
 *** Fixed
     - Wrap LaTeX code for image grid in export block
