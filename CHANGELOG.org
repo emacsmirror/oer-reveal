@@ -10,6 +10,10 @@ where version numbers starting with version 1.0.0 adhere to
 
 
 ** [Unreleased]
+** [4.31.2] - 2025-06-22
+*** Fixed
+    - Wrap LaTeX code for image grid in export block
+
 ** [4.31.1] - 2025-06-21
 *** Fixed
     - Using sizes for images grids of version 4.31.0 led to one long
