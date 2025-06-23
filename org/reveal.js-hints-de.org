@@ -1,6 +1,6 @@
 # Local IspellDict: de
 
-#+SPDX-FileCopyrightText: 2018-2022 Jens Lechtenbörger
+#+SPDX-FileCopyrightText: 2018-2022,2025 Jens Lechtenbörger
 #+SPDX-License-Identifier: CC-BY-SA-4.0
 
 # Diese Datei ist nicht für den direkten HTML-Export gedacht,
@@ -65,7 +65,7 @@ erzeugt und nutzen das HTML-Framework
     - Start und Pause von Ton über Taste „+“ (oder „a“ für ältere Präsentationen)
 - Notizen
   - Folien enthalten Notizen, wenn das Ordner-Symbol dargestellt wird
-    [[./reveal.js/dist/theme/folder_inbox.png]]
+    @@html:<img src="/reveal.js/dist/theme/folder_inbox.png" />@@
     - Taste „v“ öffnet „Courseware-Ansicht“; alternativ öffnen Klick
       auf das Symbol sowie Taste „s“ die Vortragsansicht
       - Pop-Ups müssen für Vortragsansicht erlaubt werden
