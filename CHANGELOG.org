@@ -10,6 +10,10 @@ where version numbers starting with version 1.0.0 adhere to
 
 
 ** [Unreleased]
+** [4.34.0] - 2025-08-26
+*** Added
+    - \vspace{0pt} for minipages of two-column mode with [t]
+
 ** [4.33.0] - 2025-08-26
 *** Added
     - Improve layout of condensed PDF in [[file:org/config.org]]
