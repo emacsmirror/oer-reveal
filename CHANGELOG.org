@@ -1,6 +1,6 @@
 # Local IspellDict: en
 # SPDX-License-Identifier: GPL-3.0-or-later
-# SPDX-FileCopyrightText: 2019-2025 Jens Lechtenbörger
+# SPDX-FileCopyrightText: 2019-2026 Jens Lechtenbörger
 
 * Changelog
 This file is based on
@@ -10,6 +10,11 @@ where version numbers starting with version 1.0.0 adhere to
 
 
 ** [Unreleased]
+** [4.35.0] - 2026-01-12
+*** Added
+    - Title slide for university courses (outside MLDE)
+      [[file:title-slide/course-uni-ms.html]]
+
 ** [4.34.0] - 2025-08-26
 *** Added
     - \vspace{0pt} for minipages of two-column mode with [t]
