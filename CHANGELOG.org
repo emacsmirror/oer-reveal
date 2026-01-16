@@ -10,6 +10,12 @@ where version numbers starting with version 1.0.0 adhere to
 
 
 ** [Unreleased]
+** [4.35.1] - 2026-01-16
+*** Fixed
+    - Use escape sequence %I (introduced in org-re-reveal 3.38.0) on
+      title slide [[file:title-slide/course-uni-ms.html]]
+      to separate author and instructor
+
 ** [4.35.0] - 2026-01-12
 *** Added
     - Title slide for university courses (outside MLDE)
