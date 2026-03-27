@@ -2041,7 +2041,7 @@ also after an incompatible change with Org 9.2."
     (apply #'oer-reveal--export-image-grid-helper args)))
 
 (defun oer-reveal--latex-image-grid-figures (numbered-images no-rows)
-  "Create LaTeX to display NUMBERED-IMAGES in NO-ROWS"
+  "Create LaTeX to display NUMBERED-IMAGES in NO-ROWS."
   (let* ((no-cols (/ (length numbered-images) no-rows))
          result)
     (dolist (pair numbered-images result)
